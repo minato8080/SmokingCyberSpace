@@ -176,7 +176,7 @@ io.on('connection', function (socket) {
     socket.on('message', function (msg) {
         //console.log('message: ' + msg);
         player.msg = msg;
-        player.msgcount = 40*fps;
+        player.msgCountDown = 30*fps;
         if(msg !== '')fs.writeFile("log.txt", LogWriter(player) + msg + '\n', options, (err) => {
             if (err) {
                 console.log(err)
@@ -217,8 +217,8 @@ setInterval(() => {
         }
         if (player.msgCountDown > 0) {
             player.msgCountDown--;
+            if (player.msgCountDown === 0) player.msg = '';
         }
-        if (player.msgCountDown === 0) player.msg = '';
         if (player.smokeActionCountDown > 0) {
             player.smokeActionCountDown--;
             if (player.smokeActionCountDown % 6 === 0) player.smokeActionFrame++;
