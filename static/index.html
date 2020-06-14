@@ -1,0 +1,49 @@
+﻿<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>喫煙電気空間</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/static/jquery-3.5.1.min.js"></script>
+    <script src="/static/jquery.rwdImageMaps.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body style="display: flex; flex-direction: column; width: 100%; height: 100%; margin: 0;">
+    <div style="flex: 1 1; position: relative; overflow:hidden;">
+        <div id="start-screen">
+            <div style="text-align: center; width: 100%; font-size: xx-large;">
+                <input type="text" maxlength="5" name="nickname" id="nickname" placeholder="anonymous" autofocus autocomplete="off"><br /><br />
+                <button id="start-button">CONNECT</button>
+            </div>
+        </div>
+        <button id="sousin">CHAT</button>
+        <form id="message_form">
+            <input id="input_msg" maxlength="54" autocomplete="off" />
+        </form>
+        <canvas id="canvas-2d" width="3500" height="960"></canvas>
+        <div style="text-align:center;">
+            <img id="controler" src="/static/controler.png" usemap="#ImageMap" oncontextmenu="return false;"onselectstart="return false;" />
+            <map name="ImageMap">
+                <area shape="rect" coords="69,333,198,470"alt="" onmousedown="LKey('down');"onmouseup="LKey('up');"onMouseOut="LKey('up');"/>
+                <area shape="rect" coords="288,333,414,471"alt=""onmousedown="RKey('down');"onmouseup="RKey('up');"onMouseOut="RKey('up');"/>
+                <area shape="rect" coords="982,396,1153,562" alt=""onmousedown="BKey('down');"onmouseup="BKey('up');"onMouseOut="BKey('up');"/>
+                <area shape="rect" coords="1179,396,1351,562" alt=""onmousedown="AKey('down');"onmouseup="AKey('up');"onMouseOut="AKey('up');"/>
+            </map>
+
+        </div>
+    </div>
+    <img id="player-image" src="/static/masita.png" style="display: none;">
+    <img id="map-image" src="/static/map.png" style="display: none;">
+    <img id="map-image-z1" src="/static/map-z1.png" style="display: none;">
+    <img id="top" src="/static/chatbox-top-500.png" style="display: none;">
+    <img id="middle" src="/static/chatbox-middle-500.png" style="display: none;">
+    <img id="under" src="/static/chatbox-under-500.png" style="display: none;">
+    <script src="/static/game.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('img[usemap]').rwdImageMaps();
+        });
+    </script>
+</body>
+</html>
