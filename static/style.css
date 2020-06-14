@@ -9,7 +9,7 @@ body {
     font-family: misaki2;
     overflow: hidden;
     -webkit-touch-callout: none;
-    user-select: none;
+    -webkit-user-select: none;
     -webkit-user-drag: none;
 }
 input:-webkit-autofill {
