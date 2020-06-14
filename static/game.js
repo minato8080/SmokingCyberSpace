@@ -439,9 +439,9 @@ let RKey = function (event) {
     }
     socket.emit('movement', movement, isMove);
 }
-let AKey = function (event) {
-    socket.emit('smoke', movement, isMove);
+let AKey = function () {
+    socket.emit('smoke');
 }
 
-let BKey = function (event) {
+let BKey = function () {
 }

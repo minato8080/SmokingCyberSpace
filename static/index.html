@@ -25,10 +25,10 @@
         <div style="text-align:center;">
             <img id="controler" src="/static/controler.png" usemap="#ImageMap" oncontextmenu="return false;"onselectstart="return false;" />
             <map name="ImageMap">
-                <area shape="rect" coords="69,333,198,470"alt="" onmousedown="LKey('down');"onmouseup="LKey('up');"onMouseOut="LKey('up');"/>
-                <area shape="rect" coords="288,333,414,471"alt=""onmousedown="RKey('down');"onmouseup="RKey('up');"onMouseOut="RKey('up');"/>
-                <area shape="rect" coords="982,396,1153,562" alt=""onmousedown="BKey('down');"onmouseup="BKey('up');"/>
-                <area shape="rect" coords="1179,396,1351,562" alt=""onmousedown="AKey('down');"onmouseup="AKey('up');"/>
+                <area shape="rect" coords="69,333,198,470"alt="" ontouchstart="LKey('down');"ontouchend="LKey('up');"onmousedown="LKey('down');"onmouseup="LKey('up');"onMouseOut="LKey('up');"/>
+                <area shape="rect" coords="288,333,414,471"alt=""ontouchstart="RKey('down');"ontouchend="RKey('up');"onmousedown="RKey('down');"onmouseup="RKey('up');"onMouseOut="RKey('up');"/>
+                <area shape="rect" coords="982,396,1153,562" alt=""/>
+                <area shape="rect" coords="1179,396,1351,562" alt=""ontouchstart="AKey();"onmousedown="AKey();"onmouseup="AKey();"/>
             </map>
 
         </div>

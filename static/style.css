@@ -8,6 +8,7 @@ body {
     background-color: rgb(62,12,15);
     font-family: misaki2;
     overflow: hidden;
+    -webkit-touch-callout: none;
 }
 input:-webkit-autofill {
     box-shadow: 0 0 0 1000px rgb(88,104,76) inset;
