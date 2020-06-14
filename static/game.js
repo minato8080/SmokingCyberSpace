@@ -414,7 +414,7 @@ let WalkFrameChanger = function (player) {
 //------------------------------------
 //       コントローラー
 //------------------------------------
-
+/*
 let LKey = function (event) {
     if (event === 'down') {
         movement.right = false;
@@ -445,3 +445,79 @@ let AKey = function () {
 
 let BKey = function () {
 }
+*/
+
+const ua = navigator.userAgent.toLowerCase();
+const isSP = /iphone|ipod|ipad|android/.test(ua);
+const L = document.getElementById('left');
+const R = document.getElementById('right');
+const A = document.getElementById('A');
+const eventStart = isSP ? 'touchstart' : 'mousedown';
+const eventEnd = isSP ? 'touchend' : 'mouseup';
+const eventLeave = isSP ? 'touchmove' : 'mouseleave';
+
+L.addEventListener(eventStart, e => {
+    e.preventDefault();
+    L.classList.add('active');
+    movement.right = false;
+    movement.left = true;
+    isMove = true;
+    socket.emit('movement', movement, isMove);
+})
+
+L.addEventListener(eventEnd, e => {
+    e.preventDefault();
+    L.classList.remove('active');
+    movement.right = false;
+    movement.left = false;
+    isMove = false;
+    socket.emit('movement', movement, isMove);
+});
+
+L.addEventListener(eventLeave, e => {
+    e.preventDefault();
+    let el;
+    el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : L;
+    if (!isSP || el !== L) {
+        L.classList.remove('active');
+        movement.right = false;
+        movement.left = false;
+        isMove = false;
+        socket.emit('movement', movement, isMove);
+    }
+});
+
+R.addEventListener(eventStart, e => {
+    e.preventDefault();
+    R.classList.add('active');
+    movement.right = true;
+    movement.left = false;
+    isMove = true;
+    socket.emit('movement', movement, isMove);
+})
+
+R.addEventListener(eventEnd, e => {
+    e.preventDefault();
+    R.classList.remove('active');
+    movement.right = false;
+    movement.left = false;
+    isMove = false;
+    socket.emit('movement', movement, isMove);
+});
+
+R.addEventListener(eventLeave, e => {
+    e.preventDefault();
+    let el;
+    el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : R;
+    if (!isSP || el !== R) {
+        R.classList.remove('active');
+        movement.right = false;
+        movement.left = false;
+        isMove = false;
+        socket.emit('movement', movement, isMove);
+    }
+});
+A.addEventListener(eventStart, e => {
+    e.preventDefault();
+    socket.emit('smoke');
+})
