@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="/static/jquery-3.5.1.min.js"></script>
-    <script src="/static/jquery.rwdImageMaps.min.js"></script>
     <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body style="display: flex; flex-direction: column; width: 100%; height: 100%; margin: 0;">
     <div style="flex: 1 1; position: relative; overflow:hidden;">
         <div id="start-screen">
             <div style="text-align: center; width: 100%; font-size: xx-large;">
-                <input type="text" maxlength="5" name="nickname" id="nickname" placeholder="anonymous" autofocus autocomplete="off"><br /><br />
+                <input type="text" maxlength="6" name="nickname" id="nickname" placeholder="anonymous" autofocus autocomplete="off"><br /><br />
                 <button id="start-button">CONNECT</button>
             </div>
         </div>
@@ -23,9 +21,20 @@
         </form>
         <canvas id="canvas-2d" width="3500" height="960"></canvas>
         <div style="text-align:center;">
-            <button id="left">left</button>
-            <button id="right">right</button>
-            <button id="A">A</button>
+            <div>
+                <button id="up" class="box">↑</button>
+            </div>
+            <div>
+                <button id="left" class="box">←</button>
+                <button id="right" class="box">→</button>
+                <button id="B" class="box AB">B</button>
+                <button id="A" class="box AB">A</button>
+            </div>
+            <div style="text-align:center;">
+                <button id="down" class="box">↓</button>
+                <button class="selsta">select</button>
+                <button class="selsta">start</button>
+            </div>
         </div>
     </div>
     <img id="player-image" src="/static/masita.png" style="display: none;">
