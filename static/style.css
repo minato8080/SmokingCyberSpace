@@ -96,4 +96,32 @@ textarea:focus {
     vertical-align: top;
     object-fit: contain;
 }
-/*<img id="pixer" src="/static/pxmeasure.png" style="display: none;">*/
+#left {
+    font-family: misaki2;
+    font-size: 30px;
+    display: inline-block;
+    vertical-align: top;
+    z-index: 1;
+    color: rgb(226,192,132);
+    background-color: rgb(23,23,23);
+    outline: none;
+}
+#right {
+    font-family: misaki2;
+    font-size: 30px;
+    display: inline-block;
+    vertical-align: top;
+    z-index: 1;
+    color: rgb(226,192,132);
+    background-color: rgb(23,23,23);
+    outline: none;
+}
+#A {
+    font-family: misaki2;
+    font-size: 30px;
+    display: inline-block;
+    vertical-align: top;
+    z-index: 1;
+    color: rgb(226,192,132);
+    background-color: rgb(23,23,23);
+    /*<img id="pixer" src="/static/pxmeasure.png" style="display: none;">*/
