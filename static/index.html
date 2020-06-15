@@ -12,28 +12,34 @@
         <div id="start-screen">
             <div style="text-align: center; width: 100%; font-size: xx-large;">
                 <input type="text" maxlength="6" name="nickname" id="nickname" placeholder="anonymous" autofocus autocomplete="off"><br /><br />
-                <button id="start-button">CONNECT</button>
+                <button id="start-button" class="materialbutton">接続</button>
             </div>
         </div>
-        <button id="sousin">CHAT</button>
+        <button id="sousin" class="materialbutton">送信</button>
         <form id="message_form">
             <input id="input_msg" maxlength="54" autocomplete="off" />
         </form>
-        <canvas id="canvas-2d" width="3500" height="960"></canvas>
-        <div style="text-align:center;">
-            <div>
-                <button id="up" class="box">↑</button>
-            </div>
-            <div>
-                <button id="left" class="box">←</button>
-                <button id="right" class="box">→</button>
-                <button id="B" class="box AB">B</button>
-                <button id="A" class="box AB">A</button>
-            </div>
-            <div style="text-align:center;">
-                <button id="down" class="box">↓</button>
-                <button class="selsta">select</button>
-                <button class="selsta">start</button>
+        <div id="canvas-parerent"">
+            <canvas id="canvas-2d" width="3500" height="960"></canvas>
+        </div>
+        <div class="clear">
+            <div class="border"></div>
+            <h1 class="title">喫煙電気空間</h1>
+            <div class="controler">
+                <div id="firstline">
+                    <button id="up" class="Tkey materialbutton">↑</button>
+                    <button id="A" class="AB materialbutton AB">A</button>
+                </div>
+                <div id="secondline">
+                    <button id="left" class="Tkey materialbutton">←</button>
+                    <button id="down" class="Tkey materialbutton">↓</button>
+                    <button id="right" class="Tkey materialbutton">→</button>
+                    <button id="B" class="AB materialbutton AB">B</button>
+                </div>
+                <div id="thirdline">
+                    <button class="SelSta materialbutton">select</button>
+                    <button class="SelSta materialbutton">start</button>
+                </div>
             </div>
         </div>
     </div>

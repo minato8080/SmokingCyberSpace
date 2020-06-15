@@ -36,7 +36,7 @@ $("#start-button").on('click', gameStart);
 //-------------------------------------
 //　　　　　　通信処理
 //-------------------------------------
-
+const INPUTS = ['INPUT', 'TEXTAREA'];
 $(document).on('keydown keyup', (event) => {
     const KeyToCommand = {
        // 'ArrowUp': 'forward',
@@ -45,7 +45,7 @@ $(document).on('keydown keyup', (event) => {
         'ArrowRight': 'right',
     };
     const command = KeyToCommand[event.key];
-    if (command) {
+    if (command && INPUTS.indexOf(event.target.tagName) == -1) {
         if (event.type === 'keydown') {
             movement[command] = true;
             isMove = true;
@@ -55,8 +55,8 @@ $(document).on('keydown keyup', (event) => {
         }
         socket.emit('movement', movement,isMove);
     }
-    if (event.key === 'a' && event.type === 'keydown') {
-        socket.emit('smoke');
+    if (event.key === 'a' && event.type === 'keydown' && INPUTS.indexOf(event.target.tagName) == -1) {
+            socket.emit('smoke');
     }
 });
 
@@ -151,7 +151,7 @@ $('#sousin').on('click', function () {
 //let textcolor = "rgb(180,104,100)";
 //let textcolor = "rgb(64,26,36)";
 //let textcolor = "rgb(72,58,64)";
-let textcolor = "rgb(88,106,76)";
+let textcolor = "rgb(111,128,67)";
 //let textcolor = "rgb(176,104,76)";
 let textfont = '40px misaki2';
 let margin = 60;
@@ -414,38 +414,6 @@ let WalkFrameChanger = function (player) {
 //------------------------------------
 //       コントローラー
 //------------------------------------
-/*
-let LKey = function (event) {
-    if (event === 'down') {
-        movement.right = false;
-        movement.left = true;
-        isMove = true;
-    } else {
-        movement.right = false;
-        movement.left = false;
-        isMove = false;
-    }
-    socket.emit('movement', movement, isMove);
-}
-let RKey = function (event) {
-    if (event === 'down') {
-        movement.right = true;
-        movement.left = false;
-        isMove = true;
-    } else {
-        movement.right = false;
-        movement.left = false;
-        isMove = false;
-    }
-    socket.emit('movement', movement, isMove);
-}
-let AKey = function () {
-    socket.emit('smoke');
-}
-
-let BKey = function () {
-}
-*/
 
 const ua = navigator.userAgent.toLowerCase();
 const isSP = /iphone|ipod|ipad|android/.test(ua);
@@ -458,7 +426,6 @@ const eventLeave = isSP ? 'touchmove' : 'mouseleave';
 
 L.addEventListener(eventStart, e => {
     e.preventDefault();
-    L.classList.add('active');
     movement.right = false;
     movement.left = true;
     isMove = true;
@@ -467,7 +434,6 @@ L.addEventListener(eventStart, e => {
 
 L.addEventListener(eventEnd, e => {
     e.preventDefault();
-    L.classList.remove('active');
     movement.right = false;
     movement.left = false;
     isMove = false;
@@ -479,7 +445,6 @@ L.addEventListener(eventLeave, e => {
     let el;
     el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : L;
     if (!isSP || el !== L) {
-        L.classList.remove('active');
         movement.right = false;
         movement.left = false;
         isMove = false;
@@ -489,7 +454,6 @@ L.addEventListener(eventLeave, e => {
 
 R.addEventListener(eventStart, e => {
     e.preventDefault();
-    R.classList.add('active');
     movement.right = true;
     movement.left = false;
     isMove = true;
@@ -498,7 +462,6 @@ R.addEventListener(eventStart, e => {
 
 R.addEventListener(eventEnd, e => {
     e.preventDefault();
-    R.classList.remove('active');
     movement.right = false;
     movement.left = false;
     isMove = false;
@@ -510,7 +473,6 @@ R.addEventListener(eventLeave, e => {
     let el;
     el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : R;
     if (!isSP || el !== R) {
-        R.classList.remove('active');
         movement.right = false;
         movement.left = false;
         isMove = false;

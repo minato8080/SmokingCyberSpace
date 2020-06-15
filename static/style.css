@@ -5,7 +5,7 @@
     src: url('/static/misaki_gothic_2nd.ttf') format('truetype');
 }
 body {
-    background-color: rgb(52,12,15);
+    background-color: rgb(62,12,15);
     font-family: misaki2;
     overflow: hidden;
     -webkit-touch-callout: none;
@@ -32,19 +32,17 @@ input:-webkit-autofill {
     width: 200px;
     height: 60px;
     object-fit: contain;
-    color: black;
+    color: rgb(33,43,23);
     outline: none;
     background-color: rgb(88,104,76);
 }
+::placeholder {
+    color: rgb(53,63,43);
+}
 #start-button {
-    font-family: misaki2;
     font-size: 60px;
     display: inline-block;
     vertical-align: top;
-    color: rgb(226,192,132);
-    background-color: rgb(23,23,23);
-    padding: 10px 5px 5px 10px;
-    outline: none;
 }
 
 
@@ -55,106 +53,163 @@ input:-webkit-autofill {
     font-family: misaki2;
     font-size: 30px;
     width: 100%;
-    height: 37px;
+    height: 38.5px;
     object-fit: contain;
-    color: black;
+    color: rgb(33,43,23);
     background-color: rgb(88,104,76);
     outline: none;
-}
-::placeholder {
-    color: rgb(53,63,43);
 }
 textarea:focus {
     outline: none;
 }
 #sousin {
-    font-family: misaki2;
     font-size: 30px;
-    display: inline-block;
     vertical-align: top;
     z-index: 1;
     position: absolute;
     top: 0;
     right: 0;
-    color: rgb(226,192,132);
-    background-color: rgb(23,23,23);
-    outline: none;
 }
 
+@media only screen and (max-width: 896px) {
+    .clear {
+        position: absolute;
+        top: 38px;
+        width: 100%;
+        height: 36%;
+        text-align: center;
+    }
+    .border {
+        border: 70px solid rgb(23,23,23);
+        height: 100%;
+        object-fit: fill;
+        border-radius: 10px;
+    }
+    .title {
+        position:relative;
+        top:-70px;
+        color:rgba(53, 50, 32, 0.80);
 
-#canvas-2d {
-    width: 300%;
-    margin: 0 -100%;
-    text-align: center;
-    height: 60%;
-    object-fit: contain;
-    object-position: top;
+    }
+    #canvas-parerent {
+        width: 75%;
+        height: 75%;
+        position: absolute;
+        top: 100px;
+        left: 70px;
+    }
+    .controler {
+        text-align: center;
+        position: relative;
+        left: -20px;
+        top: -50px;
+        object-fit: contain;
+    }
 }
-/*
+@media only screen and (min-width: 897px) {
+    .title {
+        display:none;
+    }
+    .controler {
+        text-align: center;
+        position: relative;
+        left: -20px;
+        top: 40px;
+        object-fit: contain;
+    }
+}
+
+    #canvas-2d {
+        width: 300%;
+        margin: 0 -100%;
+        text-align: center;
+        height: 50%;
+        object-fit: contain;
+        object-position: top;
+    }
+
+    /*
 #controler {
     height: 30%;
     text-align: center;
     vertical-align: top;
     object-fit: contain;
 }*/
-.box {
-    font-family: misaki2;
-    font-size: 60px;
-    display: inline-block;
-    vertical-align: top;
-    color: rgb(88,104,76);
-    background-color: rgb(23,23,23);
-    outline: none;
-    object-fit: contain;
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
-    border-radius: 6px;
-    top: 5px;
-}
-.AB {
-    position: relative;
-    left:54px;
-    top:20px;
-    padding:5px 15px 0px 25px;
-}
-#up {
-    padding: 2px 0px 0px 5px;
-    position: relative;
-    left: -99px;
-    top: 7px;
-}
-#left {
-    padding: 2px 0px 0px 10px;
-    position: relative;
-    left: -45px;
-}
-#right {
-    padding: 2px 0px 0px 10px;
-    position: relative;
-    left: 10px;
-    padding: 2px 0px 0px 10px;
-}
-#down {
-    padding: 2px 0px 0px 5px;
-    position: relative;
-    left: -20px;
-    top: -1px;
-}
-#A {
-    position: relative;
-    top: -40px;
-}
-.selsta {
-    font-family: misaki2;
-    font-size: 20px;
-    display: inline-block;
-    vertical-align: top;
-    color: rgb(88,104,76);
-    background-color: rgb(23,23,23);
-    outline: none;
-    object-fit: contain;
-    text-shadow: 0.6px 0.6px 0.6px rgba(255, 255, 255, 0.7);
-    border-radius: 6px;
-    position: relative;
-    top: 30px;
-}
+    .materialbutton {
+        display: inline-block;
+        font-family: misaki2;
+        padding: 4px 0px 0px 8px;
+        color: transparent;
+        background-color: rgb(23,23,23);
+        text-shadow: -2px -2px 1.5px rgba(60,50,20,0.4), 0px 0px 0.7px rgb(226,192,152),-1px -0px 1.5px rgba(60,50,40,0.8),0px -1px 1.5px rgba(60,50,40,0.8), -1.7px -1.7px 0.7px white,-1.7px 0px 1px white,0px -1.7px 1px white;
+        outline: none;
+        box-shadow: 1.7px 1.7px 1.5px black, -1px -1px 1.5px rgb(60,50,40),-1px -0px 1.5px rgb(60,50,40),0px -1px 1.5px rgb(60,50,40), -1.7px -1.7px 0.7px rgb(255, 200,200),-1.7px 0px 1px rgb(255, 200,200),0px -1.7px 1px rgb(255, 200,200);
+    }
+
+    .Tkey {
+        font-size: 60px;
+    }
+
+    .AB {
+        font-size: 60px;
+        padding: 5px 15px 0px 25px;
+        position: relative;
+    }
+
+    .SelSta {
+        font-size: 15px;
+        display: inline-block;
+        vertical-align: top;
+        outline: none;
+        object-fit: contain;
+        position: relative;
+        left: 10px;
+        top: 20px;
+        padding: 0px 2px 0px 4px;
+    }
+
+    #firstline {
+        position: relative;
+    }
+
+    #secondline {
+        position: relative;
+    }
+
+
+    #up {
+        padding: 5px 0px 0px 5px;
+        position: relative;
+        top: -2px;
+    }
+
+    #down {
+        padding: 5px 0px 0px 5px;
+        position: relative;
+        top: 0px;
+    }
+
+    #left {
+        padding: 5px 0px 0px 10px;
+        position: relative;
+        left: 4px;
+    }
+
+    #right {
+        padding: 5px 0px 0px 10px;
+        position: relative;
+        left: -4px;
+    }
+
+
+    #A {
+        position: relative;
+        left: 120px;
+        top: 10px;
+    }
+
+    #B {
+        position: relative;
+        top: 20px;
+    }
     /*<img id="pixer" src="/static/pxmeasure.png" style="display: none;">*/
