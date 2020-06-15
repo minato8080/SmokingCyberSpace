@@ -6,6 +6,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/style.css" />
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body style="display: flex; flex-direction: column; width: 100%; height: 100%; margin: 0;">
     <div style="flex: 1 1; position: relative; overflow:hidden;">
@@ -19,7 +21,7 @@
         <form id="message_form">
             <input id="input_msg" maxlength="54" autocomplete="off" />
         </form>
-        <div id="canvas-parerent"">
+        <div id="canvas-parerent" ">
             <canvas id="canvas-2d" width="3500" height="960"></canvas>
         </div>
         <div class="clear">
@@ -37,12 +39,13 @@
                     <button id="B" class="AB materialbutton AB">B</button>
                 </div>
                 <div id="thirdline">
-                    <button class="SelSta materialbutton">select</button>
-                    <button class="SelSta materialbutton">start</button>
+                    <button id="select"class="SelSta materialbutton">select</button>
+                    <button id="start" class="SelSta materialbutton">start</button>
                 </div>
             </div>
         </div>
     </div>
+    <div id="youtube"></div>
     <img id="player-image" src="/static/masita.png" style="display: none;">
     <img id="map-image" src="/static/map.png" style="display: none;">
     <img id="map-image-z1" src="/static/map-z1.png" style="display: none;">
@@ -50,10 +53,5 @@
     <img id="middle" src="/static/chatbox-middle-500.png" style="display: none;">
     <img id="under" src="/static/chatbox-under-500.png" style="display: none;">
     <script src="/static/game.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('img[usemap]').rwdImageMaps();
-        });
-    </script>
 </body>
 </html>

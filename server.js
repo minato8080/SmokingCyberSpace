@@ -135,6 +135,10 @@ class Player extends GameObject {
 
 //let bullets = {};
 
+let youtubekey;
+let requestlist = [];
+const youtubeadd = 'https://www.youtube.com/watch?v=';
+
 io.on('connection', function (socket) {
     let player = null;
     socket.on('game-start', (config) => {
@@ -143,6 +147,7 @@ io.on('connection', function (socket) {
             nickname: config.nickname,
         });
         players[player.id] = player;
+        io.sockets.emit('musicresponse', requestlist);
         //さんが入室しました。
         /*fs.writeFile("log.txt", LogWriter(player) + '\u3055\u3093\u304c\u5165\u5ba4\u3057\u307e\u3057\u305f\u3002' + '\n', options, (err) => {
             if (err) { console.log(err); throw err;}
@@ -150,6 +155,7 @@ io.on('connection', function (socket) {
     });
     //------------------------------------
     //ユーザーアクション
+
     socket.on('movement', function (movement,isMove) {
         if (!player) { return; }
         if (!player.isSmokeAction) {
@@ -163,28 +169,46 @@ io.on('connection', function (socket) {
         }
     });
     socket.on('smoke', function () {
-        if (!player || player.isSmoking) { return; }
-        player.movement.right = false;
-        player.movement.left = false;
-        player.isMove = false;
-        player.isSmokeAction = true;
-        player.isSmoking = true;
-        player.smokeActionCountDown = 6*fps;
+        if (!player) { return; }
+        if (player.isSmoking) {
+            player.smokingFrame = 1;
+        } else {
+            player.movement.right = false;
+            player.movement.left = false;
+            player.isMove = false;
+            player.isSmokeAction = true;
+            player.isSmoking = true;
+            player.smokeActionCountDown = 6 * fps;
+        }
     });
-    
+    socket.on('smokeend', function () {
+        if (!player) { return; }
+        else if (player.isSmoking) {
+            player.smokeActionCountDown = 0;
+            player.smokingFrame = 0;
+            player.isSmoking = false;
+        }
+    });
     //チャット処理
     socket.on('message', function (msg) {
-        //console.log('message: ' + msg);
         player.msg = msg;
-        player.msgCountDown = 30*fps;
-        if(msg !== '')fs.writeFile("log.txt", LogWriter(player) + msg + '\n', options, (err) => {
+        player.msgCountDown = 30 * fps;
+        if (msg !== '') fs.writeFile("log.txt", LogWriter(player) + msg + '\n', options, (err) => {
             if (err) {
                 console.log(err)
                 throw err
             }
         });
-
-        //io.emit('message', msg);
+    });
+    socket.on('musicrequest', function (address) {
+        let end = address.indexOf("&");
+        if (end > 0) {
+            youtubekey = address.substring(youtubeadd.length, end);
+        } else {
+            youtubekey = address.substring(youtubeadd.length);
+        }
+        requestlist.push(youtubekey);
+        io.sockets.emit('musicresponse', requestlist);
     });
     socket.on('disconnect', () => {
         if (!player) { return; }
@@ -225,13 +249,16 @@ setInterval(() => {
             if (player.smokeActionCountDown === 0) {
                 player.isSmokeAction = false;
                 player.smokeActionFrame = 0;
-                player.smokingCountDown = 40*fps;
+                player.smokingCountDown = 60*fps;
             }
         }
         if (player.smokingCountDown > 0) {
             player.smokingCountDown--;
             if (player.smokingCountDown % 6 === 0) player.smokingFrame++;
-            if (player.smokingCountDown === 0) player.isSmoking = false;
+            if (player.smokingCountDown === 0) {
+                player.isSmoking = false;
+                player.smokingFrame = 0;
+            }
         }
     });
     /*

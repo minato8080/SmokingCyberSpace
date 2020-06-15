@@ -60,6 +60,11 @@ $(document).on('keydown keyup', (event) => {
     }
 });
 
+
+//------------------------------------
+//             画面描画
+//------------------------------------
+
 socket.on('state', function (players, ) {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -122,24 +127,30 @@ socket.on('dead', () => {
 
 
 
-//---------------------------------
-//         チャット関連
-//---------------------------------
-
 
 //----------------------------------
 //          チャットI/O
+//----------------------------------
 
+const youtubeadd = 'https://www.youtube.com/watch?v=';
+let msg;
 $(function () {
     $('#message_form').submit(function () {
-
         socket.emit('message', $('#input_msg').val());
+        msg = $('#input_msg').val();
+        if (msg.indexOf(youtubeadd) === 0) {
+            socket.emit('musicrequest', msg);
+        }
         $('#input_msg').val('');
         return false;
     });
 });
 $('#sousin').on('click', function () {
     socket.emit('message', $('#input_msg').val());
+    msg = $('#input_msg').val();
+    if (msg.indexOf(youtubeadd) === 0) {
+        socket.emit('musicrequest', msg);
+    }
     $('#input_msg').val('');
     return false;
 });
@@ -148,9 +159,7 @@ $('#sousin').on('click', function () {
 //          チャット描画
 //----------------------------------
 
-//let textcolor = "rgb(180,104,100)";
-//let textcolor = "rgb(64,26,36)";
-//let textcolor = "rgb(72,58,64)";
+
 let textcolor = "rgb(111,128,67)";
 //let textcolor = "rgb(176,104,76)";
 let textfont = '40px misaki2';
@@ -406,13 +415,51 @@ let WalkFrameChanger = function (player) {
     }
 }
 
+//-----------------------------------
+//         MusicPlayer
+//-----------------------------------
 
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+let firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+let ytPlayer;
+let playList = [];
+let nextNumber = 0;
+let isPause = false;
+let isPlay = false;
+socket.on('musicresponse', function (list) {
+    playList = list;
+    console.log(list);
+});
 
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('youtube', {
+        height: '0',
+        width: '0',        
+    });
+}
 
-
-
+$('#start').click(function () {
+        ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+        nextNumber++
+    if (playList.length === nextNumber) {
+            nextNumber=0;
+    }
+    isPlay = true;
+});
+$('#select').click(function () {
+    if (isPause) {
+        ytPlayer.playVideo();
+        isPause = false;
+        isPlay = true;
+    }else if (isPlay) {
+        ytPlayer.pauseVideo();
+        isPause = true;
+    }
+});
 //------------------------------------
-//       コントローラー
+//       コントローラーI/O
 //------------------------------------
 
 const ua = navigator.userAgent.toLowerCase();
@@ -423,63 +470,69 @@ const A = document.getElementById('A');
 const eventStart = isSP ? 'touchstart' : 'mousedown';
 const eventEnd = isSP ? 'touchend' : 'mouseup';
 const eventLeave = isSP ? 'touchmove' : 'mouseleave';
+{  //イベントハンドラ
+    L.addEventListener(eventStart, e => {
+        e.preventDefault();
+        movement.right = false;
+        movement.left = true;
+        isMove = true;
+        socket.emit('movement', movement, isMove);
+    })
 
-L.addEventListener(eventStart, e => {
-    e.preventDefault();
-    movement.right = false;
-    movement.left = true;
-    isMove = true;
-    socket.emit('movement', movement, isMove);
-})
-
-L.addEventListener(eventEnd, e => {
-    e.preventDefault();
-    movement.right = false;
-    movement.left = false;
-    isMove = false;
-    socket.emit('movement', movement, isMove);
-});
-
-L.addEventListener(eventLeave, e => {
-    e.preventDefault();
-    let el;
-    el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : L;
-    if (!isSP || el !== L) {
+    L.addEventListener(eventEnd, e => {
+        e.preventDefault();
         movement.right = false;
         movement.left = false;
         isMove = false;
         socket.emit('movement', movement, isMove);
-    }
-});
+    });
 
-R.addEventListener(eventStart, e => {
-    e.preventDefault();
-    movement.right = true;
-    movement.left = false;
-    isMove = true;
-    socket.emit('movement', movement, isMove);
-})
+    L.addEventListener(eventLeave, e => {
+        e.preventDefault();
+        let el;
+        el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : L;
+        if (!isSP || el !== L) {
+            movement.right = false;
+            movement.left = false;
+            isMove = false;
+            socket.emit('movement', movement, isMove);
+        }
+    });
 
-R.addEventListener(eventEnd, e => {
-    e.preventDefault();
-    movement.right = false;
-    movement.left = false;
-    isMove = false;
-    socket.emit('movement', movement, isMove);
-});
+    R.addEventListener(eventStart, e => {
+        e.preventDefault();
+        movement.right = true;
+        movement.left = false;
+        isMove = true;
+        socket.emit('movement', movement, isMove);
+    })
 
-R.addEventListener(eventLeave, e => {
-    e.preventDefault();
-    let el;
-    el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : R;
-    if (!isSP || el !== R) {
+    R.addEventListener(eventEnd, e => {
+        e.preventDefault();
         movement.right = false;
         movement.left = false;
         isMove = false;
         socket.emit('movement', movement, isMove);
-    }
-});
-A.addEventListener(eventStart, e => {
-    e.preventDefault();
-    socket.emit('smoke');
-})
+    });
+
+    R.addEventListener(eventLeave, e => {
+        e.preventDefault();
+        let el;
+        el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : R;
+        if (!isSP || el !== R) {
+            movement.right = false;
+            movement.left = false;
+            isMove = false;
+            socket.emit('movement', movement, isMove);
+        }
+    });
+    A.addEventListener(eventStart, e => {
+        e.preventDefault();
+        socket.emit('smoke');
+    })
+
+    B.addEventListener(eventStart, e => {
+        e.preventDefault();
+        socket.emit('smokeend');
+    })
+}
