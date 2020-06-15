@@ -5,7 +5,7 @@
     src: url('/static/misaki_gothic_2nd.ttf') format('truetype');
 }
 body {
-    background-color: rgb(62,12,15);
+    background-color: rgb(33,33,33);
     font-family: misaki2;
     overflow: hidden;
     -webkit-touch-callout: none;
@@ -24,7 +24,7 @@ input:-webkit-autofill {
     align-items: center;
     position: absolute;
     z-index: 10;
-    background-color: rgb(62,12,15);
+    background-color: rgb(33,33,33);
 }
 #nickname {
     font-family: misaki2;
@@ -79,18 +79,20 @@ textarea:focus {
         height: 40%;
         text-align: center;
     }
+
     .border {
         border: 50px solid rgb(23,23,23);
         height: 100%;
         object-fit: fill;
         border-radius: 10px;
     }
-    .title {
-        position:relative;
-        top:-60px;
-        color:rgb(63, 60, 42);
 
+    .title {
+        position: relative;
+        top: -60px;
+        color: rgb(63, 60, 42);
     }
+
     #canvas-parerent {
         width: 83%;
         height: 83%;
@@ -98,6 +100,7 @@ textarea:focus {
         top: 80px;
         left: 40px;
     }
+
     .controler {
         text-align: center;
         position: relative;
@@ -105,6 +108,7 @@ textarea:focus {
         top: -60px;
         object-fit: contain;
     }
+
 }
 @media only screen and (min-width: 897px) {
     .title {
@@ -156,17 +160,17 @@ textarea:focus {
         position: relative;
     }
 
-    .SelSta {
-        font-size: 15px;
-        display: inline-block;
-        vertical-align: top;
-        outline: none;
-        object-fit: contain;
-        position: relative;
-        left: 10px;
-        top: 20px;
-        padding: 0px 4px 0px 6px;
-    }
+.SelSta {
+    font-size: 15px;
+    display: inline-block;
+    vertical-align: top;
+    outline: none;
+    object-fit: contain;
+    position: relative;
+    left: 10px;
+    top: 5px;
+    padding: 0px 4px 0px 6px;
+}
 
     #firstline {
         position: relative;
@@ -205,7 +209,7 @@ textarea:focus {
     #A {
         position: relative;
         left: 120px;
-        top: 5px;
+        top: 10px;
     }
 
     #B {
