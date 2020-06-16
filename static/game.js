@@ -528,7 +528,8 @@ let MobileStartPush = function () {
 
 $('#start').click(function () {
     if (!isSmartPhone()) {
-        nextNumber++
+        if (!isPause) ytPlayer.pauseVideo();
+        nextNumber++;
         if (playList.length < nextNumber) {
             nextNumber = 0;
         }
