@@ -520,7 +520,7 @@ let MobileStartPush = function () {
 }
 
 $('#start').click(function () {
-    if (isSmartPhone) {
+    if (isSmartPhone()) {
         MobileStartPush();
         return;
     }
@@ -533,8 +533,9 @@ $('#start').click(function () {
     console.log(2);
     return;
 });
+
 $('#select').click(function () {
-    if (isSmartPhone) {
+    if (isSmartPhone()) {
         return;
     }
     if (isPause) {
