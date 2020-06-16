@@ -433,7 +433,7 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 let ytPlayer;
 let playList = [];
 let nextNumber = -1;
-let isPlay = false;
+let isDone = false;
 let isPause = false;
 
 let isSmartPhone = function(){
@@ -508,11 +508,11 @@ $('#start').click(function () {
         nextNumber = 0;
     }
     ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-    ytPlayer.playVideo();
-   /* if (ytPlayer.isMuted()) {
-        ytPlayer.unMute();
-    }*/
-    isPlay = true;
+    if (isSmartPhone) {
+        ytPlayer.pauseVideo();
+        ytPlayer.playVideo();
+    }
+    isDone = true;
     console.log(2);
 });
 $('#select').click(function () {
@@ -521,7 +521,7 @@ $('#select').click(function () {
         isPause = false;
         return;
     }
-    if (isPlay) {
+    if (isDone) {
         ytPlayer.pauseVideo();
         console.log(4);
         isPause = true;
