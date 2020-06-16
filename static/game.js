@@ -428,6 +428,7 @@ let playList = [];
 let nextNumber = -1;
 let isPause = false;
 let isPlay = false;
+
 socket.on('musicresponse', function (list) {
     playList = list;
     console.log(list);
@@ -441,6 +442,25 @@ function onYouTubeIframeAPIReady() {
             'onReady': onYouTubePlayerReady,
             'onStateChange': onPlayerStateChange
         } 
+    });
+    console.log("iframe api ready"); 
+}
+
+function createYouTubePlayer() {
+    if (!YT.loaded) {
+        console.log('YouTube Player API is still loading.  Retrying...');
+        setInterval(createYouTubePlayer, 1000);
+        return;
+    } // if (!YT.loaded)
+    console.log('YouTube Player API is loaded.  Creating player instance now.');
+
+    ytPlayer = new YT.Player('youtube', {
+        height: '1',
+        width: '1',
+        events: {
+            'onReady': onYouTubePlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
     });
     console.log("iframe api ready"); 
 }
@@ -461,7 +481,7 @@ function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
         alert('finish');
         console.log("StateChange: " + newState);
-    }
+        }
 }
 $('#select').click(function () {
     if (isPause) {
