@@ -502,17 +502,42 @@ function onPlayerStateChange(event) {
     }
 }
 
+let step = 0;
+let MobileStartPush = function () {
+    if (isSmartPhone) {
+        switch (step) {
+            case 0: {
+                nextNumber++;
+                if (playList.length === nextNumber) {
+                    nextNumber = 0;
+                }
+                ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+                isDone = true;
+                step++;
+            } break;
+            case 1: {
+                ytPlayer.pauseVideo();
+                step++;
+            } break;
+            case 2: {
+                ytPlayer.playVideo();
+                step = 0;
+            } break;
+        }
+        if (step !== 2) {
+            setInterval(MobileStartPush(), 200);
+            return;
+        } return;        
+    }
+}
+
 $('#start').click(function () {
+    MobileStartPush();
     nextNumber++
     if (playList.length === nextNumber) {
         nextNumber = 0;
     }
     ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-    if (isSmartPhone) {
-        ytPlayer.pauseVideo();
-        ytPlayer.playVideo();
-        return;
-    }
     isDone = true;
     console.log(2);
     return;
