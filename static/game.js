@@ -504,28 +504,10 @@ function onPlayerStateChange(event) {
 
 let step = 0;
 let isSetUp = false;
-let MobileStartPush = function () {
+/*let MobileStartPush = function () {
     if (isSmartPhone()) {
-        if (!isSetUp) {
-            nextNumber++;
-            if (playList.length < nextNumber) {
-                nextNumber = 0;
-            }
-            ytPlayer.videoId = playList[nextNumber];
-            ytPlayer.pauseVideo();//?
-            isPause = true;
-            isDone = true;
-            isSetUp = true;
-        }
-        if(isSetUp){
-            ytPlayer.playVideo();
-            isSetUp = false;
-            isPause = false;
-        }
-
-    }
 }
-
+*/
 $('#start').click(function () {
     if (!isSmartPhone()) {
         if (!isPause) ytPlayer.pauseVideo();
@@ -537,8 +519,21 @@ $('#start').click(function () {
         isDone = true;
         console.log(2);
         return;
+    } else {
+        if (!isSetUp) {
+            nextNumber++;
+            if (playList.length < nextNumber) {
+                nextNumber = 0;
+            }
+            ytPlayer.videoId = playList[nextNumber];
+            isDone = true;
+            isSetUp = true;
+        }
+        if (isSetUp) {
+            ytPlayer.playVideo();
+            isSetUp = false;
+        }
     }
-    MobileStartPush();
 });
 
 $('#select').click(function () {
