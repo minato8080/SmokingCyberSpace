@@ -511,14 +511,14 @@ let MobileStartPush = function () {
                 if (playList.length === nextNumber) {
                     nextNumber = 0;
                 }
-                ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+                ytPlayer.videoId = playList[nextNumber];
                 isDone = true;
                 step++;
             } break;
             case 1: {
                 ytPlayer.playVideo();
                 step = 0;
-            }
+            } break;
             /*
             case 1: {
                 ytPlayer.pauseVideo();
@@ -530,7 +530,7 @@ let MobileStartPush = function () {
             } break;*/
         }
         if (step !== 1) {
-            setInterval(MobileStartPush(), 500);
+            setInterval(MobileStartPush(), 300);
             return;
         } return;
     }
