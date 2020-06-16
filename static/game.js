@@ -479,8 +479,13 @@ function onYouTubePlayerReady(event) {
 }
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
-        ytPlayer.pauseVideo();
-        console.log("End");
+        nextNumber++
+        if (playList.length === nextNumber) {
+            nextNumber = 0;
+        }
+        ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+        ytPlayer.playVideo();
+        isPlay = true;
     }
 }
 

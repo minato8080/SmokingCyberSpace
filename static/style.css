@@ -217,3 +217,8 @@ textarea:focus {
         top: 15px;
     }
     /*<img id="pixer" src="/static/pxmeasure.png" style="display: none;">*/
+
+    #video{
+        position:relative;
+        top:100px;
+    }
