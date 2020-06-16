@@ -505,39 +505,42 @@ function onPlayerStateChange(event) {
 let step = 0;
 let isSetUp = false;
 let MobileStartPush = function () {
-    if (!isSetUp) {
-        nextNumber++;
-        if (playList.length < nextNumber) {
-            nextNumber = 0;
+    if (isSmartPhone()) {
+        if (!isSetUp) {
+            nextNumber++;
+            if (playList.length < nextNumber) {
+                nextNumber = 0;
+            }
+            ytPlayer.videoId = playList[nextNumber];
+            ytPlayer.pauseVideo();//?
+            isPause = true;
+            isDone = true;
+            isSetUp = true;
         }
-        ytPlayer.videoId = playList[nextNumber];
-        isDone = true;
-        isSetUp = true;
-    } else {
-        ytPlayer.playVideo();
-        isSetUp = false;
+        if(isSetUp){
+            ytPlayer.playVideo();
+            isSetUp = false;
+            isPause = false;
+        }
+
     }
 }
 
 $('#start').click(function () {
-    if (isSmartPhone()) {
-        MobileStartPush();
+    if (!isSmartPhone()) {
+        nextNumber++
+        if (playList.length < nextNumber) {
+            nextNumber = 0;
+        }
+        ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+        isDone = true;
+        console.log(2);
         return;
     }
-    nextNumber++
-    if (playList.length < nextNumber) {
-        nextNumber = 0;
-    }
-    ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-    isDone = true;
-    console.log(2);
-    return;
+    MobileStartPush();
 });
 
 $('#select').click(function () {
-    if (isSmartPhone()) {
-        return;
-    }
     if (isPause) {
         ytPlayer.playVideo();
         isPause = false;
