@@ -530,6 +530,11 @@ $('#start').click(function () {
             return;
         }else if (isDone) {
             ytPlayer.pauseVideo();
+            nextNumber++;
+            if (playList.length < nextNumber) {
+                nextNumber = 0;
+            }
+            ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
             console.log(4);
             isPause = true;
             return;
