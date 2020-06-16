@@ -516,25 +516,30 @@ let MobileStartPush = function () {
                 step++;
             } break;
             case 1: {
+                ytPlayer.playVideo();
+                step = 0;
+            }
+            /*
+            case 1: {
                 ytPlayer.pauseVideo();
                 step++;
             } break;
             case 2: {
                 ytPlayer.playVideo();
                 step = 0;
-            } break;
+            } break;*/
         }
-        if (step !== 2) {
-            setInterval(MobileStartPush(), 200);
+        if (step !== 1) {
+            setInterval(MobileStartPush(), 500);
             return;
-        } return;        
+        } return;
     }
 }
 
 $('#start').click(function () {
     MobileStartPush();
     nextNumber++
-    if (playList.length === nextNumber) {
+    if (playList.length < nextNumber) {
         nextNumber = 0;
     }
     ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
