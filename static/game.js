@@ -485,9 +485,9 @@ function createYouTubePlayer() {
 function onYouTubePlayerReady(event) {
     console.log("player ready");
     //スマホでインライン再生は未解決
-    /*if (isSmartPhone) {
+    if (isSmartPhone) {
         ytPlayer.playsinline = 0;
-    }*/
+    }
 }
 
 function onPlayerStateChange(event) {
