@@ -435,14 +435,16 @@ socket.on('musicresponse', function (list) {
 
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('youtube', {
-        height: '1px',
-        width: '1px',
+        height: '1',
+        width: '1',
         events: {
-            'onReady': onYouTubePlayerReady
+            'onReady': onYouTubePlayerReady,
+            'onStateChange': onPlayerStateChange
         } 
     });
     console.log("iframe api ready"); 
 }
+
 function onYouTubePlayerReady(event) {
     console.log("player ready");
 }
@@ -455,6 +457,12 @@ $('#start').click(function () {
     isPlay = true;
     console.log(2);
 });
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.ENDED) {
+        alert('finish');
+        console.log("StateChange: " + newState);
+    }
+}
 $('#select').click(function () {
     if (isPause) {
         ytPlayer.playVideo();
