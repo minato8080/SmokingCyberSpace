@@ -436,8 +436,9 @@ socket.on('musicresponse', function (list) {
 
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('youtube', {
-        height: '1',
-        width: '1',
+        height: '0',
+        width: '0',
+        playsinline: 1,
         events: {
             'onReady': onYouTubePlayerReady,
             'onStateChange': onPlayerStateChange
@@ -455,8 +456,9 @@ function createYouTubePlayer() {
     console.log('YouTube Player API is loaded.  Creating player instance now.');
 
     ytPlayer = new YT.Player('youtube', {
-        height: '1',
-        width: '1',
+        height: '0',
+        width: '0',
+        playsinline: 1,
         events: {
             'onReady': onYouTubePlayerReady,
             'onStateChange': onPlayerStateChange
@@ -479,9 +481,10 @@ $('#start').click(function () {
 });
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
-        alert('finish');
-        console.log("StateChange: " + newState);
-        }
+        ytPlayer.pauseVideo();
+        isPause = true;
+        console.log("finish ");
+    }
 }
 $('#select').click(function () {
     if (isPause) {
