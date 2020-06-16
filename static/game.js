@@ -131,30 +131,37 @@ socket.on('dead', () => {
 //----------------------------------
 //          チャットI/O
 //----------------------------------
+let videoId;
 
-const youtubeadd = 'https://www.youtube.com/watch?v=';
-let msg;
 $(function () {
     $('#message_form').submit(function () {
         socket.emit('message', $('#input_msg').val());
-        msg = $('#input_msg').val();
-        if (msg.indexOf(youtubeadd) === 0) {
-            socket.emit('musicrequest', msg);
-        }
+        isMusicRequest($('#input_msg').val());
         $('#input_msg').val('');
         return false;
     });
 });
 $('#sousin').on('click', function () {
     socket.emit('message', $('#input_msg').val());
-    msg = $('#input_msg').val();
-    if (msg.indexOf(youtubeadd) === 0) {
-        socket.emit('musicrequest', msg);
-    }
+    isMusicRequest($('#input_msg').val());
     $('#input_msg').val('');
     return false;
 });
 
+let isMusicRequest = function (msg) {
+    if (msg.indexOf('v=') !== -1) {
+        videoId = msg.split('v=')[1];
+        // 正しいurlの形式だったとき
+        if (videoId) {
+            // &=クエリパラーメターがついていることがあるので取り除く
+            let ampersandPosition = videoId.indexOf('&');
+            if (ampersandPosition != -1) {
+                videoId = videoId.substring(0, ampersandPosition);
+            }
+            socket.emit('musicrequest', videoId);
+        }
+    }
+}
 //----------------------------------
 //          チャット描画
 //----------------------------------
@@ -444,15 +451,16 @@ function onYouTubeIframeAPIReady() {
             'onStateChange': onPlayerStateChange
         } 
     });
-    console.log("iframe api ready"); 
+    console.log("iframe api ready");    
 }
 
+//インスタンス化されていなかったら再帰的に呼び出す 
 function createYouTubePlayer() {
     if (!YT.loaded) {
         console.log('YouTube Player API is still loading.  Retrying...');
         setInterval(createYouTubePlayer, 1000);
         return;
-    } // if (!YT.loaded)
+    }
     console.log('YouTube Player API is loaded.  Creating player instance now.');
 
     ytPlayer = new YT.Player('youtube', {
@@ -470,6 +478,14 @@ function createYouTubePlayer() {
 function onYouTubePlayerReady(event) {
     console.log("player ready");
 }
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.ENDED) {
+        ytPlayer.pauseVideo();
+        isPause = true;
+        console.log("End");
+    }
+}
+
 $('#start').click(function () {
     nextNumber++
     if (playList.length === nextNumber) {
@@ -479,13 +495,6 @@ $('#start').click(function () {
     isPlay = true;
     console.log(2);
 });
-function onPlayerStateChange(event) {
-    if (event.data == YT.PlayerState.ENDED) {
-        ytPlayer.pauseVideo();
-        isPause = true;
-        console.log("finish ");
-    }
-}
 $('#select').click(function () {
     if (isPause) {
         ytPlayer.playVideo();

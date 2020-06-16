@@ -135,9 +135,7 @@ class Player extends GameObject {
 
 //let bullets = {};
 
-let youtubekey;
 let requestlist = [];
-const youtubeadd = 'https://www.youtube.com/watch?v=';
 
 io.on('connection', function (socket) {
     let player = null;
@@ -200,14 +198,8 @@ io.on('connection', function (socket) {
             }
         });
     });
-    socket.on('musicrequest', function (address) {
-        let end = address.indexOf("&");
-        if (end > 0) {
-            youtubekey = address.substring(youtubeadd.length, end);
-        } else {
-            youtubekey = address.substring(youtubeadd.length);
-        }
-        requestlist.push(youtubekey);
+    socket.on('musicrequest', function (videoId) {
+        requestlist.push(videoId);
         io.sockets.emit('musicresponse', requestlist);
     });
     socket.on('disconnect', () => {
