@@ -509,72 +509,63 @@ let isSetUp = false;
 }
 */
 $('#start').click(function () {
-    if (!isSmartPhone()) {
-        if (!isPause) ytPlayer.pauseVideo();
-        nextNumber++;
-        if (playList.length < nextNumber) {
-            nextNumber = 0;
-        }
-        ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-        isDone = true;
-        console.log(2);
-        return;
-    } else {
-        if (!isDone && playList.length!==0) {
-            ytPlayer.loadVideoById({ videoId: playList[0] });
-            isDone = true;
-            return;
-        }else if (isPause) {
-            ytPlayer.playVideo();
-            isPause = false;
-            return;
-        }else if (isDone) {
-            ytPlayer.pauseVideo();
+    if (playList.length !== 0) {
+        if (!isSmartPhone()) {
+            if (!isPause) ytPlayer.pauseVideo();
             nextNumber++;
             if (playList.length < nextNumber) {
                 nextNumber = 0;
             }
             ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-            console.log(4);
-            isPause = true;
-            return;
-        }/*
-        if (!isSetUp) {
-            nextNumber++;
-            if (playList.length < nextNumber) {
-                nextNumber = 0;
-            }
-            ytPlayer.videoId = playList[nextNumber];
             isDone = true;
-            isSetUp = true;
+            console.log(2);
+            return;
+        } else {
+            if (!isDone) {
+                nextNumber++;
+                if (playList.length < nextNumber) {
+                    nextNumber = 0;
+                }
+                ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+                isDone = true;
+                return;
+            } else if (isPause) {
+                ytPlayer.playVideo();
+                isPause = false;
+                return;
+            } else if (isDone) {
+                ytPlayer.pauseVideo();
+                console.log(4);
+                isPause = true;
+                isDone = false;
+                return;
+            }
         }
-        if (isSetUp) {
-            ytPlayer.playVideo();
-            isSetUp = false;
-        }*/
     }
 });
 
 $('#select').click(function () {
-    if (!isSmartPhone()) {
-        if (isPause) {
-            ytPlayer.playVideo();
-            isPause = false;
+    if (playList.length !== 0) {
+        if (!isSmartPhone()) {
+            if (isPause) {
+                ytPlayer.playVideo();
+                isPause = false;
+                return;
+            }
+            if (isDone) {
+                ytPlayer.pauseVideo();
+                console.log(4);
+                isPause = true;
+                return;
+            }
+        } else {
+            nextNumber++;
+            if (playList.length < nextNumber) {
+                nextNumber = 0;
+            }
+            ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
             return;
         }
-        if (isDone) {
-            ytPlayer.pauseVideo();
-            console.log(4);
-            isPause = true;
-            return;
-        }
-    } else if (isDone) {
-        nextNumber++;
-        if (playList.length < nextNumber) {
-            nextNumber = 0;
-        }
-        ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-        return;
     }
 });
 
