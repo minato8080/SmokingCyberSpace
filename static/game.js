@@ -503,41 +503,27 @@ function onPlayerStateChange(event) {
 }
 
 let step = 0;
+let isSetUp = false;
 let MobileStartPush = function () {
-    if (isSmartPhone) {
-        switch (step) {
-            case 0: {
-                nextNumber++;
-                if (playList.length === nextNumber) {
-                    nextNumber = 0;
-                }
-                ytPlayer.videoId = playList[nextNumber];
-                isDone = true;
-                step++;
-            } break;
-            case 1: {
-                ytPlayer.playVideo();
-                step = 0;
-            } break;
-            /*
-            case 1: {
-                ytPlayer.pauseVideo();
-                step++;
-            } break;
-            case 2: {
-                ytPlayer.playVideo();
-                step = 0;
-            } break;*/
+    if (!isSetUp) {
+        nextNumber++;
+        if (playList.length < nextNumber) {
+            nextNumber = 0;
         }
-        if (step !== 1) {
-            setInterval(MobileStartPush(), 300);
-            return;
-        } return;
+        ytPlayer.videoId = playList[nextNumber];
+        isDone = true;
+        isSetUp = true;
+    } else {
+        ytPlayer.playVideo();
+        isSetUp = false;
     }
 }
 
 $('#start').click(function () {
-    MobileStartPush();
+    if (isSmartPhone) {
+        MobileStartPush();
+        return;
+    }
     nextNumber++
     if (playList.length < nextNumber) {
         nextNumber = 0;
@@ -548,6 +534,9 @@ $('#start').click(function () {
     return;
 });
 $('#select').click(function () {
+    if (isSmartPhone) {
+        return;
+    }
     if (isPause) {
         ytPlayer.playVideo();
         isPause = false;
