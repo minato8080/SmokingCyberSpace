@@ -433,7 +433,6 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 let ytPlayer;
 let playList = [];
 let nextNumber = -1;
-let isPause = false;
 let isPlay = false;
 
 socket.on('musicresponse', function (list) {
@@ -481,7 +480,6 @@ function onYouTubePlayerReady(event) {
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
         ytPlayer.pauseVideo();
-        isPause = true;
         console.log("End");
     }
 }
@@ -492,19 +490,13 @@ $('#start').click(function () {
         nextNumber = 0;
     }
     ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+    ytPlayer.playVideo();
     isPlay = true;
     console.log(2);
 });
 $('#select').click(function () {
-    if (isPause) {
-        ytPlayer.playVideo();
-        isPause = false;
-        isPlay = true;
-        console.log(3);
-    }else if (isPlay) {
+    if (isPlay) {
         ytPlayer.pauseVideo();
-        isPause = true;
-
         console.log(4);
     }
 });
