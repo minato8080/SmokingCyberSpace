@@ -485,9 +485,9 @@ function createYouTubePlayer() {
 function onYouTubePlayerReady(event) {
     console.log("player ready");
     //スマホでインライン再生は未解決
-    if (isSmartPhone) {
+    /*if (isSmartPhone) {
         ytPlayer.playsinline = 0;
-    }
+    }*/
 }
 
 function onPlayerStateChange(event) {
@@ -498,7 +498,6 @@ function onPlayerStateChange(event) {
         }
         ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
         ytPlayer.playVideo();
-        isPlay = true;
     }
 }
 
@@ -509,6 +508,9 @@ $('#start').click(function () {
     }
     ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
     ytPlayer.playVideo();
+    if (ytPlayer.isMuted()) {
+        ytPlayer.unMute();
+    }
     isPlay = true;
     console.log(2);
 });
