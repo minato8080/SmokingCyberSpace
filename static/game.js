@@ -511,9 +511,11 @@ $('#start').click(function () {
     if (isSmartPhone) {
         ytPlayer.pauseVideo();
         ytPlayer.playVideo();
+        return;
     }
     isDone = true;
     console.log(2);
+    return;
 });
 $('#select').click(function () {
     if (isPause) {
