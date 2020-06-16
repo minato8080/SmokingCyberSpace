@@ -434,6 +434,7 @@ let ytPlayer;
 let playList = [];
 let nextNumber = -1;
 let isPlay = false;
+let isPause = false;
 
 let isSmartPhone = function(){
     if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
@@ -473,7 +474,7 @@ function createYouTubePlayer() {
     ytPlayer = new YT.Player('youtube', {
         height: '0',
         width: '0',
-        playsinline: 1,
+       // playsinline: 1,
         events: {
             'onReady': onYouTubePlayerReady,
             'onStateChange': onPlayerStateChange
@@ -485,9 +486,9 @@ function createYouTubePlayer() {
 function onYouTubePlayerReady(event) {
     console.log("player ready");
     //スマホでインライン再生は未解決
-    if (isSmartPhone) {
+    /*if (isSmartPhone) {
         ytPlayer.playsinline = 0;
-    }
+    }*/
 }
 
 function onPlayerStateChange(event) {
@@ -508,16 +509,22 @@ $('#start').click(function () {
     }
     ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
     ytPlayer.playVideo();
-    if (ytPlayer.isMuted()) {
+   /* if (ytPlayer.isMuted()) {
         ytPlayer.unMute();
-    }
+    }*/
     isPlay = true;
     console.log(2);
 });
 $('#select').click(function () {
+    if (isPause) {
+        ytPlayer.playVideo();
+        isPause = false;
+        return;
+    }
     if (isPlay) {
         ytPlayer.pauseVideo();
         console.log(4);
+        isPause = true;
     }
 });
 
