@@ -435,6 +435,14 @@ let playList = [];
 let nextNumber = -1;
 let isPlay = false;
 
+let isSmartPhone = function(){
+    if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 socket.on('musicresponse', function (list) {
     playList = list;
     console.log(list);
@@ -476,7 +484,12 @@ function createYouTubePlayer() {
 
 function onYouTubePlayerReady(event) {
     console.log("player ready");
+    //スマホでインライン再生は未解決
+    if (isSmartPhone) {
+        ytPlayer.playsinline = 0;
+    }
 }
+
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
         nextNumber++
