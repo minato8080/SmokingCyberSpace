@@ -139,16 +139,16 @@ textarea:focus {
     vertical-align: top;
     object-fit: contain;
 }*/
-    .materialbutton {
-        display: inline-block;
-        font-family: misaki2;
-        padding: 4px 0px 0px 8px;
-        color: transparent;
-        background-color: rgb(23,23,23);
-        text-shadow: -2px -2px 1.5px rgba(60,50,20,0.4), 0px 0px 0.7px rgb(226,192,152),-1px -0px 1.5px rgba(60,50,40,0.8),0px -1px 1.5px rgba(60,50,40,0.8), -1.7px -1.7px 0.7px white,-1.7px 0px 1px white,0px -1.7px 1px white;
-        outline: none;
-        box-shadow: 1.7px 1.7px 1.5px black, -1px -1px 1.5px rgb(60,50,40),-1px -0px 1.5px rgb(60,50,40),0px -1px 1.5px rgb(60,50,40), -1.7px -1.7px 0.7px rgb(255, 200,200),-1.7px 0px 1px rgb(255, 200,200),0px -1.7px 1px rgb(255, 200,200);
-    }
+.materialbutton {
+    display: inline-block;
+    font-family: misaki2;
+    padding: 4px 0px 0px 8px;
+    color: transparent;
+    background-color: rgb(23,23,23);
+    text-shadow: -2px -2px 1.5px rgba(60,50,20,0.4), 0px 0px 0.7px rgb(226,192,152),-1px -0px 1.5px rgba(60,50,40,0.8),0px -1px 1.5px rgba(60,50,40,0.8), -1.7px -1.7px 0.7px rgb(255,255,255),-1.7px 0px 1px rgb(255,255,255),0px -1.7px 1px rgb(255,255,255);
+    outline: none;
+    box-shadow: 1.7px 1.7px 1.5px rgb(0,0,0), -1px -1px 1.5px rgb(60,50,40),-1px -0px 1.5px rgb(60,50,40),0px -1px 1.5px rgb(60,50,40), -1.7px -1.7px 0.7px rgb(255, 200,200),-1.7px 0px 1px rgb(255, 200,200),0px -1.7px 1px rgb(255, 200,200);
+}
 
     .Tkey {
         font-size: 60px;

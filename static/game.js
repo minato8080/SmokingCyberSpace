@@ -425,7 +425,7 @@ let firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 let ytPlayer;
 let playList = [];
-let nextNumber = 0;
+let nextNumber = -1;
 let isPause = false;
 let isPlay = false;
 socket.on('musicresponse', function (list) {
@@ -435,29 +435,40 @@ socket.on('musicresponse', function (list) {
 
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player('youtube', {
-        height: '0',
-        width: '0',        
+        height: '1px',
+        width: '1px',
+        events: {
+            'onReady': onYouTubePlayerReady
+        } 
     });
+    console.log("iframe api ready"); 
 }
-
+function onYouTubePlayerReady(event) {
+    console.log("player ready");
+}
 $('#start').click(function () {
-        ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-        nextNumber++
+    nextNumber++
     if (playList.length === nextNumber) {
-            nextNumber=0;
+        nextNumber = 0;
     }
+    ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
     isPlay = true;
+    console.log(2);
 });
 $('#select').click(function () {
     if (isPause) {
         ytPlayer.playVideo();
         isPause = false;
         isPlay = true;
+        console.log(3);
     }else if (isPlay) {
         ytPlayer.pauseVideo();
         isPause = true;
+
+        console.log(4);
     }
 });
+
 //------------------------------------
 //       コントローラーI/O
 //------------------------------------
