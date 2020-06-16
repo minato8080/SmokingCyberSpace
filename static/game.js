@@ -520,6 +520,20 @@ $('#start').click(function () {
         console.log(2);
         return;
     } else {
+        if (!isDone && playList.length!==0) {
+            ytPlayer.loadVideoById({ videoId: playList[0] });
+            isDone = true;
+            return;
+        }else if (isPause) {
+            ytPlayer.playVideo();
+            isPause = false;
+            return;
+        }else if (isDone) {
+            ytPlayer.pauseVideo();
+            console.log(4);
+            isPause = true;
+            return;
+        }/*
         if (!isSetUp) {
             nextNumber++;
             if (playList.length < nextNumber) {
@@ -532,20 +546,30 @@ $('#start').click(function () {
         if (isSetUp) {
             ytPlayer.playVideo();
             isSetUp = false;
-        }
+        }*/
     }
 });
 
 $('#select').click(function () {
-    if (isPause) {
-        ytPlayer.playVideo();
-        isPause = false;
+    if (!isSmartPhone()) {
+        if (isPause) {
+            ytPlayer.playVideo();
+            isPause = false;
+            return;
+        }
+        if (isDone) {
+            ytPlayer.pauseVideo();
+            console.log(4);
+            isPause = true;
+            return;
+        }
+    } else if (isDone) {
+        nextNumber++;
+        if (playList.length < nextNumber) {
+            nextNumber = 0;
+        }
+        ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
         return;
-    }
-    if (isDone) {
-        ytPlayer.pauseVideo();
-        console.log(4);
-        isPause = true;
     }
 });
 
