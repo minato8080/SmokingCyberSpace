@@ -136,6 +136,7 @@ class Player extends GameObject {
 //let bullets = {};
 
 let requestlist = [];
+let whoserequest = [];
 
 io.on('connection', function (socket) {
     let player = null;
@@ -145,7 +146,7 @@ io.on('connection', function (socket) {
             nickname: config.nickname,
         });
         players[player.id] = player;
-        io.sockets.emit('musicresponse', requestlist);
+        io.sockets.emit('musicresponse', requestlist, whoserequest);
         //‚³‚ñ‚ª“üº‚µ‚Ü‚µ‚½B
         /*fs.writeFile("log.txt", LogWriter(player) + '\u3055\u3093\u304c\u5165\u5ba4\u3057\u307e\u3057\u305f\u3002' + '\n', options, (err) => {
             if (err) { console.log(err); throw err;}
@@ -198,9 +199,10 @@ io.on('connection', function (socket) {
             }
         });
     });
-    socket.on('musicrequest', function (videoId) {
+    socket.on('musicrequest', function (videoId,username) {
         requestlist.push(videoId);
-        io.sockets.emit('musicresponse', requestlist);
+        whoserequest.push(username);
+        io.sockets.emit('musicresponse', requestlist, whoserequest);
     });
     socket.on('disconnect', () => {
         if (!player) { return; }
