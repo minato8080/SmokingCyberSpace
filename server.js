@@ -154,10 +154,11 @@ io.on('connection', function (socket) {
         player.msgCountDown = 30 * fps;
         if (msg !== '') fs.writeFile("log.txt", LogWriter(player) + msg + '\n', options, (err) => {
             if (err) {
-                console.log(err)
-                throw err
+                console.log(err);
+                throw err;
             }
         });
+        console.log(msg);
     });
     socket.on('disconnect', () => {
         if (!player) { return; }
