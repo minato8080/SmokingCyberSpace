@@ -18,6 +18,13 @@ let movespeed = 3;
 let DisplayTop = 0;
 let DisplayCenter = 1750;
 let isMove = false;
+let isSmartPhone = function () {
+    if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 
 
@@ -30,36 +37,6 @@ function gameStart() {
     $("#start-screen").hide();
 }
 $("#start-button").on('click', gameStart);
-
-
-
-//-------------------------------------
-//　　　　　　通信処理
-//-------------------------------------
-const INPUTS = ['INPUT', 'TEXTAREA'];
-$(document).on('keydown keyup', (event) => {
-    const KeyToCommand = {
-       // 'ArrowUp': 'forward',
-       // 'ArrowDown': 'back',
-        'ArrowLeft': 'left',
-        'ArrowRight': 'right',
-    };
-    const command = KeyToCommand[event.key];
-    if (command && INPUTS.indexOf(event.target.tagName) == -1) {
-        if (event.type === 'keydown') {
-            movement[command] = true;
-            isMove = true;
-        } else { /* keyup */
-            movement[command] = false;
-            isMove = false;
-        }
-        socket.emit('movement', movement,isMove);
-    }
-    if (event.key === 'a' && event.type === 'keydown' && INPUTS.indexOf(event.target.tagName) == -1) {
-            socket.emit('smoke');
-    }
-});
-
 
 //------------------------------------
 //             画面描画
@@ -83,6 +60,7 @@ socket.on('state', function (players, ) {
             context.drawImage(mapImage, -myplayerpos * movespeed, +DisplayTop);
             context.font = textfont;
             context.fillStyle = textcolor;
+            if (radioOK()) ChatWriter(radioObject);
             ChatWriter(player);
             NameWriter(player);
             //自プレイヤーを描画
@@ -91,6 +69,7 @@ socket.on('state', function (players, ) {
                 DisplayCenter-240, 960 - player.height - 10 + DisplayTop, 480, 480);
             context.restore();
         }
+       // console.log(player.x);
     });
     //他プレイヤー
     Object.values(players).forEach((player) => {
@@ -165,7 +144,6 @@ let isMusicRequest = function (msg) {
 //----------------------------------
 //          チャット描画
 //----------------------------------
-
 
 let textcolor = "rgb(111,128,67)";
 //let textcolor = "rgb(176,104,76)";
@@ -271,7 +249,6 @@ setInterval(() => {
             frame8_4fps = 0;
         }
     }
-    
 }, 1000 / 4);
 
 //-----------------------------------
@@ -436,17 +413,10 @@ let nextNumber = -1;
 let isDone = false;
 let isPause = false;
 
-let isSmartPhone = function(){
-    if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-socket.on('musicresponse', function (list) {
-    playList = list;
+socket.on('musicresponse', function (list, key) {
+   playList = list;
     console.log(list);
+    
 });
 
 function onYouTubeIframeAPIReady() {
@@ -474,10 +444,12 @@ function createYouTubePlayer() {
     ytPlayer = new YT.Player('youtube', {
         height: '0',
         width: '0',
-       // playsinline: 1,
+        playsinline: 1,
         events: {
             'onReady': onYouTubePlayerReady,
-            'onStateChange': onPlayerStateChange
+            'onStateChange': onPlayerStateChange,
+            "origin":'https://smokingcyberspace.herokuapp.com/',
+            'enablejsapi':1,
         }
     });
     console.log("iframe api ready"); 
@@ -537,7 +509,6 @@ $('#start').click(function () {
                 ytPlayer.pauseVideo();
                 console.log(4);
                 isPause = true;
-                isDone = false;
                 return;
             }
         }
@@ -569,9 +540,88 @@ $('#select').click(function () {
     }
 });
 
+//-------------------------------
+//       ラジオオブジェクト
+//-------------------------------
+let radioObject = {
+    x: 795,
+    y: 650,
+    msg: ' Press A key',
+    Pages: 1,
+}
+let radioOK = function () {
+    if (670 < myplayerpos && myplayerpos < 900) return true;
+    else return false;
+}
+let radioMessenger = function () {
+    switch (radioObject.Pages) {
+        case 0: {
+            radioObject.msg = ' Press A key';
+            radioObject.Pages++;
+            if (isSmartPhone()&&playList.length!==0) {
+                nextNumber++;
+                if (playList.length < nextNumber) {
+                    nextNumber = 0;
+                }
+                ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+                isDone = true;
+            }
+        } break;
+        case 1: {
+            radioObject.msg = "I have " + playList.length + " requests now.You can listen to them with START key.";
+            radioObject.Pages++;
+        } break;
+        case 2: {
+            radioObject.msg = "You can request music by sending YouTube URL.By the CyberSpace sleeps...";
+            radioObject.Pages++;
+            if (isSmartPhone()) radioObject.Pages = 4;
+        } break;
+        case 3: {
+            radioObject.msg = "";
+            radioObject.Pages = 1;
+        } break;
+        case 4: {
+            radioObject.msg = "Unfortunately,SmartPhone user not be able to listen background.";
+            radioObject.Pages = 3;
+        }
+    }
+}
 //------------------------------------
 //       コントローラーI/O
 //------------------------------------
+
+
+//-------------------------------------
+//　　　　　　PCキーボード
+//-------------------------------------
+const INPUTS = ['INPUT', 'TEXTAREA'];
+$(document).on('keydown keyup', (event) => {
+    const KeyToCommand = {
+        // 'ArrowUp': 'forward',
+        // 'ArrowDown': 'back',
+        'ArrowLeft': 'left',
+        'ArrowRight': 'right',
+    };
+    const command = KeyToCommand[event.key];
+    if (command && INPUTS.indexOf(event.target.tagName) == -1) {
+        if (event.type === 'keydown') {
+            movement[command] = true;
+            isMove = true;
+        } else { /* keyup */
+            movement[command] = false;
+            isMove = false;
+        }
+        socket.emit('movement', movement, isMove);
+    }
+    if (event.key === 'a' && event.type === 'keydown' && INPUTS.indexOf(event.target.tagName) == -1) {
+        if (radioOK()) {
+            radioMessenger();
+        } else {
+            socket.emit('smoke');
+        }
+    }
+});
+
 
 const ua = navigator.userAgent.toLowerCase();
 const isSP = /iphone|ipod|ipad|android/.test(ua);
@@ -581,69 +631,69 @@ const A = document.getElementById('A');
 const eventStart = isSP ? 'touchstart' : 'mousedown';
 const eventEnd = isSP ? 'touchend' : 'mouseup';
 const eventLeave = isSP ? 'touchmove' : 'mouseleave';
-{  //イベントハンドラ
-    L.addEventListener(eventStart, e => {
-        e.preventDefault();
-        movement.right = false;
-        movement.left = true;
-        isMove = true;
-        socket.emit('movement', movement, isMove);
-    })
-
-    L.addEventListener(eventEnd, e => {
-        e.preventDefault();
-        movement.right = false;
-        movement.left = false;
-        isMove = false;
-        socket.emit('movement', movement, isMove);
-    });
-
-    L.addEventListener(eventLeave, e => {
-        e.preventDefault();
-        let el;
-        el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : L;
-        if (!isSP || el !== L) {
-            movement.right = false;
-            movement.left = false;
-            isMove = false;
-            socket.emit('movement', movement, isMove);
-        }
-    });
-
-    R.addEventListener(eventStart, e => {
-        e.preventDefault();
-        movement.right = true;
-        movement.left = false;
-        isMove = true;
-        socket.emit('movement', movement, isMove);
-    })
-
-    R.addEventListener(eventEnd, e => {
-        e.preventDefault();
+//イベントハンドラ
+L.addEventListener(eventStart, e => {
+    e.preventDefault();
+    movement.right = false;
+    movement.left = true;
+    isMove = true;
+    socket.emit('movement', movement, isMove);
+});
+L.addEventListener(eventEnd, e => {
+    e.preventDefault();
+    movement.right = false;
+    movement.left = false;
+    isMove = false;
+    socket.emit('movement', movement, isMove);
+});
+L.addEventListener(eventLeave, e => {
+    e.preventDefault();
+    let el;
+    el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : L;
+    if (!isSP || el !== L) {
         movement.right = false;
         movement.left = false;
         isMove = false;
         socket.emit('movement', movement, isMove);
-    });
+    }
+});
 
-    R.addEventListener(eventLeave, e => {
-        e.preventDefault();
-        let el;
-        el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : R;
-        if (!isSP || el !== R) {
-            movement.right = false;
-            movement.left = false;
-            isMove = false;
-            socket.emit('movement', movement, isMove);
-        }
-    });
-    A.addEventListener(eventStart, e => {
-        e.preventDefault();
+
+R.addEventListener(eventStart, e => {
+    e.preventDefault();
+    movement.right = true;
+    movement.left = false;
+    isMove = true;
+    socket.emit('movement', movement, isMove);
+});
+R.addEventListener(eventEnd, e => {
+    e.preventDefault();
+    movement.right = false;
+    movement.left = false;
+    isMove = false;
+    socket.emit('movement', movement, isMove);
+});
+R.addEventListener(eventLeave, e => {
+    e.preventDefault();
+    let el;
+    el = isSP ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : R;
+    if (!isSP || el !== R) {
+        movement.right = false;
+        movement.left = false;
+        isMove = false;
+        socket.emit('movement', movement, isMove);
+    }
+});
+
+$('#A').click(function () {
+    if (radioOK()) {
+        radioMessenger();
+    } else {
         socket.emit('smoke');
-    })
+    }
+});
 
-    B.addEventListener(eventStart, e => {
-        e.preventDefault();
-        socket.emit('smokeend');
-    })
-}
+
+$('#B').click(function () {
+    socket.emit('smokeend');
+});

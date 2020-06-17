@@ -15,7 +15,9 @@ body {
 input:-webkit-autofill {
     box-shadow: 0 0 0 1000px rgb(88,104,76) inset;
 }
-
+iframe {
+    -webkit-playsinline: true;
+}
 
 #start-screen {
     width: 100%;
