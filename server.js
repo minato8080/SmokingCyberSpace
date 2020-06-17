@@ -68,7 +68,6 @@ class Player extends GameObject {
         this.frameX = 0;
         this.frameY = 0;
         this.speed = 5;
-        //this.bullets = {};
         this.isMove = false;
         this.movement = {};
 
@@ -83,33 +82,6 @@ class Player extends GameObject {
         this.smokingCountDown = 0;
         this.smokingFrame = 0;
     }
-    /*
-    shoot() {
-        if (Object.keys(this.bullets).length >= 3) {
-            return;
-        }
-        const bullet = new Bullet({
-            x: this.x + this.width / 2,
-            y: this.y + this.height / 2,
-            angle: this.angle,
-            player: this,
-        });
-        bullet.move(this.width / 2);
-        this.bullets[bullet.id] = bullet;
-        bullets[bullet.id] = bullet;
-    }
-    damage() {
-        this.health--;
-        if (this.health === 0) {
-            this.remove();
-        }
-    }*/
-    /*
-    remove() {
-        delete players[this.id];
-        io.to(this.socketId).emit('dead');
-    }
-    */
     toJSON() {
         return Object.assign(super.toJSON(), {
             socketId: this.socketId, nickname: this.nickname, msg: this.msg,
@@ -120,20 +92,6 @@ class Player extends GameObject {
         });
     }
 };
-/*class Bullet extends GameObject {
-    constructor(obj) {
-        super(obj);
-        this.width = 15;
-        this.height = 15;
-        this.player = obj.player;
-    }
-    remove() {
-        delete this.player.bullets[this.id];
-        delete bullets[this.id];
-    }
-};*/
-
-//let bullets = {};
 
 let requestlist = [];
 let whoserequest = [];
@@ -181,7 +139,8 @@ io.on('connection', function (socket) {
         }
     });
     socket.on('smokeend', function () {
-        if (!player) { return; }
+        if (!player)return;
+        if (player.isSmokeAction) return;
         else if (player.isSmoking) {
             player.smokeActionCountDown = 0;
             player.smokingFrame = 0;
@@ -191,6 +150,7 @@ io.on('connection', function (socket) {
     //チャット処理
     socket.on('message', function (msg) {
         player.msg = msg;
+        RequestChecker(player);
         player.msgCountDown = 30 * fps;
         if (msg !== '') fs.writeFile("log.txt", LogWriter(player) + msg + '\n', options, (err) => {
             if (err) {
@@ -198,11 +158,6 @@ io.on('connection', function (socket) {
                 throw err
             }
         });
-    });
-    socket.on('musicrequest', function (videoId,username) {
-        requestlist.push(videoId);
-        whoserequest.push(username);
-        io.sockets.emit('musicresponse', requestlist, whoserequest);
     });
     socket.on('disconnect', () => {
         if (!player) { return; }
@@ -214,6 +169,35 @@ io.on('connection', function (socket) {
         player = null;
     });
 });
+
+
+let videoId;
+let RequestChecker = function (player) {
+    var msg = player.msg;
+    //PC版のURL
+    if (msg.indexOf('https://www.youtube.com/watch?v=') !== -1) {
+        videoId = msg.split('https://www.youtube.com/watch?v=')[1];
+    }
+    //モバイルブラウザのURL
+    else if (msg.indexOf('https://m.youtube.com/watch?feature=youtu.be&v=') !== -1) {
+        videoId = msg.split('https://m.youtube.com/watch?feature=youtu.be&v=')[1];
+    }
+    //モバイルアプリ
+    else if (msg.indexOf('https://youtu.be/') !== -1) {
+        videoId = msg.split('https://youtu.be/')[1];
+    } else { return; }
+    // &=クエリパラーメターがついていることがあるので取り除く
+    let ampersandPosition = videoId.indexOf('&');
+    if (ampersandPosition != -1) {
+        videoId = videoId.substring(0, ampersandPosition);
+    }
+    // 正しいurlの形式だったとき送信
+    if (videoId.length === 11) {
+        requestlist.push(videoId);
+        whoserequest.push(player.nickname);
+        io.sockets.emit('musicresponse', requestlist, whoserequest);
+    }
+}
 
 
 setInterval(() => {
@@ -255,22 +239,6 @@ setInterval(() => {
             }
         }
     });
-    /*
-    Object.values(bullets).forEach((bullet) => {
-        if (!bullet.move(10)) {
-            bullet.remove();
-            return;
-        }
-        Object.values(players).forEach((player) => {
-            if (bullet.intersect(player)) {
-                if (player !== bullet.player) {
-                    player.damage();
-                    bullet.remove();
-                    bullet.player.point += 1;
-                }
-            }
-        });
-    });*/
     io.sockets.emit('state', players);
 }, 1000 / fps);
 

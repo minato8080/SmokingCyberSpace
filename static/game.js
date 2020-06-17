@@ -5,9 +5,9 @@ const canvas = $('#canvas-2d')[0];
 const mapImage = $('#map-image')[0];
 const mapImageZ1 = $('#map-image-z1')[0];
 const Controler = $('#controler')[0];
-const Pixer = $('#pixer')[0];
-const context = canvas.getContext('2d');
 const playerImage = $('#player-image')[0];
+const context = canvas.getContext('2d');
+const smoky = $('#smoky')[0];
 const chatboxTop = $('#top')[0];
 const chatboxMiddle = $('#middle')[0];
 const chatboxUnder = $('#under')[0];
@@ -31,11 +31,7 @@ let isSmartPhone = function () {
 //------------------------------------
 //           スタート処理
 //------------------------------------
-let username;
 function gameStart() {
-    if ($("#nickname").val() !== '') {
-        username = $("#nickname").val();
-    } else {username = 'anonymous'}
     socket.emit('game-start', { nickname: $("#nickname").val()});
     $("#start-screen").hide();
 }
@@ -51,19 +47,16 @@ socket.on('dead', () => {
 //----------------------------------
 //          チャットI/O
 //----------------------------------
-let videoId;
 
 $(function () {
     $('#message_form').submit(function () {
         socket.emit('message', $('#input_msg').val());
-        isMusicRequest($('#input_msg').val());
         $('#input_msg').val('');
         return false;
     });
 });
 $('#sousin').on('click', function () {
     socket.emit('message', $('#input_msg').val());
-    isMusicRequest($('#input_msg').val());
     $('#input_msg').val('');
     return false;
 });
@@ -151,7 +144,6 @@ let NameWriter = function (player) {
     context.fillText('＠' + player.nickname, num + DisplayCenter - (Math.ceil(bufferSize) + 1) * 20, player.y - 30 + DisplayTop + textfloater);
     bufferSize = 0;
 }
-
 //-----------------------------------
 //         MusicPlayer
 //-----------------------------------
@@ -166,21 +158,6 @@ let whoserequest = [];
 let nextNumber = -1;
 let isDone = false;
 let isPause = false;
-
-let isMusicRequest = function (msg) {
-    if (msg.indexOf('v=') !== -1) {
-        videoId = msg.split('v=')[1];
-        // 正しいurlの形式だったとき
-        if (videoId) {
-            // &=クエリパラーメターがついていることがあるので取り除く
-            let ampersandPosition = videoId.indexOf('&');
-            if (ampersandPosition != -1) {
-                videoId = videoId.substring(0, ampersandPosition);
-            }
-            socket.emit('musicrequest', videoId, username);
-        }
-    }
-}
 
 socket.on('musicresponse', function (list, name) {
     playList = list;
@@ -236,13 +213,13 @@ let isPlaying = false;
 function onPlayerStateChange(event) {
     isPlaying = false;
     if (event.data == YT.PlayerState.ENDED) {
-        nextNumber++
+        nextNumbe += 1;
         if (playList.length === nextNumber) {
             nextNumber = 0;
         }
         ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
         ytPlayer.playVideo();
-        radioObject.msg = "Next No." + nextNumber;
+        radioObject.msg = "Next No." + nextNumber+1;
     }
     if (event.data == YT.PlayerState.BUFFERING) {
         radioObject.msg = "  LOADING..";
@@ -259,15 +236,11 @@ function onPlayerStateChange(event) {
     }
 }
 
-/*let MobileStartPush = function () {
-    if (isSmartPhone()) {
-}
-*/
 $('#start').click(function () {
     if (playList.length !== 0) {
         if (!isSmartPhone()) {
             if (!isPause) ytPlayer.pauseVideo();
-            nextNumber++;
+            nextNumber += 1;
             if (playList.length < nextNumber) {
                 nextNumber = 0;
             }
@@ -276,12 +249,11 @@ $('#start').click(function () {
             return;
         } else {
             if (!isDone) {
-                nextNumber++;
+                nextNumber += 1;
                 if (playList.length < nextNumber) {
                     nextNumber = 0;
                 }
                 ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-                isDone = true;
                 return;
             } else {
                 ytPlayer.playVideo();
@@ -297,21 +269,19 @@ $('#select').click(function () {
             if (isPause) {
                 ytPlayer.playVideo();
                 isPause = false;
-                return;
-            }
-            if (isDone) {
+            }else if (isDone) {
                 ytPlayer.pauseVideo();
                 console.log(4);
                 isPause = true;
-                return;
             }
+            return;
         } else {
-            nextNumber++;
+            nextNumber += 1;
             if (playList.length < nextNumber) {
                 nextNumber = 0;
             }
             ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-            radioObject.msg = "Next No." + nextNumber;
+            radioObject.msg = "Next No." + (nextNumber+1);
             return;
         }
     }
@@ -330,7 +300,7 @@ let whatPlaying = function () {
     return {
         x: 805,
         y: 550,
-        msg: 'No.' + nextNumber + ' requested by ' + whoserequest[nextNumber]
+        msg: 'No.' + (nextNumber+1) + ' requested by ' + whoserequest[nextNumber]
     };
 }
 
@@ -340,10 +310,6 @@ let radioOK = function () {
 }
 let radioMessenger = function () {
     switch (radioObject.Pages) {
-        case 0: {
-            radioObject.msg = ' Press A key';
-            radioObject.Pages++;
-        } break;
         case 1: {
             radioObject.msg = "I have " + playList.length + " requests now.You can listen to them with START key.";
             radioObject.Pages++;
@@ -404,6 +370,7 @@ socket.on('state', function (players, ) {
             PlayerFrameChanger(player);
             context.drawImage(playerImage, player.frameX, player.frameY, player.width, player.height,
                 DisplayCenter - 240, 960 - player.height - 10 + DisplayTop, 480, 480);
+            SmokeDrawer(player);
             context.restore();
         }
         // console.log(player.x);
@@ -420,23 +387,51 @@ socket.on('state', function (players, ) {
             PlayerFrameChanger(player);
             context.drawImage(playerImage, player.frameX, player.frameY, player.width, player.height,
                 (player.x - myplayerpos) * movespeed + DisplayCenter - 240, 960 - player.height + DisplayTop, 480, 480);
+            SmokeDrawer(player);
             context.restore();
         }
     });
 
     context.drawImage(mapImageZ1, -myplayerpos * movespeed, +DisplayTop);
-    // context.drawImage(Controler, DisplayCenter - 750, +DisplayTop + 1050);
-    //ピクセルカウント用
-    //context.drawImage(Pixer, 0,0);
-
-    /*
-    Object.values(bullets).forEach((bullet) => {
-        context.beginPath();
-        context.arc(bullet.x, bullet.y, bullet.width / 2, 0, 2 * Math.PI);
-        context.stroke();
-    });*/
 });
 
+let smoke = {
+    FrameY: 0,
+    FrameX: 0,
+    width: 110,
+    height: 55,
+    x: 0,
+    y: 20,
+    Animated: false,
+}
+let SmokeDrawer = function (player) {
+    if (!smoke.Animated) {
+        if (player.frameY === player.height * 4) {
+            smoke.FrameY = 0;
+            smoke.x = 80;
+        } else if (player.frameY === player.height * 5) {
+            smoke.FrameY = smoke.height;
+            smoke.x = 290;
+        } else {
+            return;
+        }
+        switch (player.frameX) {
+            case player.width * 4: smoke.FrameX = smoke.width * 0; break;
+            case player.width * 5: smoke.FrameX = smoke.width * 1; break;
+            case player.width * 6: smoke.FrameX = smoke.width * 2; break;
+            case player.width * 7: smoke.FrameX = smoke.width * 3; smoke.Animated = true; break;
+            default: return;
+        }
+
+        if (player.socketId !== socket.id) {
+            num = (player.x - myplayerpos) * movespeed;
+        } else {
+            num = 0;
+        }
+        context.drawImage(smoky, smoke.FrameX, smoke.FrameY, smoke.width, smoke.height,
+            num + DisplayCenter - 240 + smoke.x, 960 - player.height + smoke.y, smoke.width, smoke.height);
+    }
+}
 
 //-------------------------------------
 //　　　　　　PCキーボード
@@ -466,6 +461,9 @@ $(document).on('keydown keyup', (event) => {
         } else {
             socket.emit('smoke');
         }
+    }
+    if (event.key === 'b' && event.type === 'keydown' && INPUTS.indexOf(event.target.tagName) == -1) {
+        socket.emit('smokeend');
     }
 });
 
@@ -605,7 +603,7 @@ let SmokeActionFrameChanger = function (player) {
 
 
     switch (player.smokeActionFrame) {
-        case 0: player.frameX = 0; break;
+        case 0: player.frameX = 0; smoke.Animated = false; break;
         case 1: player.frameX = player.width * 1; break;
         case 2: player.frameX = player.width * 2; break;
         case 3: player.frameX = player.width * 3; break;
@@ -661,7 +659,7 @@ let SmokingFrameChanger = function (player) {
             case 9: player.frameX = player.width * 3; break;
             case 10: player.frameX = player.width * 2; break;
             case 11: player.frameX = player.width * 1; break;
-            case 12: player.frameX = player.width * 0; break;
+            case 12: player.frameX = player.width * 0; smoke.Animated = false;break;
             case 13: player.frameX = player.width * 4; break;
             case 14: player.frameX = player.width * 5; break;
             case 15: player.frameX = player.width * 6; break;
