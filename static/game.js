@@ -490,7 +490,7 @@ $('#start').click(function () {
             }
             ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
             isDone = true;
-            console.log(2);
+            console.log(videoId);
             return;
         } else {
             if (!isDone) {
@@ -501,14 +501,8 @@ $('#start').click(function () {
                 ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
                 isDone = true;
                 return;
-            } else if (isPause) {
+            } else{
                 ytPlayer.playVideo();
-                isPause = false;
-                return;
-            } else if (isDone) {
-                ytPlayer.pauseVideo();
-                console.log(4);
-                isPause = true;
                 return;
             }
         }
