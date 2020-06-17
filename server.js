@@ -150,9 +150,10 @@ io.on('connection', function (socket) {
     //ƒ`ƒƒƒbƒgˆ—
     socket.on('message', function (msg) {
         player.msg = msg;
+        let data = LogWriter(player) + msg + '\n';
         RequestChecker(player);
         player.msgCountDown = 30 * fps;
-        if (msg !== '') fs.writeFile("log.txt", LogWriter(player) + msg + '\n', options, (err) => {
+        if (msg !== '') fs.writeFile("log.txt", data , options, (err) => {
             if (err) {
                 console.log(err);
                 throw err;
