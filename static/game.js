@@ -254,6 +254,7 @@ $('#start').click(function () {
                     nextNumber = 0;
                 }
                 ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+                isDone = true;
                 return;
             } else {
                 ytPlayer.playVideo();
