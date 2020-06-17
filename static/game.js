@@ -445,11 +445,11 @@ function createYouTubePlayer() {
         height: '0',
         width: '0',
         playsinline: 1,
+        origin : 'https://smokingcyberspace.herokuapp.com/',
+        enablejsapi : 1,
         events: {
             'onReady': onYouTubePlayerReady,
             'onStateChange': onPlayerStateChange,
-            "origin":'https://smokingcyberspace.herokuapp.com/',
-            'enablejsapi':1,
         }
     });
     console.log("iframe api ready"); 
@@ -572,17 +572,22 @@ let radioMessenger = function () {
             radioObject.Pages++;
         } break;
         case 2: {
-            radioObject.msg = "You can request music by sending YouTube URL.By the CyberSpace sleeps...";
-            radioObject.Pages++;
-            if (isSmartPhone()) radioObject.Pages = 4;
+            if (isSmartPhone()) {
+                radioObject.msg = "Change next with SELECT key.";
+            } else { radioObject.msg = "Play&Pause with SELECT key.";}
         } break;
         case 3: {
+            radioObject.msg = "You can request music by sending YouTube URL.By the CyberSpace sleeps...";
+            radioObject.Pages++;
+            if (isSmartPhone()) radioObject.Pages = 5;
+        } break;
+        case 4: {
             radioObject.msg = "";
             radioObject.Pages = 1;
         } break;
-        case 4: {
+        case 5: {
             radioObject.msg = "Unfortunately,SmartPhone user not be able to listen background.";
-            radioObject.Pages = 3;
+            radioObject.Pages--;
         }
     }
 }
