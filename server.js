@@ -153,11 +153,11 @@ io.on('connection', function (socket) {
         let data = LogWriter(player) + msg + '\n';
         RequestChecker(player);
         player.msgCountDown = 30 * fps;
-        if (msg !== '') fs.writeFile("./log.txt", data , options, (err) => {
+        if (msg !== '') fs.writeFile('./log.txt', data , options, (err) => {
             if (err) {
                 console.log(err);
                 throw err;
-            }
+            } else {"ê≥èÌÇ…èoóÕÇ≥ÇÍÇ‹ÇµÇΩ"}
         });
         console.log(msg);
     });

@@ -4,10 +4,10 @@
     "http": "^0.0.1-security",
     "socket.io": "^2.3.0"
   },
-  "scripts": {
-    "start": "node server.js"
-  },
-  "name": "http_test",
+    "scripts": {
+        "start": "node server.js && node script-file.js >log-file.txt 2>error-file.txt"
+    },
+  "name": "SCS",
   "version": "1.0.0",
   "main": "server.js",
   "devDependencies": {},
