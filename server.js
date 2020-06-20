@@ -4,10 +4,16 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const socketIO = require('socket.io');
+const pg = require('pg');
+const connectionStirng = process.env.DATABASE_URL ||'postgres://gpzrlzstucgaol:f02aef829006a46ae2dc1f636cb7cba07e74b5c5a5a88ce0d1dad370dfa41fea@ec2-34-230-231-71.compute-1.amazonaws.com:5432/d87931jutk3o9b';
+//const connectionString = 'postgres://postgres:hijack69PG@localhost:5432/SCSlogs';
 const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 const fs = require('fs');
+const pool = new pg.Pool({
+    connectionString: connectionString
+});
 const options = {
     flag: 'a',
     encoding: "utf8"
@@ -20,6 +26,15 @@ const ZeroPosition = 425;
 //(元画像横幅-ディスプレイ幅/2-遊び)/移動速度
 //(6090-1750-480)/3=1286
 const MaxPosition = 1285;
+
+let requestlist = [];
+let whoserequest = [];
+
+pool
+    .query('SELECT * FROM requestlist')
+    .then(res => {
+        foreach(res).rows[0])
+    })
 
 class GameObject {
     constructor(obj = {}) {
@@ -93,9 +108,6 @@ class Player extends GameObject {
     }
 };
 
-let requestlist = [];
-let whoserequest = [];
-
 io.on('connection', function (socket) {
     let player = null;
     socket.on('game-start', (config) => {
@@ -109,6 +121,13 @@ io.on('connection', function (socket) {
         /*fs.writeFile("log.txt", LogWriter(player) + '\u3055\u3093\u304c\u5165\u5ba4\u3057\u307e\u3057\u305f\u3002' + '\n', options, (err) => {
             if (err) { console.log(err); throw err;}
         });*/
+        pool
+            .query('INSERT INTO roomlogs(time,id,name,state) VALUES($1,$2,$3,$4) RETURNING *',
+                [timelog(), player.id.toString(32), player.nickname, '入室'])
+            .then(res => {
+                console.log(res.rows[0])
+            })
+            .catch(e => console.error(e.stack))
     });
     //------------------------------------
     //ユーザーアクション
@@ -150,16 +169,23 @@ io.on('connection', function (socket) {
     //チャット処理
     socket.on('message', function (msg) {
         player.msg = msg;
-        let data = LogWriter(player) + msg + '\n';
+        //let data = LogWriter(player) + msg + '\n';
         RequestChecker(player);
         player.msgCountDown = 30 * fps;
-        if (msg !== '') fs.writeFile('./log.txt', data , options, (err) => {
+        /*if (msg !== '') fs.writeFile('log.txt', data , options, (err) => {
             if (err) {
                 console.log(err);
                 throw err;
-            } else {"正常に出力されました"}
+            } else { "正常に出力されました" }
         });
-        console.log(msg);
+        console.log(msg);*/
+        pool
+            .query('INSERT INTO chatlogs(time,id,name,message) VALUES($1,$2,$3,$4) RETURNING *',
+                [timelog(), player.id.toString(32), player.nickname, player.msg])
+            .then(res => {
+                console.log(res.rows[0])
+            })
+            .catch(e => console.error(e.stack))
     });
     socket.on('disconnect', () => {
         if (!player) { return; }
@@ -167,6 +193,13 @@ io.on('connection', function (socket) {
         /*fs.writeFile("log.txt", LogWriter(player) + '\u3055\u3093\u304c\u9000\u51fa\u3057\u307e\u3057\u305f\u3002' + '\n', options, (err) => {
             if (err) { console.log(err); throw err;}
         });*/
+        pool
+            .query('INSERT INTO roomlogs(time,id,name,state) VALUES($1,$2,$3,$4) RETURNING *',
+                [timelog(), player.id.toString(32), player.nickname, '退出'])
+            .then(res => {
+                console.log(res.rows[0])
+            })
+            .catch(e => console.error(e.stack))
         delete players[player.id];
         player = null;
     });
@@ -198,6 +231,13 @@ let RequestChecker = function (player) {
         requestlist.push(videoId);
         whoserequest.push(player.nickname);
         io.sockets.emit('musicresponse', requestlist, whoserequest);
+        pool
+            .query('INSERT INTO requestlist(date,id,name,videoId) VALUES($1,$2,$3,$4) RETURNING *',
+                [datelog(), player.id.toString(32), player.nickname, videoId])
+            .then(res => {
+                console.log(res.rows[0])
+            })
+            .catch(e => console.error(e.stack))
     }
 }
 
@@ -247,6 +287,33 @@ setInterval(() => {
 
 //-----------------------------
 //ログ関連
+let timelog =()=>{
+    let date = new Date();
+    let yyyy = date.getFullYear();
+    let mm = toDoubleDigits(date.getMonth() + 1);
+    let dd = toDoubleDigits(date.getDate());
+    let hh = toDoubleDigits(date.getHours());
+    let mi = toDoubleDigits(date.getMinutes());
+    let ss = toDoubleDigits(date.getSeconds());
+    let time = yyyy + '/' + mm + '/' + dd + ' ' + hh + ':' + mi + ':' + ss;
+    return time;
+}
+let datelog = () => {
+    let date = new Date();
+    let yyyy = date.getFullYear();
+    let mm = toDoubleDigits(date.getMonth() + 1);
+    let dd = toDoubleDigits(date.getDate());
+    let day = yyyy + '/' + mm + '/' + dd;
+    return day;
+}
+let toDoubleDigits = function (num) {
+    num += "";
+    if (num.length === 1) {
+        num = "0" + num;
+    }
+    return num;
+};
+/*
 let LogWriter = function (player) {
     let date = new Date();
     let yyyy = date.getFullYear();
@@ -259,14 +326,7 @@ let LogWriter = function (player) {
     //let log = player.msg + '\t'+time + ' id:' + player.id + ' name:' + player.nickname +   '\n';
     let log = time + '^ID:' + player.id.toString(32) + '@' + player.nickname + '<';
     return log;
-}
-let toDoubleDigits = function (num) {
-    num += "";
-    if (num.length === 1) {
-        num = "0" + num;
-    }
-    return num;
-};
+}*/
 
 
 
