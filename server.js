@@ -29,13 +29,13 @@ const MaxPosition = 1285;
 
 let requestlist = [];
 let whoserequest = [];
-
+/*
 pool
     .query('SELECT * FROM requestlist')
     .then(res => {
         foreach(res).rows[0])
     })
-
+    */
 class GameObject {
     constructor(obj = {}) {
         this.id = Math.floor(Math.random() * 100000000);
