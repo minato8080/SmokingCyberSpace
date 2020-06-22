@@ -5,8 +5,8 @@ const http = require('http');
 const path = require('path');
 const socketIO = require('socket.io');
 const pg = require('pg');
-const connectionString = process.env.DATABASE_URL ||'postgres://gpzrlzstucgaol:f02aef829006a46ae2dc1f636cb7cba07e74b5c5a5a88ce0d1dad370dfa41fea@ec2-34-230-231-71.compute-1.amazonaws.com:5432/SCSlogs';
-//const connectionString = 'postgres://postgres:hijack69PG@localhost:5432/SCSlogs';
+const connectionString = process.env.DATABASE_URL ||'postgres://gpzrlzstucgaol:f02aef829006a46ae2dc1f636cb7cba07e74b5c5a5a88ce0d1dad370dfa41fea@ec2-34-230-231-71.compute-1.amazonaws.com:5432/d87931jutk3o9b';
+//const connectionString = process.env.DATABASE_URL ||'postgres://postgres:hijack69PG@localhost:5432/SCSlogs';
 const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
@@ -123,7 +123,7 @@ io.on('connection', function (socket) {
         });*/
         pool
             .query('INSERT INTO roomlogs(time,id,name,state) VALUES($1,$2,$3,$4) RETURNING *',
-                [timelog(), player.id.toString(32), player.nickname, '“üŽº'])
+                [timelog(), player.id.toString(32), player.nickname, 'IN'])
             .then(res => {
                 console.log(res.rows[0])
             })
@@ -195,7 +195,7 @@ io.on('connection', function (socket) {
         });*/
         pool
             .query('INSERT INTO roomlogs(time,id,name,state) VALUES($1,$2,$3,$4) RETURNING *',
-                [timelog(), player.id.toString(32), player.nickname, '‘Þo'])
+                [timelog(), player.id.toString(32), player.nickname, 'OUT'])
             .then(res => {
                 console.log(res.rows[0])
             })
