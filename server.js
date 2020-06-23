@@ -29,12 +29,8 @@ const ZeroPosition = 425;
 //(6090-1750-480)/3=1286
 const MaxPosition = 1285;
 
-let requestlist = [];
+let requestslist = [];
 let whoserequest = [];
-pool
-    .query('SELECT array_agg(videoId),array_agg(name) INTO $1,$4 FROM requestlist WHERE $2 <= date AND date <= $3', [requestlist, weekhead(), datelog(), whoserequest])
-    .catch(e => console.error(e.stack))
-
 
 class GameObject {
     constructor(obj = {}) {
@@ -116,7 +112,7 @@ io.on('connection', function (socket) {
             nickname: config.nickname,
         });
         players[player.id] = player;
-        io.sockets.emit('musicresponse', requestlist, whoserequest);
+        io.sockets.emit('musicresponse', requestslist, whoserequest);
         //‚³‚ñ‚ª“üŽº‚µ‚Ü‚µ‚½B
         /*fs.writeFile("log.txt", LogWriter(player) + '\u3055\u3093\u304c\u5165\u5ba4\u3057\u307e\u3057\u305f\u3002' + '\n', options, (err) => {
             if (err) { console.log(err); throw err;}
@@ -228,9 +224,9 @@ let RequestChecker = function (player) {
     }
     // ³‚µ‚¢url‚ÌŒ`Ž®‚¾‚Á‚½‚Æ‚«‘—M
     if (videoId.length === 11) {
-        requestlist.push(videoId);
+        requestslist.push(videoId);
         whoserequest.push(player.nickname);
-        io.sockets.emit('musicresponse', requestlist, whoserequest);
+        io.sockets.emit('musicresponse', requestslist, whoserequest);
         pool
             .query('INSERT INTO requestlist(date,id,name,videoId) VALUES($1,$2,$3,$4) RETURNING *',
                 [datelog(), player.id.toString(32), player.nickname, videoId])
@@ -335,6 +331,10 @@ pool
     })
     .catch(e => console.error(e.stack))
     */
+
+pool
+    .query('SELECT array_agg(videoId),array_agg(name) INTO $1,$4 FROM requestlist WHERE $2 <= date AND date <= $3', [requestlist, weekhead(), datelog(), whoserequest])
+    .catch(e => console.error(e.stack))
 
 
 /*
