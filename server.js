@@ -44,7 +44,7 @@ let weekhead = ()=>{
 }
 
 pool
-    .query('SELECT videoId,name BULK COLLECT INTO requestlist,whoserequest FROM requestlist WHERE weekhead() <= date AND date <= datelog();')
+    .query('SELECT videoId BULK COLLECT INTO requestlist FROM requestlist WHERE weekhead() <= date AND date <= datelog();SELECT name BULK COLLECT INTO whoserequest FROM requestlist WHERE weekhead() <= date AND date <= datelog();')
     .catch (e => console.error(e.stack))
     
 class GameObject {
