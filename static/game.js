@@ -213,7 +213,7 @@ let isPlaying = false;
 function onPlayerStateChange(event) {
     isPlaying = false;
     if (event.data == YT.PlayerState.ENDED) {
-        nextNumbe += 1;
+        nextNumber += 1;
         if (playList.length === nextNumber) {
             nextNumber = 0;
         }
