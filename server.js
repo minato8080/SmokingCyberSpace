@@ -31,22 +31,7 @@ const MaxPosition = 1285;
 
 let requestslist = [];
 let whoserequest = [];
-let weekhead = ()=>{
-    let date = new Date();
-    let d = date.getDay();//曜日取得
-    if (d === 0) { d = 6; } else { d--;}//月曜スタート
-    date.setDate(date.getDate() - d)//週の開始日をセット
-    let yyyy = date.getFullYear();
-    let mm = toDoubleDigits(date.getMonth() + 1);
-    let dd = toDoubleDigits(date.getDate());
-    let day = yyyy + mm + dd;
-    return day;
-}
 
-pool
-    .query('SELECT array_agg(videoId), array_agg(name) INTO requestslist, whoserequest FROM requestlist WHERE weekhead() <= date AND date <= datelog();')
-    .catch (e => console.error(e.stack))
-    
 class GameObject {
     constructor(obj = {}) {
         this.id = Math.floor(Math.random() * 100000000);
@@ -324,6 +309,24 @@ let toDoubleDigits = function (num) {
     }
     return num;
 };
+let weekhead = () => {
+    let date = new Date();
+    let d = date.getDay();//曜日取得
+    if (d === 0) { d = 6; } else { d--; }//月曜スタート
+    date.setDate(date.getDate() - d)//週の開始日をセット
+    let yyyy = date.getFullYear();
+    let mm = toDoubleDigits(date.getMonth() + 1);
+    let dd = toDoubleDigits(date.getDate());
+    let day = yyyy + mm + dd;
+    return day;
+}
+
+let w = weekhead();
+let t = datelog();
+pool
+    .query('SELECT array_agg(videoId), array_agg(name) INTO requestslist, whoserequest FROM requestlist WHERE w <= date AND date <= t;')
+    .catch(e => console.error(e.stack))
+
 /*
 let LogWriter = function (player) {
     let date = new Date();
