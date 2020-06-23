@@ -312,20 +312,20 @@ let radioOK = function () {
 let radioMessenger = function () {
     switch (radioObject.Pages) {
         case 1: {
-            radioObject.msg = "I have " + playList.length + " requests now.You can listen to them with START key.";
+            radioObject.msg = "There are " + playList.length + " requests this week.Play with START key";
             radioObject.Pages++;
         } break;
         case 2: {
             if (isSmartPhone()) {
-                radioObject.msg = "Change next with SELECT key.";
+                radioObject.msg = "Change the number with SELECT key";
                 radioObject.Pages++;
             } else {
-                radioObject.msg = "Play & Pausewith SELECT key.";
+                radioObject.msg = "Play & Pausewith SELECT key";
                 radioObject.Pages++;
             }
         } break;
         case 3: {
-            radioObject.msg = "You can request music bysending YouTube URL. By the CyberSpace sleeps...";
+            radioObject.msg = "You can request music bysending YouTube URL.";
             radioObject.Pages++;
             if (isSmartPhone()) radioObject.Pages = 5;
         } break;

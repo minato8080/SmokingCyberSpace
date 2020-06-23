@@ -10,14 +10,16 @@ const connectionString = process.env.DATABASE_URL ||'postgres://gpzrlzstucgaol:f
 const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
-const fs = require('fs');
+//const fs = require('fs');
 const pool = new pg.Pool({
     connectionString: connectionString
 });
+/*
 const options = {
     flag: 'a',
     encoding: "utf8"
 };
+*/
 const fps = 24;
 let players = {};
 //(ディスプレイ幅/2-遊び)/移動速度
@@ -29,13 +31,22 @@ const MaxPosition = 1285;
 
 let requestlist = [];
 let whoserequest = [];
-/*
+let weekhead = ()=>{
+    let date = new Date();
+    let d = date.getDay();//曜日取得
+    if (d === 0) { d = 6; } else { d--;}//月曜スタート
+    date.setDate(date.getDate() - d)//週の開始日をセット
+    let yyyy = date.getFullYear();
+    let mm = toDoubleDigits(date.getMonth() + 1);
+    let dd = toDoubleDigits(date.getDate());
+    let day = yyyy + mm + dd;
+    return day;
+}
+
 pool
-    .query('SELECT * FROM requestlist')
-    .then(res => {
-        foreach(res).rows[0])
-    })
-    */
+    .query('SELECT videoId,name BULK COLLECT INTO requestlist,whoserequest FROM requestlist WHERE weekhead() <= date AND date <= datelog();')
+    .catch (e => console.error(e.stack))
+    
 class GameObject {
     constructor(obj = {}) {
         this.id = Math.floor(Math.random() * 100000000);
@@ -303,7 +314,7 @@ let datelog = () => {
     let yyyy = date.getFullYear();
     let mm = toDoubleDigits(date.getMonth() + 1);
     let dd = toDoubleDigits(date.getDate());
-    let day = yyyy + '/' + mm + '/' + dd;
+    let day = yyyy + mm + dd;
     return day;
 }
 let toDoubleDigits = function (num) {
