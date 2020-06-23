@@ -324,7 +324,7 @@ let weekhead = () => {
 let w = weekhead();
 let t = datelog();
 pool
-    .query('SELECT array_agg(videoId), array_agg(name) INTO requestslist, whoserequest FROM requestlist WHERE w <= date AND date <= t;')
+    .query('SELECT array_agg(videoId) INTO requestslist FROM requestlist WHERE w <= date AND date <= t;SELECT array_agg(name) INTO whoserequest FROM requestlist WHERE w <= date AND date <= t;')
     .catch(e => console.error(e.stack))
 
 /*
