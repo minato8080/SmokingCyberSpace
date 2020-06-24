@@ -290,6 +290,8 @@ setInterval(() => {
 //ログ関連
 let timelog =()=>{
     let date = new Date();
+    //日本時間に調整
+    date.setHours(date.getHours() + 9);
     let yyyy = date.getFullYear();
     let mm = toDoubleDigits(date.getMonth() + 1);
     let dd = toDoubleDigits(date.getDate());
@@ -301,6 +303,8 @@ let timelog =()=>{
 }
 let datelog = () => {
     let date = new Date();
+    //日本時間に調整
+    date.setHours(date.getHours() + 9);
     let yyyy = date.getFullYear();
     let mm = toDoubleDigits(date.getMonth() + 1);
     let dd = toDoubleDigits(date.getDate());
@@ -316,6 +320,8 @@ let toDoubleDigits = function (num) {
 };
 let weekhead = () => {
     let date = new Date();
+    //日本時間に調整
+    date.setHours(date.getHours() + 9);
     let d = date.getDay();//曜日取得
     if (d === 0) { d = 6; } else { d--; }//月曜スタート
     date.setDate(date.getDate() - d)//週の開始日をセット
