@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/static/jquery.cookie.js"></script>
     <link rel="stylesheet" href="/static/style.css" />
     <link rel="shortcut icon" href="/static/favicon.ico" type="image/vnd.microsoft.icon">
     <meta name="twitter:card" content="summary_large_image" />
@@ -18,7 +19,7 @@
     <div style="flex: 1 1; position: relative; overflow:hidden;">
         <div id="start-screen">
             <div style="text-align: center; width: 100%; font-size: xx-large;">
-                <input type="text" maxlength="6" name="nickname" id="nickname" placeholder="anonymous" autofocus autocomplete="off"><br /><br />
+                <input type="text" maxlength="6" name="nickname" id="nickname" value="" placeholder="anonymous" autofocus autocomplete="off"><br /><br />
                 <button id="start-button" class="materialbutton">接続</button>
             </div>
         </div>

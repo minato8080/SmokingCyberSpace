@@ -26,11 +26,16 @@ let isSmartPhone = function () {
     }
 }
 
-
+$(function () {
+    //読み込んだクッキーをフォームのvalue値として代入
+    if ($.cookie("SCS_user_nickname") !== 'undefined')
+    $('#nickname').val($.cookie("SCS_user_nickname"));
+})
 //------------------------------------
 //           スタート処理
 //------------------------------------
 function gameStart() {
+    $.cookie("SCS_user_nickname", $('#nickname').val());
     socket.emit('game-start', { nickname: $("#nickname").val()});
     $("#start-screen").hide();
 }
