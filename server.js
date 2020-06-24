@@ -29,7 +29,7 @@ const ZeroPosition = 425;
 //(6090-1750-480)/3=1286
 const MaxPosition = 1285;
 
-let requestslist = [];
+let requestlist = [];
 let whoserequest = [];
 
 class GameObject {
@@ -112,7 +112,7 @@ io.on('connection', function (socket) {
             nickname: config.nickname,
         });
         players[player.id] = player;
-        io.sockets.emit('musicresponse', requestslist, whoserequest);
+        io.sockets.emit('musicresponse', requestlist, whoserequest);
         //さんが入室しました。
         /*fs.writeFile("log.txt", LogWriter(player) + '\u3055\u3093\u304c\u5165\u5ba4\u3057\u307e\u3057\u305f\u3002' + '\n', options, (err) => {
             if (err) { console.log(err); throw err;}
@@ -222,13 +222,18 @@ let RequestChecker = function (player) {
     if (ampersandPosition != -1) {
         videoId = videoId.substring(0, ampersandPosition);
     }
+    //?クエリパラーメターがついていることがあるので取り除く
+    let questionPosition = videoId.indexOf('?');
+    if (questionPosition != -1) {
+        videoId = videoId.substring(0, questionPosition);
+    }
     // 正しいurlの形式だったとき送信
     if (videoId.length === 11) {
-        requestslist.push(videoId);
+        requestlist.push(videoId);
         whoserequest.push(player.nickname);
-        io.sockets.emit('musicresponse', requestslist, whoserequest);
+        io.sockets.emit('musicresponse', requestlist, whoserequest);
         pool
-            .query('INSERT INTO requestlist(date,id,name,videoId) VALUES($1,$2,$3,$4) RETURNING *',
+            .query('INSERT INTO requestlist(date,id,name,videoid) VALUES($1,$2,$3,$4) RETURNING *',
                 [datelog(), player.id.toString(32), player.nickname, videoId])
             .then(res => {
                 console.log(res.rows[0])
@@ -319,23 +324,11 @@ let weekhead = () => {
     let dd = toDoubleDigits(date.getDate());
     let day = yyyy + mm + dd;
     return day;
-}
-/*
-let w = weekhead();
-let t = datelog();
-pool
-    .query('SELECT array_agg(videoId) INTO requestslist FROM requestlist WHERE w <= date AND date <= t;SELECT array_agg(name) INTO whoserequest FROM requestlist WHERE w <= date AND date <= t;')
-    .then(res => {
-        requestslist = res;
-        console.log(res.rows[0])
-    })
-    .catch(e => console.error(e.stack))
-    */
 
 pool
-    .query('SELECT array_agg(videoId),array_agg(name) INTO $1,$4 FROM requestlist WHERE $2 <= date AND date <= $3', [requestlist, weekhead(), datelog(), whoserequest])
+    .query('SELECT videoid,name FROM requestlist WHERE $1 <= date AND date <= $2', [weekhead(), datelog()])
+    .then(res => { for (let i = 0; i < res.rows.length; i++) { requestlist.push(res.rows[i].videoid); whoserequest.push(res.rows[i].name); } console.log(requestlist); })
     .catch(e => console.error(e.stack))
-
 
 /*
 let LogWriter = function (player) {
@@ -360,6 +353,11 @@ app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, '/static/index.html'));
 });
 
+/*
 server.listen(process.env.PORT || 3000, function () {
+    console.log('Starting server on port 3000');
+});*/
+
+server.listen( 3000, function () {
     console.log('Starting server on port 3000');
 });
