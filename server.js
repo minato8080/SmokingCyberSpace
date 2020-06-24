@@ -324,6 +324,7 @@ let weekhead = () => {
     let dd = toDoubleDigits(date.getDate());
     let day = yyyy + mm + dd;
     return day;
+}
 
 pool
     .query('SELECT videoid,name FROM requestlist WHERE $1 <= date AND date <= $2', [weekhead(), datelog()])
@@ -353,11 +354,11 @@ app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, '/static/index.html'));
 });
 
-/*
+
 server.listen(process.env.PORT || 3000, function () {
     console.log('Starting server on port 3000');
-});*/
-
+});
+    /*
 server.listen( 3000, function () {
     console.log('Starting server on port 3000');
-});
+});*/
