@@ -28,7 +28,7 @@ let isSmartPhone = function () {
 
 $(function () {
     //読み込んだクッキーをフォームのvalue値として代入
-    if ($.cookie("SCS_user_nickname") !== 'undefined')
+    if ($.cookie("SCS_user_nickname") !== 'undefined' && $.cookie("SCS_user_nickname") !== null)
     $('#nickname').val($.cookie("SCS_user_nickname"));
 })
 //------------------------------------
