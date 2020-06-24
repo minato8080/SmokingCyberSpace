@@ -109,10 +109,11 @@ io.on('connection', function (socket) {
     let player = null;
     socket.on('game-start', (config) => {
         player = new Player({
-            IP: socket.request.connection.remoteAddress,
+            IP: socket.conn.remoteAddress,
             socketId: socket.id,
             nickname: config.nickname,
         });
+        console.log(socket.conn.remoteAddress);
         players[player.id] = player;
         io.sockets.emit('musicresponse', requestlist, whoserequest);
         //‚³‚ñ‚ª“üº‚µ‚Ü‚µ‚½B
