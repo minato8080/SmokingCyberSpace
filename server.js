@@ -67,6 +67,7 @@ class GameObject {
 class Player extends GameObject {
     constructor(obj = {}) {
         super(obj);
+        this.IP = obj.IP;
         this.socketId = obj.socketId;
         //if (obj.nickname === '') this.nickname = '\u540d\u7121\uff7c';
         if (obj.nickname === '') this.nickname = 'anonymous';
@@ -108,6 +109,7 @@ io.on('connection', function (socket) {
     let player = null;
     socket.on('game-start', (config) => {
         player = new Player({
+            IP: socket.request.connection.remoteAddress,
             socketId: socket.id,
             nickname: config.nickname,
         });
@@ -118,8 +120,8 @@ io.on('connection', function (socket) {
             if (err) { console.log(err); throw err;}
         });*/
         pool
-            .query('INSERT INTO roomlogs(time,id,name,state) VALUES($1,$2,$3,$4) RETURNING *',
-                [timelog(), player.id.toString(32), player.nickname, 'IN'])
+            .query('INSERT INTO roomlogs(time,ip,id,name,state) VALUES($1,$2,$3,$4,$5) RETURNING *',
+                [timelog(),player.IP, player.id.toString(32), player.nickname, 'IN'])
             .then(res => {
                 console.log(res.rows[0])
             })
@@ -176,8 +178,8 @@ io.on('connection', function (socket) {
         });
         console.log(msg);*/
         pool
-            .query('INSERT INTO chatlogs(time,id,name,message) VALUES($1,$2,$3,$4) RETURNING *',
-                [timelog(), player.id.toString(32), player.nickname, player.msg])
+            .query('INSERT INTO chatlogs(time,ip,id,name,message) VALUES($1,$2,$3,$4,$5) RETURNING *',
+                [timelog(), player.IP,player.id.toString(32), player.nickname, player.msg])
             .then(res => {
                 console.log(res.rows[0])
             })
@@ -190,8 +192,8 @@ io.on('connection', function (socket) {
             if (err) { console.log(err); throw err;}
         });*/
         pool
-            .query('INSERT INTO roomlogs(time,id,name,state) VALUES($1,$2,$3,$4) RETURNING *',
-                [timelog(), player.id.toString(32), player.nickname, 'OUT'])
+            .query('INSERT INTO roomlogs(time,ip,id,name,state) VALUES($1,$2,$3,$4,$5) RETURNING *',
+                [timelog(), player.IP,player.id.toString(32), player.nickname, 'OUT'])
             .then(res => {
                 console.log(res.rows[0])
             })
@@ -233,8 +235,8 @@ let RequestChecker = function (player) {
         whoserequest.push(player.nickname);
         io.sockets.emit('musicresponse', requestlist, whoserequest);
         pool
-            .query('INSERT INTO requestlist(date,id,name,videoid) VALUES($1,$2,$3,$4) RETURNING *',
-                [datelog(), player.id.toString(32), player.nickname, videoId])
+            .query('INSERT INTO requestlist(date,ip,id,name,videoid) VALUES($1,$2,$3,$4,$5) RETURNING *',
+                [datelog(), player.IP,player.id.toString(32), player.nickname, videoId])
             .then(res => {
                 console.log(res.rows[0])
             })
