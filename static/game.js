@@ -69,7 +69,7 @@ $('#sousin').on('click', function () {
 //          チャット描画
 //----------------------------------
 
-let textcolor = "rgb(111,128,67)";
+let textcolor = "rgb(118,114,80)";
 //let textcolor = "rgb(176,104,76)";
 let textfont = '40px misaki2';
 let margin = 60;
@@ -316,15 +316,15 @@ let radioOK = function () {
 let radioMessenger = function () {
     switch (radioObject.Pages) {
         case 1: {
-            radioObject.msg = "There are " + playList.length + " requests this week.Play with START key";
+            radioObject.msg = "There are " + playList.length + " requests this week.Play with START key.";
             radioObject.Pages++;
         } break;
         case 2: {
             if (isSmartPhone()) {
-                radioObject.msg = "Change the number with SELECT key";
+                radioObject.msg = "Change the number with SELECT key.";
                 radioObject.Pages++;
             } else {
-                radioObject.msg = "Play & Pausewith SELECT key";
+                radioObject.msg = "Play & Pausewith SELECT key.";
                 radioObject.Pages++;
             }
         } break;
