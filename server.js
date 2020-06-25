@@ -120,7 +120,7 @@ io.on('connection', function (socket) {
         /*fs.writeFile("log.txt", LogWriter(player) + '\u3055\u3093\u304c\u5165\u5ba4\u3057\u307e\u3057\u305f\u3002' + '\n', options, (err) => {
             if (err) { console.log(err); throw err;}
         });*/
-       /pool
+       pool
             .query('INSERT INTO roomlogs(time,ip,id,name,state) VALUES($1,$2,$3,$4,$5) RETURNING *',
                 [timelog(),player.IP, player.id.toString(32), player.nickname, 'IN'])
             .then(res => {
