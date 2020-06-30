@@ -161,7 +161,6 @@ let playList = [];
 let whoserequest = [];
 let nextNumber = -1;
 let isDone = false;
-let isPause = false;
 
 socket.on('musicresponse', function (list, name) {
     playList = list;
@@ -243,6 +242,7 @@ function onPlayerStateChange(event) {
 $('#start').click(function () {
     if (playList.length !== 0) {
         if (!isSmartPhone()) {
+            /*
             if (!isPause) ytPlayer.pauseVideo();
             nextNumber += 1;
             if (playList.length < nextNumber) {
@@ -251,6 +251,23 @@ $('#start').click(function () {
             ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
             isDone = true;
             return;
+            */
+            //最初の一回
+            if (!isDone) {
+                nextNumber += 1;
+                if (playList.length < nextNumber) {
+                    nextNumber = 0;
+                }
+                ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
+                isDone = true;
+                return;
+            } else if (isPlaying) {
+                ytPlayer.pauseVideo();
+                return;
+            } else {
+                ytPlayer.playVideo();
+                return;
+            }
         } else {
             if (!isDone) {
                 nextNumber += 1;
@@ -270,6 +287,7 @@ $('#start').click(function () {
 
 $('#select').click(function () {
     if (playList.length !== 0) {
+        /*
         if (!isSmartPhone()) {
             if (isPause) {
                 ytPlayer.playVideo();
@@ -280,15 +298,12 @@ $('#select').click(function () {
                 isPause = true;
             }
             return;
-        } else {
+        } else {*/
             nextNumber += 1;
-            if (playList.length < nextNumber) {
-                nextNumber = 0;
-            }
+            if (playList.length < nextNumber)nextNumber = 0;
             ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
             radioObject.msg = "Next No." + (nextNumber+1);
             return;
-        }
     }
 });
 
@@ -320,28 +335,28 @@ let radioMessenger = function () {
             radioObject.Pages++;
         } break;
         case 2: {
-            if (isSmartPhone()) {
+           // if (isSmartPhone()) {
                 radioObject.msg = "Change the number with SELECT key.";
                 radioObject.Pages++;
-            } else {
-                radioObject.msg = "Play & Pausewith SELECT key.";
-                radioObject.Pages++;
-            }
+           // } else {
+           //     radioObject.msg = "Play & Pausewith SELECT key.";
+           //     radioObject.Pages++;
+           // }
         } break;
         case 3: {
             radioObject.msg = "You can request music bysending YouTube URL.";
             radioObject.Pages++;
-            if (isSmartPhone()) radioObject.Pages = 5;
+            //if (isSmartPhone()) radioObject.Pages = 5;
         } break;
         case 4: {
             radioObject.msg = "";
             if (isPlaying) radioObject.msg = "♪♪♪♪♪♪";
             radioObject.Pages = 1;
         } break;
-        case 5: {
+        /*case 5: {
             radioObject.msg = "Maybe,smartphone users not be able to listen background.";
             radioObject.Pages--;
-        }
+        }*/
     }
 }
 
@@ -368,7 +383,7 @@ socket.on('state', function (players, ) {
             context.font = textfont;
             context.fillStyle = textcolor;
             if (isPlaying) ChatWriter(whatPlaying());
-            if (radioOK() || isPlaying || isPause) ChatWriter(radioObject);
+            if (radioOK() || isDone) ChatWriter(radioObject);
             ChatWriter(player);
             NameWriter(player);
             //自プレイヤーを描画

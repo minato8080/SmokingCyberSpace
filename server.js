@@ -6,7 +6,7 @@ const path = require('path');
 const socketIO = require('socket.io');
 const pg = require('pg');
 const connectionString = process.env.DATABASE_URL ||'postgres://gpzrlzstucgaol:f02aef829006a46ae2dc1f636cb7cba07e74b5c5a5a88ce0d1dad370dfa41fea@ec2-34-230-231-71.compute-1.amazonaws.com:5432/d87931jutk3o9b';
-//const connectionString = process.env.DATABASE_URL ||'postgres://postgres:hijack69PG@localhost:5432/SCSlogs';
+//const connectionString = process.env.DATABASE_URL ||'postgres://postgres:hijack69PG@localhost:5432/SCSlogs';//ローカル環境テスト用
 const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
@@ -168,6 +168,7 @@ io.on('connection', function (socket) {
     //チャット処理
     socket.on('message', function (msg) {
         player.msg = msg;
+        if (msg === '' || msg === null) return;
         //let data = LogWriter(player) + msg + '\n';
         RequestChecker(player);
         player.msgCountDown = 30 * fps;
