@@ -73,11 +73,10 @@ let textcolor = "rgb(118,114,80)";
 //let textcolor = "rgb(176,104,76)";
 let textfont = '40px misaki2';
 let margin = 60;
-let oneline = 6;
+let oneline = 6.5;
 let num, len, lines, chr;
 let bufferSize = 0;
 let buffer = '';
-let chatarray = [];
 
 let ChatWriter = function (player) {
     if (player.msg === '') {return}
@@ -89,28 +88,52 @@ let ChatWriter = function (player) {
 
     len = player.msg.length;
     lines = Math.ceil(len / oneline);
-    for (let i = 0 ,bufferLength = 0; i < len; i++) {
+    let chatarray = [];
+    let lineSizeArray = [];
+    //全文字の繰り返し処理
+    for (let i = 0, buffer_i = 0; i < len; i++) {
         buffer += player.msg.charAt(i);
-        chr = buffer.charCodeAt(bufferLength);
-        if ((chr >= 0x00 && chr < 0x81) ||
-            (chr === 0xf8f0) ||
-            (chr >= 0xff61 && chr < 0xffa0) ||
-            (chr >= 0xf8f1 && chr < 0xf8f4)) {
-            //半角文字の場合は0.5を加算
-            bufferSize += 0.5;
+        chr = buffer.charCodeAt(buffer_i);
+        //---------------------------
+        //エスケープシーケンス
+        if (chr === 92 && player.msg.charAt(i+1) === 'n') {
+            i++;
+            buffer = buffer.slice(0, -1);
+            //if (buffer !== '') {
+                buffer = SpaceCut(buffer);
+                lineSizeArray.push(bufferSize);
+                chatarray.push(buffer);
+                buffer = '';
+                bufferSize = 0;
+                buffer_i = 0;
+            //}
         } else {
-            //それ以外の文字の場合は1を加算
-            bufferSize += 1.0;
+            //---------------------------
+            if ((chr >= 0x00 && chr < 0x81) ||
+                (chr === 0xf8f0) ||
+                (chr >= 0xff61 && chr < 0xffa0) ||
+                (chr >= 0xf8f1 && chr < 0xf8f4)) {
+                //半角文字の場合は0.5を加算
+                bufferSize += 0.5;
+            } else {
+                //それ以外の文字の場合は1を加算
+                bufferSize += 1.0;
+            }
+            buffer_i++;
+            //改行処理
+            if (bufferSize >= oneline && i !== len - 1) {
+                buffer = SpaceCut(buffer);
+                lineSizeArray.push(bufferSize);
+                chatarray.push(buffer);
+                buffer = '';
+                bufferSize = 0;
+                buffer_i = 0;
+            }
         }
-        bufferLength++
-        if (bufferSize >= oneline && i !== len - 1) {
-            chatarray.push(buffer);
-            buffer = '';
-            bufferSize = 0;
-            bufferLength = 0;
-        }
-        
     }
+    //最後の一行
+    buffer = SpaceCut(buffer);
+    lineSizeArray.push(bufferSize);
     chatarray.push(buffer);
     buffer = '';
     bufferSize = 0;
@@ -121,9 +144,31 @@ let ChatWriter = function (player) {
     context.drawImage(chatboxUnder, num + DisplayCenter - (oneline * 20) -20, player.y - margin -30 -5 + textfloater);
 
     for (let i = 0; i < chatarray.length; i++) {
-        context.fillText(chatarray[i], num + DisplayCenter - oneline * 20, player.y - margin + DisplayTop - (chatarray.length - i) * 40 + textfloater);
+        //console.log(lineSizeArray[i]);
+        context.fillText(chatarray[i], num + DisplayCenter - lineSizeArray[i] * 20, player.y - margin + DisplayTop - (chatarray.length - i) * 40 + textfloater);
     }
     chatarray = [];
+}
+
+let SpaceCut= function (str) {
+    if (str.slice(-1) === ' ') {//末尾
+        str = str.slice(0, -1);
+        bufferSize -= 0.5;
+        return SpaceCut(str);
+    } else if (str.slice(-1) === '　') {
+        str = str.slice(0, -1);
+        bufferSize -= 1.0;
+        return SpaceCut(str);
+    } else if (str.slice(0, 1) === ' ') {//先頭
+        str = str.slice(1);
+        bufferSize -= 0.5;
+        return SpaceCut(str);
+    } else if (str.slice(0, 1) === ' ') {
+        str = str.slice(1);
+        bufferSize -= 1.0;
+        return SpaceCut(str);
+    }
+    return str;
 }
 
 let NameWriter = function (player) {
@@ -165,6 +210,7 @@ let isDone = false;
 socket.on('musicresponse', function (list, name) {
     playList = list;
     whoserequest = name;
+    radioPageUpdate();
     console.log(list);
 });
 
@@ -225,17 +271,17 @@ function onPlayerStateChange(event) {
         radioObject.msg = "Next No." + nextNumber+1;
     }
     if (event.data == YT.PlayerState.BUFFERING) {
-        radioObject.msg = "  LOADING..";
+        radioObject.msg = "LOADING..";
     }
     if (event.data == YT.PlayerState.CUED) {
-        radioObject.msg = "    READY";
+        radioObject.msg = "READY";
     }
     if (event.data == YT.PlayerState.PLAYING) {
         radioObject.msg = "♪♪♪♪♪♪";
         isPlaying = true;
     }
     if (event.data == YT.PlayerState.PAUSED) {
-        radioObject.msg = "    PAUSE";
+        radioObject.msg = "PAUSED";
     }
 }
 
@@ -306,14 +352,33 @@ $('#select').click(function () {
             return;
     }
 });
-
+//------------------------------
+//         ヘリオス像
+//------------------------------
+let helios = {
+    x: 0,
+    y: 540,
+    msg: 'Welcome to\\nSmoking Cyber Space!',
+}
+let heliosOK = function () {
+    if (-130 < myplayerpos && myplayerpos < 130) return true;
+    else if (-425 === myplayerpos) {
+        helios.msg = 'There is no\\nway.'
+        return true;
+    }
+    else if (-420 === myplayerpos) {
+        helios.msg = 'Welcome to\\nSmoking Cyber Space!';
+        return false;
+    }
+    else return false;
+}
 //-------------------------------
 //       ラジオオブジェクト
 //-------------------------------
 let radioObject = {
     x: 795,
     y: 650,
-    msg: ' Press A key',
+    msg: 'Press B key',
     Pages: 1,
 }
 let whatPlaying = function () {
@@ -328,15 +393,20 @@ let radioOK = function () {
     if (680 < myplayerpos && myplayerpos < 910) return true;
     else return false;
 }
+let radioPageUpdate = function () {
+    if (radioObject.Pages === 2)
+        radioObject.msg = "There are " + playList.length + "\\nrequests this week.Play with START key.";
+}
+
 let radioMessenger = function () {
     switch (radioObject.Pages) {
         case 1: {
-            radioObject.msg = "There are " + playList.length + " requests this week.Play with START key.";
+            radioObject.msg = "There are " + playList.length + "\\nrequests this week.Play with START key.";
             radioObject.Pages++;
         } break;
         case 2: {
            // if (isSmartPhone()) {
-                radioObject.msg = "Change the number with SELECT key.";
+                radioObject.msg = "Change the\\nnumber with\\nSELECT key.";
                 radioObject.Pages++;
            // } else {
            //     radioObject.msg = "Play & Pausewith SELECT key.";
@@ -344,7 +414,7 @@ let radioMessenger = function () {
            // }
         } break;
         case 3: {
-            radioObject.msg = "You can request music bysending YouTube URL.";
+            radioObject.msg = "You can\\nrequest music by sending\\nYouTube URL.";
             radioObject.Pages++;
             //if (isSmartPhone()) radioObject.Pages = 5;
         } break;
@@ -384,6 +454,8 @@ socket.on('state', function (players, ) {
             context.fillStyle = textcolor;
             if (isPlaying) ChatWriter(whatPlaying());
             if (radioOK() || isDone) ChatWriter(radioObject);
+            if (heliosOK()) ChatWriter(helios);
+            //ここからプレイヤー
             ChatWriter(player);
             NameWriter(player);
             //自プレイヤーを描画
@@ -393,7 +465,7 @@ socket.on('state', function (players, ) {
             SmokeDrawer(player);
             context.restore();
         }
-        // console.log(player.x);
+        //console.log(player.x);
     });
     //他プレイヤー
     Object.values(players).forEach((player) => {
@@ -476,14 +548,14 @@ $(document).on('keydown keyup', (event) => {
         socket.emit('movement', movement, isMove);
     }
     if (event.key === 'a' && event.type === 'keydown' && INPUTS.indexOf(event.target.tagName) == -1) {
+        socket.emit('smoke');
+    }
+    if (event.key === 'b' && event.type === 'keydown' && INPUTS.indexOf(event.target.tagName) == -1) {
         if (radioOK()) {
             radioMessenger();
         } else {
-            socket.emit('smoke');
+            socket.emit('smokeend');
         }
-    }
-    if (event.key === 'b' && event.type === 'keydown' && INPUTS.indexOf(event.target.tagName) == -1) {
-        socket.emit('smokeend');
     }
 });
 
@@ -555,16 +627,16 @@ R.addEventListener(eventLeave, e => {
 });
 
 $('#A').click(function () {
-    if (radioOK()) {
-        radioMessenger();
-    } else {
         socket.emit('smoke');
-    }
 });
 
 
 $('#B').click(function () {
-    socket.emit('smokeend');
+    if (radioOK()) {
+        radioMessenger();
+    } else {
+        socket.emit('smokeend');
+    }
 });
 
 //----------------------------

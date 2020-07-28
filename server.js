@@ -74,7 +74,7 @@ class Player extends GameObject {
         else { this.nickname = obj.nickname;}
         this.width = 480;
         this.height = 480;
-        this.x = 0;
+        this.x = -70;
         this.y = 480;
         this.angle = 1;
         this.frameX = 0;
