@@ -24,6 +24,22 @@ input:-webkit-autofill {
     z-index: 10;
     background-color: rgb(33,33,33);
 }
+
+label img {
+    margin: 3px;
+    padding: 8px;
+}
+.selection-group {
+    position: relative;
+    top: -30px;
+}
+.selection-group input[type="radio"] {
+    display: none;
+}
+.selection-group input[type="radio"]:checked + label img {
+    background: black;
+}
+
 #nickname {
     font-family: misaki2;
     font-size: 30px;
@@ -32,6 +48,8 @@ input:-webkit-autofill {
     object-fit: contain;
     color: rgb(33,43,23);
     outline: none;
+    position: relative;
+    top: -20px;
     background-color: rgb(88,104,76);
 }
 ::placeholder {

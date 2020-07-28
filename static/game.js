@@ -5,12 +5,18 @@ const canvas = $('#canvas-2d')[0];
 const mapImage = $('#map-image')[0];
 const mapImageZ1 = $('#map-image-z1')[0];
 const Controler = $('#controler')[0];
-const playerImage = $('#player-image')[0];
+//const playerImage = $('#masi')[0];
+//const playerImage2 = $('#tatu')[0];
 const context = canvas.getContext('2d');
 const smoky = $('#smoky')[0];
 const chatboxTop = $('#top')[0];
 const chatboxMiddle = $('#middle')[0];
 const chatboxUnder = $('#under')[0];
+
+const Avatars = {
+    masi: $('#masi')[0],
+    tatu: $('#tatu')[0],
+};
 
 let movement = {};
 let myplayerpos;
@@ -36,7 +42,8 @@ $(function () {
 //------------------------------------
 function gameStart() {
     $.cookie("SCS_user_nickname", $('#nickname').val());
-    socket.emit('game-start', { nickname: $("#nickname").val()});
+    socket.emit('game-start', { nickname: $("#nickname").val(), avatar: document.getElementById("avatar").avatar.value });
+    //console.log(document.getElementById("avatar").avatar.value);
     $("#start-screen").hide();
 }
 $("#start-button").on('click', gameStart);
@@ -460,7 +467,7 @@ socket.on('state', function (players, ) {
             NameWriter(player);
             //自プレイヤーを描画
             PlayerFrameChanger(player);
-            context.drawImage(playerImage, player.frameX, player.frameY, player.width, player.height,
+            context.drawImage(Avatars[player.avatar], player.frameX, player.frameY, player.width, player.height,
                 DisplayCenter - 240, 960 - player.height - 10 + DisplayTop, 480, 480);
             SmokeDrawer(player);
             context.restore();
@@ -477,7 +484,7 @@ socket.on('state', function (players, ) {
             NameWriter(player);
             //他プレイヤーを描画
             PlayerFrameChanger(player);
-            context.drawImage(playerImage, player.frameX, player.frameY, player.width, player.height,
+            context.drawImage(Avatars[player.avatar], player.frameX, player.frameY, player.width, player.height,
                 (player.x - myplayerpos) * movespeed + DisplayCenter - 240, 960 - player.height + DisplayTop, 480, 480);
             SmokeDrawer(player);
             context.restore();
@@ -694,34 +701,79 @@ let SmokeActionFrameChanger = function (player) {
     }
 
 
-    switch (player.smokeActionFrame) {
-        case 0: player.frameX = 0; smoke.Animated = false; break;
-        case 1: player.frameX = player.width * 1; break;
-        case 2: player.frameX = player.width * 2; break;
-        case 3: player.frameX = player.width * 3; break;
-        case 4: player.frameX = player.width * 4; break;
-        case 5: player.frameX = player.width * 5; break;
-        case 6: player.frameX = player.width * 6; break;
-        case 7: player.frameX = player.width * 7; break;
-        case 8: player.frameX = player.width * 6; break;
-        case 9: player.frameX = player.width * 7; break;
-        case 10: player.frameX = player.width * 6; break;
-        case 11: player.frameX = player.width * 7; break;
-        case 12: player.frameX = player.width * 8; break;
-        case 13: player.frameX = player.width * 9; break;
-        case 14: player.frameX = player.width * 3; break;
-        case 15: player.frameX = player.width * 3; break;
-        case 16: player.frameX = player.width * 3; break;
-        case 17: player.frameX = player.width * 3; break;
-        case 18: player.frameX = player.width * 2; break;
-        case 19: player.frameX = player.width * 1; break;
-        case 20: player.frameX = player.width * 4; break;
-        case 21: player.frameX = player.width * 5; break;
-        case 22: player.frameX = player.width * 6; break;
-        case 23: player.frameX = player.width * 7; break;
+    switch (player.avatar) {
+        case 'masi': {
+            switch (player.smokeActionFrame) {
+                case 0: player.frameX = 0; smoke.Animated = false; break;
+                case 1: player.frameX = player.width * 1; break;
+                case 2: player.frameX = player.width * 2; break;
+                case 3: player.frameX = player.width * 3; break;
+                case 4: player.frameX = player.width * 4; break;
+                case 5: player.frameX = player.width * 5; break;
+                case 6: player.frameX = player.width * 6; break;
+                case 7: player.frameX = player.width * 7; break;
+                case 8: player.frameX = player.width * 6; break;
+                case 9: player.frameX = player.width * 7; break;
+                case 10: player.frameX = player.width * 6; break;
+                case 11: player.frameX = player.width * 7; break;
+                case 12: player.frameX = player.width * 8; break;
+                case 13: player.frameX = player.width * 9; break;
+                case 14: player.frameX = player.width * 3; break;
+
+                case 15: player.frameX = player.width * 3; break;
+                case 16: player.frameX = player.width * 3; break;
+                case 17: player.frameX = player.width * 3; break;
+                case 18: player.frameX = player.width * 2; break;
+                case 19: player.frameX = player.width * 1; break;
+                case 20: player.frameX = player.width * 4; break;
+                case 21: player.frameX = player.width * 5; break;
+                case 22: player.frameX = player.width * 6; break;
+                case 23: player.frameX = player.width * 7; break;
+            }
+        } break;
+        case 'tatu': {
+            switch (player.smokeActionFrame) {
+                case 0: player.frameX = 0; smoke.Animated = false; break;
+                case 1: player.frameX = player.width * 1; break;
+                case 2: player.frameX = player.width * 2; break;
+                case 3: player.frameX = player.width * 3; break;
+                case 4: player.frameX = player.width * 4; break;
+                case 5: player.frameX = player.width * 4; break;
+                case 6: player.frameX = player.width * 5; break;
+                case 7: player.frameX = player.width * 6; break;
+                case 8: player.frameX = player.width * 7; break;
+                case 9: player.frameX = player.width * 8; break;
+                case 10: player.frameX = player.width * 8; break;
+                case 11: player.frameX = player.width * 8; break;
+                case 12: player.frameX = player.width * 9; break;
+                case 13: player.frameX = player.width * 9; break;
+                case 14: player.frameX = player.width * 9; break;
+
+                case 15: player.frameX = player.width * 3; break;
+                case 16: player.frameX = player.width * 3; break;
+                case 17: player.frameX = player.width * 3; break;
+                case 18: player.frameX = player.width * 2; break;
+                case 19: player.frameX = player.width * 1; break;
+                case 20: player.frameX = player.width * 4; break;
+                case 21: player.frameX = player.width * 5; break;
+                case 22: player.frameX = player.width * 6; break;
+                case 23: player.frameX = player.width * 7; break;
+            }
+        } break;
     }
+   
 
 }
+/*
+switch (player.avatar) {
+    case 'masi': {
+        
+    } break;
+    case 'tatu': {
+       
+    } break;
+}
+*/
 let SmokingFrameChanger = function (player) {
     if (player.angle < 0) {
             player.frameY = player.height * 4;
@@ -730,12 +782,25 @@ let SmokingFrameChanger = function (player) {
             player.frameY = player.height * 5;
     }
     if (player.isMove) {
-        switch (frame8_4fps) {
-            case 0: case 4: player.frameX = 0; break;
-            case 1: case 5: player.frameX = player.width * 8; break;
-            case 2: case 6: player.frameX = 0; break;
-            case 3: case 7: player.frameX = player.width * 9; break;
+        switch (player.avatar){
+            case 'masi': {
+                switch (frame8_4fps) {
+                    case 0: case 4: player.frameX = 0; break;
+                    case 1: case 5: player.frameX = player.width * 8; break;
+                    case 2: case 6: player.frameX = 0; break;
+                    case 3: case 7: player.frameX = player.width * 9; break;
+                }
+            } break;
+            case 'tatu': {
+                switch (frame8_4fps) {
+                    case 0: case 4: player.frameX = player.width * 9; break;
+                    case 1: case 5: player.frameX = player.width * 8; break;
+                    case 2: case 6: player.frameX = player.width * 9; break;
+                    case 3: case 7: player.frameX = player.width * 10; break;
+                }
+            } break;
         }
+        
     }
     else {
         switch (player.smokingFrame % 32) {
@@ -792,22 +857,46 @@ let IdleFrameChanger = function (player) {
     }
 }
 let WalkFrameChanger = function (player) {
-    if (player.angle < 0) {
-        player.frameY = 0;
-        switch (frame8_4fps) {
-            case 0: case 4: player.frameX = 0; break;
-            case 1: case 5: player.frameX = player.width * 1; break;
-            case 2: case 6: player.frameX = 0; break;
-            case 3: case 7: player.frameX = player.width * 2; break;
-        }
-    }
-    else if (player.angle > 0) {
-        player.frameY = 0;
-        switch (frame8_4fps) {
-            case 0: case 4: player.frameX = player.width * 3; break;
-            case 1: case 5: player.frameX = player.width * 4; break;
-            case 2: case 6: player.frameX = player.width * 3; break;
-            case 3: case 7: player.frameX = player.width * 5; break;
-        }
+    switch (player.avatar) {
+        case 'masi': {
+            if (player.angle < 0) {
+                player.frameY = 0;
+                switch (frame8_4fps) {
+                    case 0: case 4: player.frameX = 0; break;
+                    case 1: case 5: player.frameX = player.width * 1; break;
+                    case 2: case 6: player.frameX = 0; break;
+                    case 3: case 7: player.frameX = player.width * 2; break;
+                }
+            }
+            else if (player.angle > 0) {
+                player.frameY = 0;
+                switch (frame8_4fps) {
+                    case 0: case 4: player.frameX = player.width * 3; break;
+                    case 1: case 5: player.frameX = player.width * 4; break;
+                    case 2: case 6: player.frameX = player.width * 3; break;
+                    case 3: case 7: player.frameX = player.width * 5; break;
+                }
+            }
+        } break;
+        case 'tatu': {
+            if (player.angle < 0) {
+                player.frameY = 0;
+                switch (frame8_4fps) {
+                    case 0: case 4: player.frameX = player.width * 1; break;
+                    case 1: case 5: player.frameX = player.width * 0; break;
+                    case 2: case 6: player.frameX = player.width * 1; break;
+                    case 3: case 7: player.frameX = player.width * 2; break;
+                }
+            }
+            else if (player.angle > 0) {
+                player.frameY = 0;
+                switch (frame8_4fps) {
+                    case 0: case 4: player.frameX = player.width * 4; break;
+                    case 1: case 5: player.frameX = player.width * 3; break;
+                    case 2: case 6: player.frameX = player.width * 4; break;
+                    case 3: case 7: player.frameX = player.width * 5; break;
+                }
+            }
+        } break;
     }
 }

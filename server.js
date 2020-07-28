@@ -71,7 +71,8 @@ class Player extends GameObject {
         this.socketId = obj.socketId;
         //if (obj.nickname === '') this.nickname = '\u540d\u7121\uff7c';
         if (obj.nickname === '') this.nickname = 'anonymous';
-        else { this.nickname = obj.nickname;}
+        else { this.nickname = obj.nickname; }
+        this.avatar = obj.avatar;
         this.width = 480;
         this.height = 480;
         this.x = -70;
@@ -96,6 +97,7 @@ class Player extends GameObject {
     }
     toJSON() {
         return Object.assign(super.toJSON(), {
+            avatar:this.avatar,
             socketId: this.socketId, nickname: this.nickname, msg: this.msg,
             angle: this.angle, isMove: this.isMove,
             frameX: this.frameX, frameY: this.frameY,
@@ -112,6 +114,7 @@ io.on('connection', function (socket) {
             IP: socket.conn.remoteAddress,
             socketId: socket.id,
             nickname: config.nickname,
+            avatar: config.avatar,
         });
         console.log(socket.conn.remoteAddress);
         players[player.id] = player;
