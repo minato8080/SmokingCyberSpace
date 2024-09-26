@@ -51,7 +51,6 @@ function gameStart() {
     nickname: $("#nickname").val(),
     avatar: document.getElementById("avatar").avatar.value,
   });
-  //console.log(document.getElementById("avatar").avatar.value);
   $("#start-screen").hide();
 }
 $("#start-button").on("click", gameStart);
@@ -329,77 +328,10 @@ function onPlayerStateChange(event) {
     radioObject.msg = "PAUSED";
   }
 }
-/*
-function getTitle(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        var title = this.responseXML.title || "no title";
-        callback(url, title);
-    }
-    xhr.open("GET", url, true);
-    xhr.responseType = "document";
-    xhr.send();
-}
-getTitle('https://o-treetree.hatenablog.com/', alertTitle);
-function alertTitle(url, title) {
-    console.log("URL： " + url + "\nTITLE： " + title)
-}
-*/
-/*
-var getTitle = function (url, callback) {
-    var END_POINT = 'http://www.usamimi.info/~ryouchi/title/get_title_jsonp.php';
-    $.ajax({
-        type: 'GET',
-        url: END_POINT,
-        dataType: 'jsonp',
-        data: {
-            url: url,
-        },
-        success: callback,
-    });
-};
-getTitle('https://www.youtube.com/watch?v=o09ETk6eTgM',console.log);
-*/
-/*
-$.ajax({
-    type: 'GET',
-    url: 'http://localhost/',
-    success: function (data) {
-        var t = data.match(/<title>(.*)<\/title>/);
-        console.log(t[1]);
-    }
-});
-*/
-
-/*
-function getJsonFile() {
-    $.getJSON(
-        'https://www.googleapis.com/youtube/v3/search?key={AIzaSyDzI3-Urlpk0u2g2xlbFEUSbuGJ8EB9Ao0}&part=id,snippet',
-        {
-            q: $('JfsXLHPk0aU').val(),
-            type: 'video',
-            maxResults: 50,
-        },
-        function (data) {
-            return data['items'].item.snippet.title;
-        });
-}
-console.log(getJsonFile());
-*/
 
 $("#start").click(function () {
   if (playList.length !== 0) {
     if (!isSmartPhone()) {
-      /*
-            if (!isPause) ytPlayer.pauseVideo();
-            nextNumber += 1;
-            if (playList.length < nextNumber) {
-                nextNumber = 0;
-            }
-            ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
-            isDone = true;
-            return;
-            */
       //最初の一回
       if (!isDone) {
         nextNumber += 1;
@@ -435,18 +367,6 @@ $("#start").click(function () {
 
 $("#select").click(function () {
   if (playList.length !== 0) {
-    /*
-        if (!isSmartPhone()) {
-            if (isPause) {
-                ytPlayer.playVideo();
-                isPause = false;
-            }else if (isDone) {
-                ytPlayer.pauseVideo();
-                console.log(4);
-                isPause = true;
-            }
-            return;
-        } else {*/
     nextNumber += 1;
     if (playList.length < nextNumber) nextNumber = 0;
     ytPlayer.loadVideoById({ videoId: playList[nextNumber] });
@@ -514,20 +434,14 @@ let radioMessenger = function () {
       break;
     case 2:
       {
-        // if (isSmartPhone()) {
         radioObject.msg = "Change the\\nnumber with\\nSELECT key.";
         radioObject.Pages++;
-        // } else {
-        //     radioObject.msg = "Play & Pausewith SELECT key.";
-        //     radioObject.Pages++;
-        // }
       }
       break;
     case 3:
       {
         radioObject.msg = "You can\\nrequest music by sending\\nYouTube URL.";
         radioObject.Pages++;
-        //if (isSmartPhone()) radioObject.Pages = 5;
       }
       break;
     case 4:
@@ -537,10 +451,6 @@ let radioMessenger = function () {
         radioObject.Pages = 1;
       }
       break;
-    /*case 5: {
-            radioObject.msg = "Maybe,smartphone users not be able to listen background.";
-            radioObject.Pages--;
-        }*/
   }
 };
 

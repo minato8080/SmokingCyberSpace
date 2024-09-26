@@ -6,15 +6,15 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "start": "nodemon ./server/server.js",
-    "dev": "set BROWSER=none && npm-run-all --parallel dev:*",
-    "dev:server": "nodemon ./server/server.js",
+    "start": "nodemon ./server/src/main/server.js",
+    "dev": "npx webpack --config webpack.config.js && npm-run-all --parallel dev:*",
+    "dev:server": "nodemon ./server/src/main/server.js",
     "dev:client": "webpack serve --open --hot",
     "build": "npx webpack --config webpack.config.js"
   },
   "name": "smoking_cyber_space",
   "version": "1.0.0",
-  "main": "./server/server.js",
+  "main": "./server/src/main/server.js",
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",
