@@ -1,0 +1,182 @@
+﻿@charset "UTF-8";
+
+@font-face {
+    font-family: 'misaki2';
+    src: url('../fonts/misaki_gothic_2nd.ttf') format('truetype');
+}
+body {
+    background-color: rgb(33,33,33);
+    font-family: misaki2;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+input:-webkit-autofill {
+    box-shadow: 0 0 0 1000px rgb(88,104,76) inset;
+}
+#start-screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    z-index: 10;
+    background-color: rgb(33,33,33);
+}
+
+label img {
+    margin: 3px;
+    padding: 8px;
+}
+.selection-group {
+    position: relative;
+    top: -30px;
+}
+.selection-group input[type="radio"] {
+    display: none;
+}
+.selection-group input[type="radio"]:checked + label img {
+    background: black;
+}
+
+#nickname {
+    font-family: misaki2;
+    font-size: 30px;
+    width: 200px;
+    height: 60px;
+    object-fit: contain;
+    color: rgb(33,43,23);
+    outline: none;
+    position: relative;
+    top: -20px;
+    background-color: rgb(88,104,76);
+}
+::placeholder {
+    color: rgb(53,63,43);
+}
+#start-button {
+    font-size: 60px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+#message_form {
+    margin: 0;
+}
+#input_msg {
+    font-family: misaki2;
+    font-size: 30px;
+    width: 100%;
+    height: 38.5px;
+    object-fit: contain;
+    color: rgb(33,43,23);
+    background-color: rgb(88,104,76);
+    outline: none;
+}
+textarea:focus {
+    outline: none;
+}
+#sousin {
+    font-size: 30px;
+    vertical-align: top;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.controler {
+        text-align: center;
+        position: relative;
+        left: -20px;
+        top: 40px;
+        object-fit: contain;
+    }
+
+    #canvas-2d {
+        width: 300%;
+        margin: 0 -100%;
+        text-align: center;
+        height: 50%;
+        object-fit: contain;
+        object-position: top;
+    }
+
+.materialbutton {
+    display: inline-block;
+    font-family: misaki2;
+    padding: 4px 0px 0px 8px;
+    color: transparent;
+    background-color: rgb(23,23,23);
+    text-shadow: -2px -2px 1.5px rgba(60,50,20,0.4), 0px 0px 0.7px rgb(226,192,152),-1px -0px 1.5px rgba(60,50,40,0.8),0px -1px 1.5px rgba(60,50,40,0.8), -1.7px -1.7px 0.7px rgb(255,255,255),-1.7px 0px 1px rgb(255,255,255),0px -1.7px 1px rgb(255,255,255);
+    outline: none;
+    box-shadow: 1.7px 1.7px 1.5px rgb(0,0,0), -1px -1px 1.5px rgb(60,50,40),-1px -0px 1.5px rgb(60,50,40),0px -1px 1.5px rgb(60,50,40), -1.7px -1.7px 0.7px rgb(255, 200,200),-1.7px 0px 1px rgb(255, 200,200),0px -1.7px 1px rgb(255, 200,200);
+}
+
+    .Tkey {
+        font-size: 60px;
+    }
+
+    .AB {
+        font-size: 60px;
+        padding: 5px 15px 0px 25px;
+        position: relative;
+    }
+
+.SelSta {
+    font-size: 15px;
+    display: inline-block;
+    vertical-align: top;
+    outline: none;
+    object-fit: contain;
+    position: relative;
+    left: 10px;
+    top: 5px;
+    padding: 0px 4px 0px 6px;
+}
+
+    #firstline {
+        position: relative;
+    }
+
+    #secondline {
+        position: relative;
+    }
+
+
+    #up {
+        padding: 5px 0px 0px 5px;
+        position: relative;
+        top: -2px;
+    }
+
+    #down {
+        padding: 5px 0px 0px 5px;
+        position: relative;
+        top: 0px;
+    }
+
+    #left {
+        padding: 5px 0px 0px 10px;
+        position: relative;
+        left: 4px;
+    }
+
+    #right {
+        padding: 5px 0px 0px 10px;
+        position: relative;
+        left: -4px;
+    }
+
+
+    #A {
+        position: relative;
+        left: 120px;
+        top: 10px;
+    }
+
+    #B {
+        position: relative;
+        top: 15px;
+    }
