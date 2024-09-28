@@ -2,48 +2,53 @@ const { LogWriter, timelog, datelog } = require("../util/log");
 const Player = require("../lib/Player");
 const global = require("../common/global");
 const { APP } = require("../common/const");
+// ファイルシステムが有効な場合、fsモジュールをインポート
 if (APP.IS_FS) {
   const fs = require("fs");
 }
 
+/**
+ * YouTubeの動画リクエストを処理する関数
+ * @param {Player} player - リクエストを送信したプレイヤーオブジェクト
+ */
 const RequestChecker = function (player) {
   let videoId;
   const msg = player.msg;
-  // PC版のURL
-  if (msg.indexOf("https:// www.youtube.com/watch?v=") !== -1) {
-    videoId = msg.split("https:// www.youtube.com/watch?v=")[1];
+  const pcUrl = "https://www.youtube.com/watch?v=";
+  const mobileUrl = "https://m.youtube.com/watch?feature=youtu.be&v=";
+  const appUrl = "https://youtu.be/";
+
+  // PC版のURLをチェック
+  if (msg.indexOf(pcUrl) !== -1) {
+    videoId = msg.split(pcUrl)[1];
   }
-  // モバイルブラウザのURL
-  else if (
-    msg.indexOf("https:// m.youtube.com/watch?feature=youtu.be&v=") !== -1
-  ) {
-    videoId = msg.split("https:// m.youtube.com/watch?feature=youtu.be&v=")[1];
+  // モバイルブラウザのURLをチェック
+  else if (msg.indexOf(mobileUrl) !== -1) {
+    videoId = msg.split(mobileUrl)[1];
   }
-  // モバイルアプリ
-  else if (msg.indexOf("https:// youtu.be/") !== -1) {
-    videoId = msg.split("https:// youtu.be/")[1];
+  // モバイルアプリのURLをチェック
+  else if (msg.indexOf(appUrl) !== -1) {
+    videoId = msg.split(appUrl)[1];
   } else {
     return;
   }
-  // &=クエリパラーメターがついていることがあるので取り除く
-  let ampersandPosition = videoId.indexOf("&");
-  if (ampersandPosition != -1) {
-    videoId = videoId.substring(0, ampersandPosition);
-  }
-  // ?クエリパラーメターがついていることがあるので取り除く
-  let questionPosition = videoId.indexOf("?");
-  if (questionPosition != -1) {
-    videoId = videoId.substring(0, questionPosition);
-  }
-  // 正しいurlの形式だったとき送信
+
+  // クエリパラメータを除去
+  videoId = videoId.split(/[&?]/)[0];
+
+  // 正しいURLの形式（11文字）の場合、リクエストを処理
   if (videoId.length === 11) {
+    // グローバルリストにリクエストを追加
     global.requestlist.push(videoId);
     global.whoserequest.push(player.nickname);
+    // 全クライアントに更新されたリクエストリストを送信
     global.io.sockets.emit(
       "musicresponse",
       global.requestlist,
       global.whoserequest
     );
+
+    // データベースにリクエストを保存
     global.pool
       .query(
         "INSERT INTO requestlist(date,ip,id,name,videoid) VALUES($1,$2,$3,$4,$5) RETURNING *",
@@ -56,21 +61,31 @@ const RequestChecker = function (player) {
   }
 };
 
-exports.onConnection = (socket) => {
+/**
+ * 新しい接続があった時の処理
+ * @param {Socket} socket - 接続されたソケット
+ */
+const onConnection = (socket) => {
   let player = null;
+
+  // ゲーム開始時の処理
   socket.on("game-start", (config) => {
+    // 新しいプレイヤーを作成
     player = new Player({
       IP: socket.conn.remoteAddress,
       socketId: socket.id,
       nickname: config.nickname,
       avatar: config.avatar,
     });
+    // グローバルプレイヤーリストに追加
     global.players[player.id] = player;
+    // 現在の音楽リクエストリストを送信
     global.io.sockets.emit(
       "musicresponse",
       global.requestlist,
       global.whoserequest
     );
+    // データベースに入室ログを記録
     global.pool
       .query(
         "INSERT INTO roomlogs(time,ip,id,name,state) VALUES($1,$2,$3,$4,$5) RETURNING *",
@@ -81,10 +96,13 @@ exports.onConnection = (socket) => {
       })
       .catch((e) => console.error(e.stack));
   });
+
+  // 切断時の処理
   socket.on("disconnect", () => {
-    if (!player) {
+    if (!player || !global.players[player.id]) {
       return;
     }
+    // ファイルシステムが有効な場合、ログを記録
     if (APP.IS_FS && player) {
       fs.writeFile(
         "log.txt",
@@ -98,6 +116,7 @@ exports.onConnection = (socket) => {
         }
       );
     }
+    // データベースに退室ログを記録
     global.pool
       .query(
         "INSERT INTO roomlogs(time,ip,id,name,state) VALUES($1,$2,$3,$4,$5) RETURNING *",
@@ -107,11 +126,12 @@ exports.onConnection = (socket) => {
         console.log(res.rows[0]);
       })
       .catch((e) => console.error(e.stack));
-    delete players[player.id];
+    // プレイヤーをグローバルリストから削除
+    delete global.players[player.id];
     player = null;
   });
-  //------------------------------------
-  //ユーザーアクション
+  
+  // プレイヤーの移動処理
   socket.on("movement", (movement, isMove) => {
     if (!player) return;
     if (!player.isSmokeAction) {
@@ -128,6 +148,8 @@ exports.onConnection = (socket) => {
       player.isMove = false;
     }
   });
+
+  // タバコを吸う動作の開始処理
   socket.on("smoke", () => {
     if (!player) return;
     if (player.isSmoking) {
@@ -141,6 +163,8 @@ exports.onConnection = (socket) => {
       player.smokeActionCountDown = 6 * APP.FPS;
     }
   });
+
+  // タバコを吸う動作の終了処理
   socket.on("smokeend", () => {
     if (!player) return;
     if (player.isSmokeAction) return;
@@ -150,12 +174,14 @@ exports.onConnection = (socket) => {
       player.isSmoking = false;
     }
   });
-  //チャット処理
+
+  // チャットメッセージ処理
   socket.on("message", (msg) => {
     if (!msg) return;
     player.msg = msg;
     RequestChecker(player);
     player.msgCountDown = 30 * fps;
+    // ファイルシステムが有効な場合、ログを記録
     if (APP.IS_FS) {
       if (msg !== "")
         fs.writeFile(
@@ -173,6 +199,7 @@ exports.onConnection = (socket) => {
         );
       console.log(msg);
     }
+    // データベースにチャットログを記録
     pool
       .query(
         "INSERT INTO chatlogs(time,ip,id,name,message) VALUES($1,$2,$3,$4,$5) RETURNING *",
@@ -190,3 +217,4 @@ exports.onConnection = (socket) => {
       .catch((e) => console.error(e.stack));
   });
 };
+module.exports = onConnection;

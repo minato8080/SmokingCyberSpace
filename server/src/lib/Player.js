@@ -36,6 +36,10 @@ class Player extends GameObject {
     this.smokingFrame = 0;
   }
   
+  /**
+   * プレイヤーオブジェクトをJSON形式に変換する
+   * @returns {Object} プレイヤーの情報を含むJSONオブジェクト
+   */
   toJSON() {
     return Object.assign(super.toJSON(), {
       avatar: this.avatar,

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.17.1",
     "http": "^0.0.1-security",
     "pg": "^8.2.1",
@@ -7,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon ./server/src/main/server.js",
-    "dev": "npx webpack --config webpack.config.js && npm-run-all --parallel dev:*",
+    "dev": "set BROWSER=none && npx webpack --config webpack.config.js && npm-run-all --parallel dev:*",
     "dev:server": "nodemon ./server/src/main/server.js",
     "dev:client": "webpack serve --open --hot",
     "build": "npx webpack --config webpack.config.js"
