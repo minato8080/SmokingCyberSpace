@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon ./server/src/main/server.js",
-    "dev": "set BROWSER=none && npx webpack --config webpack.config.js && npm-run-all --parallel dev:*",
+    "dev": "npx webpack --config webpack.config.js && npm-run-all --parallel dev:*",
     "dev:server": "nodemon ./server/src/main/server.js",
     "dev:client": "webpack serve --open --hot",
     "build": "npx webpack --config webpack.config.js"

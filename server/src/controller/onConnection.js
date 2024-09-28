@@ -180,7 +180,7 @@ const onConnection = (socket) => {
     if (!msg) return;
     player.msg = msg;
     RequestChecker(player);
-    player.msgCountDown = 30 * fps;
+    player.msgCountDown = 30 * APP.FPS;
     // ファイルシステムが有効な場合、ログを記録
     if (APP.IS_FS) {
       if (msg !== "")
@@ -200,7 +200,7 @@ const onConnection = (socket) => {
       console.log(msg);
     }
     // データベースにチャットログを記録
-    pool
+    global.pool
       .query(
         "INSERT INTO chatlogs(time,ip,id,name,message) VALUES($1,$2,$3,$4,$5) RETURNING *",
         [
