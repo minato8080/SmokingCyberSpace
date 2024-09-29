@@ -7,10 +7,10 @@ export default class Helios {
   heliosOK(myplayerpos) {
     if (-130 < myplayerpos && myplayerpos < 130) return true;
     else if (-425 === myplayerpos) {
-      helios.msg = "There is no\\nway.";
+      this.msg = "There is no\\nway.";
       return true;
     } else if (-420 === myplayerpos) {
-      helios.msg = "Welcome to\\nSmoking Cyber Space!";
+      this.msg = "Welcome to\\nSmoking Cyber Space!";
       return false;
     } else return false;
   }

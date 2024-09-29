@@ -1,30 +1,34 @@
-export let isDone = false;
-import { radio } from "../models/gameObjects";
+/**
+ * 音楽サービスモジュール
+ *
+ * このモジュールは、YouTubeプレーヤーを使用して音楽を再生する機能を提供します。
+ * ユーザーが音楽を選択し、再生、停止、次の曲に進むことができます。
+ *
+ * @module musicService
+ */
+
+import { radio, state } from "../models/gameObjects";
 import { isSmartPhone } from "../config/gameConfig";
+import { startButton, selectButton } from "../config/elementConfig";
 
 let ytPlayer;
 
-function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player("youtube", {
-    height: "0",
-    width: "0",
-    playsinline: 1,
-    events: {
-      onReady: onYouTubePlayerReady,
-      onStateChange: onPlayerStateChange,
-    },
-  });
-  console.log("iframe api ready");
-}
-
-function onYouTubePlayerReady(event) {
+/**
+ * YouTubeプレーヤーが準備完了したときに呼び出される関数
+ * @param {Object} _event - イベントオブジェクト
+ */
+function onYouTubePlayerReady(_event) {
   console.log("player ready");
-  //スマホでインライン再生は未解決
-  /*if (isSmartPhone) {
-        ytPlayer.playsinline = 0;
-    }*/
+  // TODO: スマホでインライン再生は不可
+  if (isSmartPhone) {
+    ytPlayer.playsinline = 0;
+  }
 }
 
+/**
+ * YouTubeプレーヤーの状態が変化したときに呼び出される関数
+ * @param {Object} event - 状態変化イベント
+ */
 function onPlayerStateChange(event) {
   if (event.data == YT.PlayerState.ENDED) {
     radio.nextNumber += 1;
@@ -33,7 +37,7 @@ function onPlayerStateChange(event) {
     }
     ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
     ytPlayer.playVideo();
-    radio.msg = "Next No." + radio.nextNumber + 1;
+    radio.msg = "Next No." + (radio.nextNumber + 1);
   }
   if (event.data == YT.PlayerState.BUFFERING) {
     radio.msg = "LOADING..";
@@ -50,6 +54,9 @@ function onPlayerStateChange(event) {
   }
 }
 
+/**
+ * YouTubeプレーヤーを作成する関数
+ */
 export function createYouTubePlayer() {
   if (!YT.loaded) {
     console.log("YouTube Player API is still loading.  Retrying...");
@@ -72,6 +79,9 @@ export function createYouTubePlayer() {
   console.log("iframe api ready");
 }
 
+/**
+ * 音楽を初期化する関数
+ */
 export function initializeMusic() {
   const tag = document.createElement("script");
   tag.src = "https://www.youtube.com/iframe_api";
@@ -81,17 +91,17 @@ export function initializeMusic() {
 
   createYouTubePlayer();
 
-  $("#start").click(function () {
+  startButton.click(function () {
     if (radio.playList.length !== 0) {
       if (!isSmartPhone()) {
         //最初の一回
-        if (!isDone) {
+        if (!state.isYtPlayerLoadVideoById) {
           radio.nextNumber += 1;
           if (radio.playList.length < radio.nextNumber) {
             radio.nextNumber = 0;
           }
           ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-          isDone = true;
+          state.isYtPlayerLoadVideoById = true;
           return;
         } else if (radio.isPlaying) {
           ytPlayer.pauseVideo();
@@ -101,13 +111,13 @@ export function initializeMusic() {
           return;
         }
       } else {
-        if (!isDone) {
+        if (!state.isYtPlayerLoadVideoById) {
           radio.nextNumber += 1;
           if (radio.playList.length < radio.nextNumber) {
             radio.nextNumber = 0;
           }
           ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-          isDone = true;
+          state.isYtPlayerLoadVideoById = true;
           return;
         } else {
           ytPlayer.playVideo();
@@ -117,7 +127,7 @@ export function initializeMusic() {
     }
   });
 
-  $("#select").click(function () {
+  selectButton.click(function () {
     if (radio.playList.length !== 0) {
       radio.nextNumber += 1;
       if (radio.playList.length < radio.nextNumber) radio.nextNumber = 0;

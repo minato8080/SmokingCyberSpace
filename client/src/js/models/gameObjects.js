@@ -1,11 +1,15 @@
 import Radio from "./radio.js";
 import Helios from "./Helios.js";
-import Smoke from "./Smoke.js"
+import Smoke from "./Smoke.js";
 
 const state = {
-  myplayerpos: 0,
+  myPlayerPos: 0,
+  textFloater: 0,
+  age: 0,
+  frame4_1fps: 0,
+  frame8_4fps: 0,
   isMove: false,
-  textfloater: 0,
+  isYtPlayerLoadVideoById: false,
 };
 
 const players = {};

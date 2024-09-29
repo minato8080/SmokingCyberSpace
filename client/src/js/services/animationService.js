@@ -1,10 +1,5 @@
 import { helios, radio, state } from "../models/gameObjects";
 import {
-  PlayerFrameChanger,
-  updateAnimationFrames,
-} from "../utils/animationFrameChanger";
-import { ChatWriter, NameWriter } from "../utils/textUtils";
-import {
   Avatars,
   DisplayCenter,
   DisplayTop,
@@ -12,11 +7,12 @@ import {
   textcolor,
   textfont,
 } from "../config/gameConfig";
+import { mapImage, mapImageZ1, smoky } from "../config/elementConfig";
 import { socket } from "./socketService";
 import { smoke } from "../models/gameObjects";
-import { isDone } from "./musicService";
 import { clearCanvas } from "../utils/canvasHelper";
-import { mapImage, mapImageZ1, smoky } from "./uiService";
+import { PlayerFrameChanger } from "../utils/animationFrameChanger";
+import { ChatWriter, NameWriter } from "../utils/textUtils";
 
 /**
  * 背景を描画する関数
@@ -46,8 +42,8 @@ function drawPlayers(canvas, context, players) {
   Object.values(players).forEach((player) => {
     const isCurrentPlayer = player.socketId === socket.id;
     if (isCurrentPlayer) {
-      state.myplayerpos = player.x;
-      context.drawImage(mapImage, -state.myplayerpos * movespeed, +DisplayTop);
+      state.myPlayerPos = player.x;
+      context.drawImage(mapImage, -state.myPlayerPos * movespeed, +DisplayTop);
     }
 
     context.save();
@@ -56,17 +52,18 @@ function drawPlayers(canvas, context, players) {
 
     if (isCurrentPlayer) {
       if (radio.isPlaying) ChatWriter(radio.whatPlaying());
-      if (radio.radioOK(state.myplayerpos) || isDone) ChatWriter(radio);
-      if (helios.heliosOK(state.myplayerpos)) ChatWriter(helios);
+      if (radio.radioOK(state.myPlayerPos) || state.isYtPlayerLoadVideoById)
+        ChatWriter(radio);
+      if (helios.heliosOK(state.myPlayerPos)) ChatWriter(helios);
     }
 
     ChatWriter(player);
     NameWriter(player);
-    PlayerFrameChanger(player);
+    PlayerFrameChanger(player, state.frame8_4fps);
 
     const xPos = isCurrentPlayer
       ? DisplayCenter - 240
-      : (player.x - state.myplayerpos) * movespeed + DisplayCenter - 240;
+      : (player.x - state.myPlayerPos) * movespeed + DisplayCenter - 240;
     const yPos = isCurrentPlayer
       ? 960 - player.height - 10 + DisplayTop
       : 960 - player.height + DisplayTop;
@@ -87,7 +84,7 @@ function drawPlayers(canvas, context, players) {
     context.restore();
   });
 
-  context.drawImage(mapImageZ1, -state.myplayerpos * movespeed, +DisplayTop);
+  context.drawImage(mapImageZ1, -state.myPlayerPos * movespeed, +DisplayTop);
 }
 
 /**
@@ -105,32 +102,26 @@ export function initializeRendering(socket, canvas, context) {
   });
 }
 
-export const loop = {
-  age: 0,
-  frame4_1fps: 0,
-  frame8_4fps: 0,
-  textfloater: 0,
-};
 /**
  * アニメーションループを初期化する関数
  */
 export function initializeAnimationLoop() {
   setInterval(() => {
-    loop.age++;
-    loop.frame8_4fps++;
-    if (loop.age % 4 === 0) {
-      loop.frame4_1fps++;
-      if (loop.frame4_1fps === 4) {
-        loop.frame4_1fps = 0;
+    state.age++;
+    state.frame8_4fps++;
+    if (state.age % 4 === 0) {
+      state.frame4_1fps++;
+      if (state.frame4_1fps === 4) {
+        state.frame4_1fps = 0;
       }
-      if (loop.frame4_1fps > 1) {
-        loop.textfloater += 5;
+      if (state.frame4_1fps > 1) {
+        state.textFloater += 5;
       } else {
-        loop.textfloater -= 5;
+        state.textFloater -= 5;
       }
 
-      if (loop.age % 8 === 0) {
-        loop.frame8_4fps = 0;
+      if (state.age % 8 === 0) {
+        state.frame8_4fps = 0;
       }
     }
   }, 1000 / 4);

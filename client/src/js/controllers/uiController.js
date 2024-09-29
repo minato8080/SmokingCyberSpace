@@ -46,7 +46,7 @@ export function initializeUIController() {
   });
 
   $("#B").click(function () {
-    if (radio.radioOK(state.myplayerpos)) {
+    if (radio.radioOK(state.myPlayerPos)) {
       radio.radioMessenger();
     } else {
       emitSmokeEnd();

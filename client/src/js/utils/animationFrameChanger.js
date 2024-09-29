@@ -1,5 +1,4 @@
 import { smoke } from "../models/gameObjects";
-import { loop } from "../services/animationService";
 
 /**
  * 喫煙アクションのフレームを変更する関数
@@ -114,9 +113,7 @@ function WalkFrameChanger(player, frame8_4fps) {
  * プレイヤーのフレームを変更する関数
  * @param {Object} player - プレイヤーオブジェクト
  */
-export function PlayerFrameChanger(player) {
-  const { frame8_4fps } = loop;
-
+export function PlayerFrameChanger(player, frame8_4fps) {
   if (player.isSmokeAction) {
     // 喫煙アクション
     SmokeActionFrameChanger(player);

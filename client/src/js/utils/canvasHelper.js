@@ -1,4 +1,4 @@
-import { canvas } from "../services/uiService";
+import { canvas } from "../config/elementConfig"
 
 /**
  * キャンバスを初期化する関数

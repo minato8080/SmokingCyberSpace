@@ -16,13 +16,13 @@ export function initializeKeyboardControls(socket, gameObjects) {
     if (command && INPUTS.indexOf(event.target.tagName) == -1) {
       if (event.type === "keydown") {
         movement[command] = true;
-        isMove = true;
+        state.isMove = true;
       } else {
         /* keyup */
         movement[command] = false;
-        isMove = false;
+        state.isMove = false;
       }
-      emitMovement(movement, isMove);
+      emitMovement(movement, state.isMove);
     }
     if (
       event.key === "a" &&
@@ -36,7 +36,7 @@ export function initializeKeyboardControls(socket, gameObjects) {
       event.type === "keydown" &&
       INPUTS.indexOf(event.target.tagName) == -1
     ) {
-      if (radio.radioOK(state.myplayerpos)) {
+      if (radio.radioOK(state.myPlayerPos)) {
         radio.radioMessenger();
       } else {
         emitSmokeEnd();
