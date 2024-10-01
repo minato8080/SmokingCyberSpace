@@ -52,18 +52,27 @@ global.pool
   });
 
 // CSP設定
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'", "https:"],
-        connectSrc: ["'self'", "data:", "https://www.youtube.com"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'", "https:", "'unsafe-eval'"],
+// Node.jsのバージョンを確認
+const nodeVersion = process.versions.node;
+const requiredVersion = "18.0.0";
+if (nodeVersion > requiredVersion) {
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'", "https:"],
+          connectSrc: ["'self'", "data:", "https://www.youtube.com"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrc: ["'self'", "https:", "'unsafe-eval'"],
+        },
       },
-    },
-  })
-);
+    })
+  );
+}else{
+  console.error(
+    `Node.js ${requiredVersion} 以上が必要です。現在のバージョン: ${nodeVersion}`
+  );
+}
 
 // publicフォルダを静的ファイルとして提供
 app.use(express.static(path.join(APP.ROOT, "client/public")));
