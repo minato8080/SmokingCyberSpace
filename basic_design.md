@@ -1,8 +1,7 @@
-<pre>
 # Start of Selection
+<pre>
 root
 ├─ .env
-├─ .env.develop
 ├─ .gitignore
 ├─ basic_design.md
 ├─ package-lock.json
@@ -13,41 +12,36 @@ root
 ├─ client
 │  ├─ public
 │  │  ├─ favicon.ico
-│  │  └─ index.html
-│  │
-│  ├─ img
-│  │  ├─ chatbox-middle-500.png
-│  │  ├─ chatbox-top-500.png
-│  │  ├─ chatbox-under-500.png
-│  │  ├─ map.png
-│  │  ├─ map_ad.png
-│  │  ├─ map_front.png
-│  │  ├─ masi-icon.png
-│  │  ├─ masi.png
-│  │  ├─ smoke.png
-│  │  ├─ tatu-icon.png
-│  │  ├─ tatu.png
-│  │  └─ twittercard.png
+│  │  ├─ css
+│  │  │  └─ style.css
+│  │  ├─ fonts
+│  │  │  └─ misaki_gothic_2nd.ttf
+│  │  └─ img
+│  │      ├─ chatbox-middle-500.png
+│  │      ├─ chatbox-top-500.png
+│  │      ├─ chatbox-under-500.png
+│  │      ├─ map.png
+│  │      ├─ map_ad.png
+│  │      ├─ map_front.png
+│  │      ├─ masi-icon.png
+│  │      ├─ masi.png
+│  │      ├─ smoke.png
+│  │      ├─ tatu-icon.png
+│  │      ├─ tatu.png
+│  │      └─ twittercard.png
 │  │
 │  └─ src
-│     ├─ css
-│     │  └─ style.css
-│     │
-│     ├─ fonts
-│     │  └─ misaki_gothic_2nd.ttf
-│     │
+│     ├─ index.html
 │     └─ js
 │         ├─ index.js
 │         │
 │         ├─ config
+│         │  ├─ elementConfig.js
 │         │  └─ gameConfig.js
 │         │
 │         ├─ controllers
 │         │  ├─ keyboardController.js
 │         │  └─ uiController.js
-│         │
-│         ├─ lib
-│         │  └─ jquery.cookie.js
 │         │
 │         ├─ models
 │         │  ├─ gameObjects.js
@@ -67,12 +61,8 @@ root
 │             └─ textUtils.js
 │   
 ├─ dist
-│  ├─ c9833d5faab9099f2334.ttf
-│  ├─ favicon.ico
 │  ├─ index.html
 │  └─ index.js
-│      └─ img
-│          └─ ...
 │
 └─ server
     └─ src
@@ -84,7 +74,7 @@ root
         │  ├─ onConnection.js
         │  └─ setUpdateFrame.js
         │
-        ├─ lib
+        ├─ models
         │  ├─ GameObject.js
         │  └─ Player.js
         │

@@ -1,9 +1,17 @@
 const GameObject = require("./GameObject");
 
 /**
+ * @typedef {import('./types/Player').Player} Player
+ */
+
+/**
  * プレイヤークラス
+ * @extends {GameObject}
  */
 class Player extends GameObject {
+  /**
+   * @param {Partial<Player>} [obj={}]
+   */
   constructor(obj = {}) {
     super(obj);
     this.IP = obj.IP;
@@ -38,7 +46,7 @@ class Player extends GameObject {
   
   /**
    * プレイヤーオブジェクトをJSON形式に変換する
-   * @returns {Object} プレイヤーの情報を含むJSONオブジェクト
+   * @returns {ReturnType<Player['toJSON']>}
    */
   toJSON() {
     return Object.assign(super.toJSON(), {

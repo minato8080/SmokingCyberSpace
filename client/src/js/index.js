@@ -1,6 +1,5 @@
 ﻿"use strict";
 
-import "../css/style.css";
 import { initializeCanvas } from "./utils/canvasHelper.js";
 import { initializeKeyboardControls } from "./controllers/keyboardController.js";
 import { initializeUIController } from "./controllers/uiController.js";
@@ -16,10 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const socket = initializeSocket();
   const { canvas, context } = initializeCanvas();
 
-  initializeUI(socket);
-  initializeKeyboardControls(socket);
+  initializeKeyboardControls();
   initializeUIController();
-  initializeMusic();
+  initializeUI();
+  // initializeMusic();
   initializeRendering(socket, canvas, context);
   initializeAnimationLoop();
 });

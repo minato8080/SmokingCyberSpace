@@ -1,4 +1,4 @@
-module.exports = {
+exports.global = {
   players: {},
   requestlist: [],
   whoserequest: [],

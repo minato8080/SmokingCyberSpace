@@ -7,8 +7,8 @@
 
 import {
   nicknameInput,
-  avatarInput,
-  startButton,
+  gameStartButton,
+  startScreen,
   messageForm,
   inputMsg,
   sousinButton,
@@ -27,9 +27,9 @@ export function initializeUI() {
       nicknameInput.val($.cookie("SCS_user_nickname"));
   });
 
-  startButton.on("click", function () {
+  gameStartButton.on("click", function () {
     $.cookie("SCS_user_nickname", nicknameInput.val());
-    emitGameStart(nicknameInput.val(), avatarInput.value);
+    emitGameStart(nicknameInput.val(), document.getElementById("avatarArea").avatar.value);
     startScreen.hide();
   });
 

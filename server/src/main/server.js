@@ -1,19 +1,21 @@
 "use strict";
 
+// 環境変数を読み込む
+require("dotenv").config();
+
 const express = require("express");
 const http = require("http");
 const path = require("path");
 const socketIO = require("socket.io");
 const pg = require("pg");
+const helmet = require("helmet");
 
 const { APP } = require("../common/const");
-const global = require("../common/global");
-const onConnection = require("../controller/onConnection");
-const setUpdateFrame = require("../controller/setUpdateFrame");
-const { datelog, weekhead } = require("../util/log");
+const { global } = require("../common/global");
+const { onConnection } = require("../services/connectionService");
+const { initializeFrameService } = require("../services/frameService");
+const { getLogDate, weekhead } = require("../util/log");
 
-// 環境変数を読み込む
-require('dotenv').config();
 // Expressアプリケーションを作成
 const app = express();
 // HTTPサーバーを作成
@@ -27,13 +29,13 @@ global.pool = new pg.Pool({ connectionString: process.env.POSTGERSS_KEY });
 global.io.on("connection", onConnection);
 
 // ゲームの更新フレームを設定
-setUpdateFrame();
+initializeFrameService();
 
 // データベースからリクエストリストを取得
 global.pool
   .query(
     "SELECT videoid,name FROM requestlist WHERE $1 <= date AND date <= $2",
-    [weekhead(), datelog()]
+    [weekhead(), getLogDate()]
   )
   .then((res) => {
     // 取得したデータをグローバル変数に格納
@@ -49,13 +51,27 @@ global.pool
     console.error(e.stack);
   });
 
-// distフォルダを静的ファイルとして提供
-app.use(express.static(path.join(APP.ROOT, "/dist")));
+// CSP設定
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'", "https:"],
+        connectSrc: ["'self'", "data:", "https://www.youtube.com"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'", "https:", "'unsafe-eval'"],
+      },
+    },
+  })
+);
+
+// publicフォルダを静的ファイルとして提供
+app.use(express.static(path.join(APP.ROOT, "client/public")));
 
 // ルートパスへのGETリクエストに対するハンドラ
 app.get("/", (_request, response) => {
   console.log(__dirname);
-  response.sendFile(path.join(APP.ROOT, "/dist/index.html"));
+  response.sendFile(path.join(APP.ROOT, "client/public/dist/index.html"));
 });
 
 // サーバーを指定されたポートで起動

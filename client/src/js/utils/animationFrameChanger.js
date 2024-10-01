@@ -1,8 +1,12 @@
 import { smoke } from "../models/gameObjects";
 
 /**
+ * @typedef {import('@/server/src/models/types/Player').Player} Player
+ */
+
+/**
  * 喫煙アクションのフレームを変更する関数
- * @param {Object} player - プレイヤーオブジェクト
+ * @param {Player} player - プレイヤーオブジェクト
  */
 function SmokeActionFrameChanger(player) {
   if (player.angle < 0) {
@@ -49,7 +53,7 @@ function SmokeActionFrameChanger(player) {
 
 /**
  * 喫煙中のフレームを変更する関数
- * @param {Object} player - プレイヤーオブジェクト
+ * @param {Player} player - プレイヤーオブジェクト
  * @param {number} frame8_4fps - 8フレームごとに4回更新されるフレーム
  */
 function SmokingFrameChanger(player, frame8_4fps) {

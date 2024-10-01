@@ -1,18 +1,23 @@
 import { helios, radio, state } from "../models/gameObjects";
 import {
-  Avatars,
   DisplayCenter,
   DisplayTop,
   movespeed,
   textcolor,
   textfont,
+  BACKGROUND_COLOR,
 } from "../config/gameConfig";
-import { mapImage, mapImageZ1, smoky } from "../config/elementConfig";
+import { Avatars, mapImage, mapImageZ1, smoky } from "../config/elementConfig";
 import { socket } from "./socketService";
 import { smoke } from "../models/gameObjects";
 import { clearCanvas } from "../utils/canvasHelper";
 import { PlayerFrameChanger } from "../utils/animationFrameChanger";
 import { ChatWriter, NameWriter } from "../utils/textUtils";
+
+/**
+ * @typedef {import('@/server/src/models/types/Player').Player} Player
+ * @typedef {import('@/node_modules/socket.io-client/lib/socket')} Socket
+ */
 
 /**
  * 背景を描画する関数
@@ -26,16 +31,15 @@ export function drawBackground(context) {
 
 /**
  * プレイヤーを描画する関数
+ * @param {HTMLCanvasElement} canvas - キャンバス要素
  * @param {CanvasRenderingContext2D} context - キャンバスのコンテキスト
- * @param {Object} players - プレイヤーのオブジェクト
+ * @param {Record<string, Player>} players - プレイヤーのオブジェクト
  */
 function drawPlayers(canvas, context, players) {
   // プレイヤーの状態更新処理
   context.clearRect(0, 0, canvas.width, canvas.height);
 
-  context.lineWidth = 10;
   context.beginPath();
-  context.fillStyle = "rgb(62,12,15)";
   context.fill();
   context.stroke();
 
@@ -68,8 +72,9 @@ function drawPlayers(canvas, context, players) {
       ? 960 - player.height - 10 + DisplayTop
       : 960 - player.height + DisplayTop;
 
+    const avatarImage = Avatars[player.avatar];
     context.drawImage(
-      Avatars[player.avatar],
+      avatarImage,
       player.frameX,
       player.frameY,
       player.width,
@@ -89,7 +94,7 @@ function drawPlayers(canvas, context, players) {
 
 /**
  * レンダリングを初期化する関数
- * @param {Object} socket - ソケットオブジェクト
+ * @param {Socket} socket - ソケットオブジェクト
  * @param {HTMLCanvasElement} canvas - キャンバス要素
  * @param {CanvasRenderingContext2D} context - キャンバスのコンテキスト
  */

@@ -55,7 +55,7 @@ label img {
 ::placeholder {
   color: rgb(53, 63, 43);
 }
-#start-button {
+#game-start-button {
   font-size: 60px;
   display: inline-block;
   vertical-align: top;

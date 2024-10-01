@@ -1,15 +1,16 @@
-import { canvas } from "../config/elementConfig"
+import { canvas } from "../config/elementConfig";
+import { BACKGROUND_COLOR } from "../config/gameConfig";
 
 /**
  * キャンバスを初期化する関数
- * @returns {Object} キャンバスとコンテキストのオブジェクト
+ * @returns {{canvas:HTMLCanvasElement,context:CanvasRenderingContext2D}}
  */
 export function initializeCanvas() {
   const context = canvas.getContext("2d");
 
   // キャンバスの初期設定
   context.lineWidth = 10;
-  context.fillStyle = "rgb(62,12,15)";
+  context.fillStyle = BACKGROUND_COLOR;
 
   return { canvas, context };
 }

@@ -1,6 +1,10 @@
-import Radio from "./radio.js";
+import Radio from "./Radio.js";
 import Helios from "./Helios.js";
 import Smoke from "./Smoke.js";
+
+/**
+ * @typedef {import('@/server/src/models/types/Player').Player} Player
+ */
 
 const state = {
   myPlayerPos: 0,
@@ -12,6 +16,7 @@ const state = {
   isYtPlayerLoadVideoById: false,
 };
 
+/** @type {Record<string, Player>} */
 const players = {};
 
 const helios = new Helios();

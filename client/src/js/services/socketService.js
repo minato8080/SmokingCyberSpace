@@ -7,12 +7,16 @@
  * ・プレイヤーの位置情報
  * ・喫煙アクション
  */
-
 import * as io from "socket.io-client";
 import { radio } from "../models/gameObjects";
 import { startScreen } from "../config/elementConfig";
 
+/**
+ * @typedef {import('@/node_modules/socket.io-client/lib/socket')} Socket
+ */
+
 // Socket.IOのインスタンスを作成
+/** @type {Socket} */
 export const socket = io();
 
 /**
@@ -22,7 +26,7 @@ export const socket = io();
  * - "dead"イベント: スタート画面を表示
  * - "musicresponse"イベント: 音楽リストとリクエスト者の情報を更新
  *
- * @returns {Object} socket - Socket.IOのインスタンス
+ * @returns {Socket} socket - Socket.IOのインスタンス
  */
 export function initializeSocket() {
   socket.on("dead", () => {

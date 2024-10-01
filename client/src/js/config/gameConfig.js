@@ -1,10 +1,3 @@
-import { masi,tatu } from "./elementConfig";
-
-const Avatars = {
-  masi,
-  tatu,
-};
-
 const movespeed = 3;
 
 const DisplayTop = 0;
@@ -12,6 +5,7 @@ const DisplayCenter = 1750;
 
 const textcolor = "rgb(118,114,80)";
 const textfont = "40px misaki2";
+const BACKGROUND_COLOR = "rgb(62,12,15)";
 
 const textMargin = 60;
 const textOneline = 6.5;
@@ -25,12 +19,12 @@ const isSmartPhone = function () {
 };
 
 export {
-  Avatars,
   movespeed,
   DisplayTop,
   DisplayCenter,
   textcolor,
   textfont,
+  BACKGROUND_COLOR,
   textMargin,
   textOneline,
   isSmartPhone,

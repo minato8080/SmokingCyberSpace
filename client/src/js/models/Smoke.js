@@ -1,5 +1,9 @@
 import { DisplayCenter, movespeed } from "../config/gameConfig";
 
+/**
+ * @typedef {import('@/server/src/models/types/Player').Player} Player
+ */
+
 export default class Smoke {
   constructor() {
     this.FrameY = 0;
@@ -10,6 +14,7 @@ export default class Smoke {
     this.y = 20;
     this.Animated = false;
   }
+  /** @type {function(CanvasRenderingContext2D,  HTMLImageElement,  Player, any): void} */
   SmokeDrawer(context, smoky, player, socket) {
     if (!this.Animated) {
       this.FrameY = player.frameY === player.height * 4 ? 0 : this.height;

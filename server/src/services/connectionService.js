@@ -1,6 +1,6 @@
-const { LogWriter, timelog, datelog } = require("../util/log");
-const Player = require("../lib/Player");
-const global = require("../common/global");
+const { createLog, getLogTime, getLogDate } = require("../util/log");
+const Player = require("../models/Player");
+const { global } = require("../common/global");
 const { APP } = require("../common/const");
 // ファイルシステムが有効な場合、fsモジュールをインポート
 if (APP.IS_FS) {
@@ -11,7 +11,7 @@ if (APP.IS_FS) {
  * YouTubeの動画リクエストを処理する関数
  * @param {Player} player - リクエストを送信したプレイヤーオブジェクト
  */
-const RequestChecker = function (player) {
+const checkRequest = function (player) {
   let videoId;
   const msg = player.msg;
   const pcUrl = "https://www.youtube.com/watch?v=";
@@ -52,7 +52,13 @@ const RequestChecker = function (player) {
     global.pool
       .query(
         "INSERT INTO requestlist(date,ip,id,name,videoid) VALUES($1,$2,$3,$4,$5) RETURNING *",
-        [datelog(), player.IP, player.id.toString(32), player.nickname, videoId]
+        [
+          getLogDate(),
+          player.IP,
+          player.id.toString(32),
+          player.nickname,
+          videoId,
+        ]
       )
       .then((res) => {
         console.log(res.rows[0]);
@@ -65,7 +71,7 @@ const RequestChecker = function (player) {
  * 新しい接続があった時の処理
  * @param {Socket} socket - 接続されたソケット
  */
-const onConnection = (socket) => {
+exports.onConnection = (socket) => {
   let player = null;
 
   // ゲーム開始時の処理
@@ -89,7 +95,7 @@ const onConnection = (socket) => {
     global.pool
       .query(
         "INSERT INTO roomlogs(time,ip,id,name,state) VALUES($1,$2,$3,$4,$5) RETURNING *",
-        [timelog(), player.IP, player.id.toString(32), player.nickname, "IN"]
+        [getLogTime(), player.IP, player.id.toString(32), player.nickname, "IN"]
       )
       .then((res) => {
         console.log(res.rows[0]);
@@ -106,7 +112,7 @@ const onConnection = (socket) => {
     if (APP.IS_FS && player) {
       fs.writeFile(
         "log.txt",
-        LogWriter(player) + APP.LOG_MSG.EXIT_ESC + "\n",
+        createLog(player) + APP.LOG_MSG.EXIT_ESC + "\n",
         options,
         (err) => {
           if (err) {
@@ -120,7 +126,13 @@ const onConnection = (socket) => {
     global.pool
       .query(
         "INSERT INTO roomlogs(time,ip,id,name,state) VALUES($1,$2,$3,$4,$5) RETURNING *",
-        [timelog(), player.IP, player.id.toString(32), player.nickname, "OUT"]
+        [
+          getLogTime(),
+          player.IP,
+          player.id.toString(32),
+          player.nickname,
+          "OUT",
+        ]
       )
       .then((res) => {
         console.log(res.rows[0]);
@@ -130,7 +142,7 @@ const onConnection = (socket) => {
     delete global.players[player.id];
     player = null;
   });
-  
+
   // プレイヤーの移動処理
   socket.on("movement", (movement, isMove) => {
     if (!player) return;
@@ -179,14 +191,14 @@ const onConnection = (socket) => {
   socket.on("message", (msg) => {
     if (!msg) return;
     player.msg = msg;
-    RequestChecker(player);
+    checkRequest(player);
     player.msgCountDown = 30 * APP.FPS;
     // ファイルシステムが有効な場合、ログを記録
     if (APP.IS_FS) {
       if (msg !== "")
         fs.writeFile(
           "log.txt",
-          LogWriter(this) + msg + "\n",
+          createLog(this) + msg + "\n",
           options,
           (err) => {
             if (err) {
@@ -204,7 +216,7 @@ const onConnection = (socket) => {
       .query(
         "INSERT INTO chatlogs(time,ip,id,name,message) VALUES($1,$2,$3,$4,$5) RETURNING *",
         [
-          timelog(),
+          getLogTime(),
           player.IP,
           player.id.toString(32),
           player.nickname,
@@ -217,4 +229,3 @@ const onConnection = (socket) => {
       .catch((e) => console.error(e.stack));
   });
 };
-module.exports = onConnection;

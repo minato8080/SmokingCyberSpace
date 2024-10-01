@@ -5,7 +5,7 @@ import {
   emitMovement,
 } from "../services/socketService";
 
-export function initializeKeyboardControls(socket, gameObjects) {
+export function initializeKeyboardControls() {
   $(document).on("keydown keyup", (event) => {
     const INPUTS = ["INPUT", "TEXTAREA"];
     const KeyToCommand = {

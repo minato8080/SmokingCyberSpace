@@ -56,27 +56,32 @@ function onPlayerStateChange(event) {
 
 /**
  * YouTubeプレーヤーを作成する関数
+ * @param {number} count - プレーヤー作成のためのカウント
  */
-export function createYouTubePlayer() {
-  if (!YT.loaded) {
-    console.log("YouTube Player API is still loading.  Retrying...");
-    setInterval(createYouTubePlayer, 1000);
-    return;
-  }
-  console.log("YouTube Player API is loaded.  Creating player instance now.");
+export function createYouTubePlayer(count) {
+  if (YT && count > 0) {
+    if (!YT.loaded) {
+      console.log("YouTube Player API is still loading.  Retrying...");
+      setInterval(createYouTubePlayer(count - 1), 10000);
+      return;
+    }
+    console.log("YouTube Player API is loaded.  Creating player instance now.");
 
-  ytPlayer = new YT.Player("youtube", {
-    height: "0",
-    width: "0",
-    playsinline: 1,
-    origin: window.location.origin,
-    enablejsapi: 1,
-    events: {
-      onReady: onYouTubePlayerReady,
-      onStateChange: onPlayerStateChange,
-    },
-  });
-  console.log("iframe api ready");
+    ytPlayer = new YT.Player("youtube", {
+      height: "0",
+      width: "0",
+      playsinline: 1,
+      origin: window.location.origin,
+      enablejsapi: 1,
+      events: {
+        onReady: onYouTubePlayerReady,
+        onStateChange: onPlayerStateChange,
+      },
+    });
+    console.log("iframe api ready");
+  } else {
+    console.log("iframe was unsuccessful");
+  }
 }
 
 /**
@@ -89,7 +94,7 @@ export function initializeMusic() {
   const firstScriptTag = document.getElementsByTagName("script")[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-  createYouTubePlayer();
+  createYouTubePlayer(3);
 
   startButton.click(function () {
     if (radio.playList.length !== 0) {

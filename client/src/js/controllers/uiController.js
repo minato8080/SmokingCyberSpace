@@ -23,21 +23,25 @@ export function initializeUIController() {
       state.isMove = true;
       emitMovement(movement, state.isMove);
     });
-    [eventEnd, eventLeave].forEach((event) => {
-      button.addEventListener(event, (e) => {
-        e.preventDefault();
-        const elem = isSmartPhone
-          ? document.elementFromPoint(
-              e.touches?.[0].clientX,
-              e.touches?.[0].clientY
-            )
-          : button;
-        if (event === eventEnd || !isSmartPhone || elem !== button) {
-          movement.right = movement.left = false;
-          state.isMove = false;
-          emitMovement(movement, state.isMove);
-        }
-      });
+    button.addEventListener(eventEnd, (e) => {
+      e.preventDefault();
+      movement.right = movement.left = false;
+      state.isMove = false;
+      emitMovement(movement, state.isMove);
+    });
+    button.addEventListener(eventLeave, (e) => {
+      e.preventDefault();
+      const elem = isSmartPhone
+        ? document.elementFromPoint(
+            e.touches?.[0].clientX,
+            e.touches?.[0].clientY
+          )
+        : button;
+      if (!isSmartPhone || elem !== button) {
+        movement.right = movement.left = false;
+        state.isMove = false;
+        emitMovement(movement, state.isMove);
+      }
     });
   });
 
