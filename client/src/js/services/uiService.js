@@ -10,8 +10,8 @@ import {
   gameStartButton,
   startScreen,
   messageForm,
-  inputMsg,
-  sousinButton,
+  inputMessage,
+  sendButton,
 } from "../config/elementConfig";
 import { emitGameStart, emitMessage } from "./socketService";
 
@@ -34,14 +34,14 @@ export function initializeUI() {
   });
 
   messageForm.submit(function () {
-    emitMessage(inputMsg.val());
-    inputMsg.val("");
+    emitMessage(inputMessage.val());
+    inputMessage.val("");
     return false;
   });
 
-  sousinButton.on("click", function () {
-    emitMessage(inputMsg.val());
-    inputMsg.val("");
+  sendButton.on("click", function () {
+    emitMessage(inputMessage.val());
+    inputMessage.val("");
     return false;
   });
 }

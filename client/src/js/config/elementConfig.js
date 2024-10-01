@@ -1,87 +1,87 @@
 /** @type {HTMLCanvasElement} */
-const canvas = $("#canvas-2d")[0];
+const canvas = $("#canvas2d")[0];
 /** @type {CanvasRenderingContext2D} */
 const context = canvas.getContext("2d");
 
 /** @type {HTMLImageElement} */
-const mapImage = $("#map-image")[0];
+const mapImage = $("#mapImage")[0];
 /** @type {HTMLImageElement} */
-const mapImageZ1 = $("#map-image-z1")[0];
+const mapImageZ1 = $("#mapImageZ1")[0];
 /** @type {HTMLImageElement} */
-const smoky = $("#smoky")[0];
+const smokyImage = $("#smokyImage")[0];
 
 /** @type {HTMLImageElement} */
-const chatboxTop = $("#top")[0];
+const chatboxTop = $("#chatboxTop")[0];
 /** @type {HTMLImageElement} */
-const chatboxMiddle = $("#middle")[0];
+const chatboxMiddle = $("#chatboxMiddle")[0];
 /** @type {HTMLImageElement} */
-const chatboxUnder = $("#under")[0];
+const chatboxUnder = $("#chatboxUnder")[0];
 
 /** @type {HTMLImageElement} */
-const masi = $("#masi")[0];
+const masiImage = $("#masiImage")[0];
 /** @type {HTMLImageElement} */
-const tatu = $("#tatu")[0];
+const tatuImage = $("#tatuImage")[0];
 
 /** @type {JQuery<HTMLElement>} */
-const startScreen = $("#start-screen");
+const startScreen = $("#startScreen");
 /** @type {JQuery<HTMLElement>} */
-const gameStartButton = $("#game-start-button");
+const gameStartButton = $("#gameStartButton");
 /** @type {JQuery<HTMLElement>} */
-const Controler = $("#controler");
+const controler = $("#controler");
 /** @type {JQuery<HTMLElement>} */
-const youtubePlayer = $("#youtube");
+const youtubePlayer = $("#youtubePlayer");
 /** @type {JQuery<HTMLElement>} */
-const nicknameInput = $("#nickname");
+const nicknameInput = $("#nicknameInput");
 /** @type {JQuery<HTMLElement>} */
-const messageForm = $("#message_form");
+const messageForm = $("#messageForm");
 /** @type {JQuery<HTMLElement>} */
-const inputMsg = $("#input_msg");
+const inputMessage = $("#inputMessage");
 
 /** @type {JQuery<HTMLElement>} */
-const startButton = $("#start");
+const startButton = $("#startButton");
 /** @type {JQuery<HTMLElement>} */
-const selectButton = $("#select");
+const selectButton = $("#selectButton");
 /** @type {JQuery<HTMLElement>} */
-const sousinButton = $("#sousin");
+const sendButton = $("#sendButton");
 /** @type {JQuery<HTMLElement>} */
-const leftButton = $("#left");
+const leftButton = $("#leftButton");
 /** @type {JQuery<HTMLElement>} */
-const rightButton = $("#right");
+const rightButton = $("#rightButton");
 /** @type {JQuery<HTMLElement>} */
-const buttonA = $("#A");
+const buttonA = $("#buttonA");
 /** @type {JQuery<HTMLElement>} */
-const buttonB = $("#B");
+const buttonB = $("#buttonB");
 
 /** @type {{ masi: HTMLImageElement, tatu: HTMLImageElement }} */
-const Avatars = {
-  masi,
-  tatu,
+const avatars = {
+  masi: masiImage,
+  tatu: tatuImage,
 };
 /** @type {HTMLInputElement} */
-const avatarInput = $("#avatar").avatar;
+const avatarInput = $("#avatarArea").avatar;
 
 export {
   canvas,
   context,
   mapImage,
   mapImageZ1,
-  Controler,
-  smoky,
+  controler,
+  smokyImage,
   chatboxTop,
   chatboxMiddle,
   chatboxUnder,
   nicknameInput,
   startButton,
   messageForm,
-  inputMsg,
-  sousinButton,
+  inputMessage,
+  sendButton,
   startScreen,
   gameStartButton,
   selectButton,
   youtubePlayer,
-  masi,
-  tatu,
-  Avatars,
+  masiImage,
+  tatuImage,
+  avatars,
   avatarInput,
   leftButton,
   rightButton,

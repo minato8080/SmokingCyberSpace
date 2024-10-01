@@ -5,9 +5,8 @@ import {
   movespeed,
   textcolor,
   textfont,
-  BACKGROUND_COLOR,
 } from "../config/gameConfig";
-import { Avatars, mapImage, mapImageZ1, smoky } from "../config/elementConfig";
+import { avatars, mapImage, mapImageZ1, smokyImage } from "../config/elementConfig";
 import { socket } from "./socketService";
 import { smoke } from "../models/gameObjects";
 import { clearCanvas } from "../utils/canvasHelper";
@@ -36,7 +35,7 @@ export function drawBackground(context) {
  * @param {number} myPlayerPos - 自プレイヤーの位置
  */
 function drawPlayer(context, player, myPlayerPos) {
-  const avatarImage = Avatars[player.avatar];
+  const avatarImage = avatars[player.avatar];
   const isMyPlayer = player.socketId === socket.id;
   const xPos = isMyPlayer
     ? DisplayCenter - 240
@@ -60,7 +59,7 @@ function drawPlayer(context, player, myPlayerPos) {
     480,
     480
   );
-  smoke.SmokeDrawer(context, smoky, player, socket);
+  smoke.SmokeDrawer(context, smokyImage, player, socket);
 }
 
 /**

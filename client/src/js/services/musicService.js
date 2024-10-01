@@ -88,55 +88,29 @@ export function createYouTubePlayer(count) {
  * 音楽を初期化する関数
  */
 export function initializeMusic() {
-  const tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-
-  const firstScriptTag = document.getElementsByTagName("script")[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
   createYouTubePlayer(3);
   if (!ytPlayer) return;
 
   startButton.click(function () {
     if (radio.playList.length === 0) return;
 
-    if (!isSmartPhone()) {
-      //最初の一回
-      if (!state.isYtPlayerLoadVideoById) {
-        radio.nextNumber += 1;
-        if (radio.playList.length < radio.nextNumber) {
-          radio.nextNumber = 0;
-        }
-        ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-        state.isYtPlayerLoadVideoById = true;
-        return;
-      } else if (radio.isPlaying) {
-        ytPlayer.pauseVideo();
-        return;
-      } else {
-        ytPlayer.playVideo();
-        return;
-      }
+    if (!state.isYtPlayerLoadVideoById) {
+      radio.nextNumber = (radio.nextNumber + 1) % radio.playList.length;
+      ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
+      state.isYtPlayerLoadVideoById = true;
+    } else if (!isSmartPhone() && radio.isPlaying) {
+      ytPlayer.pauseVideo();
     } else {
-      if (!state.isYtPlayerLoadVideoById) {
-        radio.nextNumber += 1;
-        if (radio.playList.length < radio.nextNumber) {
-          radio.nextNumber = 0;
-        }
-        ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-        state.isYtPlayerLoadVideoById = true;
-        return;
-      } else {
-        ytPlayer.playVideo();
-        return;
-      }
+      ytPlayer.playVideo();
     }
+    return;
   });
 
   selectButton.click(function () {
     if (radio.playList.length === 0) return;
 
     radio.nextNumber += 1;
+    
     if (radio.playList.length < radio.nextNumber) radio.nextNumber = 0;
     ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
     radio.msg = "Next No." + (radio.nextNumber + 1);

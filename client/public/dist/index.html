@@ -27,26 +27,18 @@
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="/socket.io/socket.io.js"></script>
   </head>
-  <body
-    style="
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-    "
-  >
+  <body class="container" >
     <div style="flex: 1 1; position: relative; overflow: hidden">
-      <div id="start-screen">
+      <div id="startScreen">
         <div style="text-align: center; width: 100%; font-size: xx-large">
-          <form id="avatarArea" class="selection-group">
-            <input id="a" type="radio" name="avatar" value="masi" checked />
-            <label for="a">
+          <form id="avatarArea" class="selectionGroup">
+            <input id="avatarMasi" type="radio" name="avatar" value="masi" checked />
+            <label for="avatarMasi">
               <img src="img/masi-icon.png" />
             </label>
 
-            <input id="b" type="radio" name="avatar" value="tatu" />
-            <label for="b">
+            <input id="avatarTatu" type="radio" name="avatar" value="tatu" />
+            <label for="avatarTatu">
               <img src="img/tatu-icon.png" />
             </label>
           </form>
@@ -54,46 +46,46 @@
             type="text"
             maxlength="6"
             name="nickname"
-            id="nickname"
+            id="nicknameInput"
             value=""
             placeholder="anonymous"
             autofocus
             autocomplete="off"
           /><br /><br />
-          <button id="game-start-button" class="materialbutton">接続</button>
+          <button id="gameStartButton" class="materialButton">接続</button>
         </div>
       </div>
-      <button id="sousin" class="materialbutton">送信</button>
-      <form id="message_form">
-        <input id="input_msg" maxlength="54" autocomplete="off" />
+      <button id="sendButton" class="materialButton">送信</button>
+      <form id="messageForm">
+        <input id="inputMessage" maxlength="54" autocomplete="off" />
       </form>
-      <canvas id="canvas-2d" width="3500" height="960"></canvas>
-      <div class="controler">
-        <div id="firstline">
-          <button id="up" class="Tkey materialbutton">↑</button>
-          <button id="A" class="AB materialbutton AB">A</button>
+      <canvas id="canvas2d" width="3500" height="960"></canvas>
+      <div class="controller">
+        <div class="controllerRow">
+          <button id="upButton" class="directionKey materialButton">↑</button>
+          <button id="buttonA" class="actionButton materialButton">A</button>
         </div>
-        <div id="secondline">
-          <button id="left" class="Tkey materialbutton">←</button>
-          <button id="down" class="Tkey materialbutton">↓</button>
-          <button id="right" class="Tkey materialbutton">→</button>
-          <button id="B" class="AB materialbutton AB">B</button>
+        <div class="controllerRow">
+          <button id="leftButton" class="directionKey materialButton">←</button>
+          <button id="downButton" class="directionKey materialButton">↓</button>
+          <button id="rightButton" class="directionKey materialButton">→</button>
+          <button id="buttonB" class="actionButton materialButton">B</button>
         </div>
-        <div id="thirdline">
-          <button id="select" class="SelSta materialbutton">select</button>
-          <button id="start" class="SelSta materialbutton">start</button>
+        <div class="controllerRow">
+          <button id="selectButton" class="menuButton materialButton">select</button>
+          <button id="startButton" class="menuButton materialButton">start</button>
         </div>
       </div>
     </div>
-    <div id="youtube" webkit-playsinline playsinline></div>
-    <img id="masi" src="img/masi.png" style="display: none" />
-    <img id="tatu" src="img/tatu.png" style="display: none" />
-    <img id="map-image" src="img/map_ad.png" style="display: none" />
-    <img id="map-image-z1" src="img/map_front.png" style="display: none" />
-    <img id="top" src="img/chatbox-top-500.png" style="display: none" />
-    <img id="middle" src="img/chatbox-middle-500.png" style="display: none" />
-    <img id="under" src="img/chatbox-under-500.png" style="display: none" />
-    <img id="smoky" src="img/smoke.png" style="display: none" />
+    <div id="youtubePlayer" webkit-playsinline playsinline></div>
+    <img id="masiImage" src="img/masi.png" style="display: none" />
+    <img id="tatuImage" src="img/tatu.png" style="display: none" />
+    <img id="mapImage" src="img/map_ad.png" style="display: none" />
+    <img id="mapImageZ1" src="img/map_front.png" style="display: none" />
+    <img id="chatboxTop" src="img/chatbox-top-500.png" style="display: none" />
+    <img id="chatboxMiddle" src="img/chatbox-middle-500.png" style="display: none" />
+    <img id="chatboxUnder" src="img/chatbox-under-500.png" style="display: none" />
+    <img id="smokyImage" src="img/smoke.png" style="display: none" />
     <script src="dist/index.js" type="text/javascript"></script>
   </body>
 </html>

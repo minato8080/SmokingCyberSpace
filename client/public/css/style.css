@@ -15,7 +15,14 @@ body {
 input:-webkit-autofill {
   box-shadow: 0 0 0 1000px rgb(88, 104, 76) inset;
 }
-#start-screen {
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+#startScreen {
   width: 100%;
   height: 100%;
   display: flex;
@@ -29,18 +36,18 @@ label img {
   margin: 3px;
   padding: 8px;
 }
-.selection-group {
+.selectionGroup {
   position: relative;
   top: -30px;
 }
-.selection-group input[type="radio"] {
+.selectionGroup input[type="radio"] {
   display: none;
 }
-.selection-group input[type="radio"]:checked + label img {
+.selectionGroup input[type="radio"]:checked + label img {
   background: black;
 }
 
-#nickname {
+#nicknameInput {
   font-family: misaki2;
   font-size: 30px;
   width: 200px;
@@ -55,16 +62,16 @@ label img {
 ::placeholder {
   color: rgb(53, 63, 43);
 }
-#game-start-button {
+#gameStartButton {
   font-size: 60px;
   display: inline-block;
   vertical-align: top;
 }
 
-#message_form {
+#messageForm {
   margin: 0;
 }
-#input_msg {
+#inputMessage {
   font-family: misaki2;
   font-size: 30px;
   width: 100%;
@@ -77,7 +84,7 @@ label img {
 textarea:focus {
   outline: none;
 }
-#sousin {
+#sendButton {
   font-size: 30px;
   vertical-align: top;
   z-index: 1;
@@ -93,7 +100,7 @@ textarea:focus {
   object-fit: contain;
 }
 
-#canvas-2d {
+#canvas2d {
   width: 300%;
   margin: 0 -100%;
   text-align: center;
@@ -102,7 +109,7 @@ textarea:focus {
   object-position: top;
 }
 
-.materialbutton {
+.materialButton {
   --shadow-color: rgba(60, 50, 40, 0.8);
   --highlight-color: rgb(255, 255, 255);
   --highlight-shadow-color: rgb(255, 200, 200);
@@ -133,17 +140,17 @@ textarea:focus {
     0 -1.7px 1px var(--highlight-shadow-color);
 }
 
-.Tkey {
+.directionKey {
   font-size: 60px;
 }
 
-.AB {
+.actionButton {
   font-size: 60px;
   padding: 5px 15px 0px 25px;
   position: relative;
 }
 
-.SelSta {
+.menuButton {
   font-size: 15px;
   display: inline-block;
   vertical-align: top;
@@ -155,45 +162,49 @@ textarea:focus {
   padding: 0px 4px 0px 6px;
 }
 
-#firstline {
+.controller {
+  text-align: center;
+  position: relative;
+  left: -20px;
+  top: 40px;
+  object-fit: contain;
+}
+
+.controllerRow {
   position: relative;
 }
 
-#secondline {
-  position: relative;
-}
-
-#up {
+#upButton {
   padding: 5px 0px 0px 5px;
   position: relative;
   top: -2px;
 }
 
-#down {
+#downButton {
   padding: 5px 0px 0px 5px;
   position: relative;
   top: 0px;
 }
 
-#left {
+#leftButton {
   padding: 5px 0px 0px 10px;
   position: relative;
   left: 4px;
 }
 
-#right {
+#rightButton {
   padding: 5px 0px 0px 10px;
   position: relative;
   left: -4px;
 }
 
-#A {
+#buttonA {
   position: relative;
   left: 120px;
   top: 10px;
 }
 
-#B {
+#buttonB {
   position: relative;
   top: 15px;
 }
