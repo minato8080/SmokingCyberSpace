@@ -43,6 +43,14 @@ const startButton = $("#start");
 const selectButton = $("#select");
 /** @type {JQuery<HTMLElement>} */
 const sousinButton = $("#sousin");
+/** @type {JQuery<HTMLElement>} */
+const leftButton = $("#left");
+/** @type {JQuery<HTMLElement>} */
+const rightButton = $("#right");
+/** @type {JQuery<HTMLElement>} */
+const buttonA = $("#A");
+/** @type {JQuery<HTMLElement>} */
+const buttonB = $("#B");
 
 /** @type {{ masi: HTMLImageElement, tatu: HTMLImageElement }} */
 const Avatars = {
@@ -75,4 +83,8 @@ export {
   tatu,
   Avatars,
   avatarInput,
+  leftButton,
+  rightButton,
+  buttonA,
+  buttonB,
 };

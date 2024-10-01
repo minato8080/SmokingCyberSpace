@@ -1,7 +1,9 @@
 "use strict";
 
 // 環境変数を読み込む
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
+// dotenv.config({ path: '.env.develop' });
 
 const express = require("express");
 const { createServer } = require('node:http');
@@ -77,7 +79,7 @@ if (nodeVersion > requiredVersion) {
 // publicフォルダを静的ファイルとして提供
 app.use(express.static(path.join(APP.ROOT, "client/public")));
 
-// ルートパスへのGETリクエストに対するハンドラ
+// ルートパスへのGETリクエスト
 app.get("/", (_request, response) => {
   console.log(__dirname);
   response.sendFile(path.join(APP.ROOT, "client/public/dist/index.html"));

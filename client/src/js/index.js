@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeKeyboardControls();
   initializeUIController();
   initializeUI();
-  // initializeMusic();
+  initializeMusic();
   initializeRendering(socket, canvas, context);
   initializeAnimationLoop();
 });

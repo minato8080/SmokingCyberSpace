@@ -95,50 +95,51 @@ export function initializeMusic() {
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
   createYouTubePlayer(3);
+  if (!ytPlayer) return;
 
   startButton.click(function () {
-    if (radio.playList.length !== 0) {
-      if (!isSmartPhone()) {
-        //最初の一回
-        if (!state.isYtPlayerLoadVideoById) {
-          radio.nextNumber += 1;
-          if (radio.playList.length < radio.nextNumber) {
-            radio.nextNumber = 0;
-          }
-          ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-          state.isYtPlayerLoadVideoById = true;
-          return;
-        } else if (radio.isPlaying) {
-          ytPlayer.pauseVideo();
-          return;
-        } else {
-          ytPlayer.playVideo();
-          return;
+    if (radio.playList.length === 0) return;
+
+    if (!isSmartPhone()) {
+      //最初の一回
+      if (!state.isYtPlayerLoadVideoById) {
+        radio.nextNumber += 1;
+        if (radio.playList.length < radio.nextNumber) {
+          radio.nextNumber = 0;
         }
+        ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
+        state.isYtPlayerLoadVideoById = true;
+        return;
+      } else if (radio.isPlaying) {
+        ytPlayer.pauseVideo();
+        return;
       } else {
-        if (!state.isYtPlayerLoadVideoById) {
-          radio.nextNumber += 1;
-          if (radio.playList.length < radio.nextNumber) {
-            radio.nextNumber = 0;
-          }
-          ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-          state.isYtPlayerLoadVideoById = true;
-          return;
-        } else {
-          ytPlayer.playVideo();
-          return;
+        ytPlayer.playVideo();
+        return;
+      }
+    } else {
+      if (!state.isYtPlayerLoadVideoById) {
+        radio.nextNumber += 1;
+        if (radio.playList.length < radio.nextNumber) {
+          radio.nextNumber = 0;
         }
+        ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
+        state.isYtPlayerLoadVideoById = true;
+        return;
+      } else {
+        ytPlayer.playVideo();
+        return;
       }
     }
   });
 
   selectButton.click(function () {
-    if (radio.playList.length !== 0) {
-      radio.nextNumber += 1;
-      if (radio.playList.length < radio.nextNumber) radio.nextNumber = 0;
-      ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-      radio.msg = "Next No." + (radio.nextNumber + 1);
-      return;
-    }
+    if (radio.playList.length === 0) return;
+
+    radio.nextNumber += 1;
+    if (radio.playList.length < radio.nextNumber) radio.nextNumber = 0;
+    ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
+    radio.msg = "Next No." + (radio.nextNumber + 1);
+    return;
   });
 }

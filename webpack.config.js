@@ -2,7 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const dotenv = require("dotenv");
-dotenv.config(); // .envファイルから環境変数を読み込む
+dotenv.config();
+// dotenv.config({ path: '.env.develop' });
 
 module.exports = {
   entry: "./client/src/js/index.js", // エントリーポイント
