@@ -1,7 +1,8 @@
 import { DisplayCenter, movespeed } from "../config/gameConfig";
-
+import { state } from "./gameObjects";
 /**
  * @typedef {import('@/server/src/models/types/Player').Player} Player
+ * @typedef {import('@/node_modules/socket.io/client-dist/socket.io')} Socket
  */
 
 export default class Smoke {
@@ -14,7 +15,13 @@ export default class Smoke {
     this.y = 20;
     this.Animated = false;
   }
-  /** @type {function(CanvasRenderingContext2D,  HTMLImageElement,  Player, any): void} */
+  /**
+   * @param {CanvasRenderingContext2D} context - キャンバスのコンテキスト
+   * @param {HTMLImageElement} smoky - 煙の画像要素
+   * @param {Player} player - プレイヤーオブジェクト
+   * @param {Socket} socket - ソケットオブジェクト
+   * @returns {void}
+   */
   SmokeDrawer(context, smoky, player, socket) {
     if (!this.Animated) {
       this.FrameY = player.frameY === player.height * 4 ? 0 : this.height;
@@ -27,7 +34,7 @@ export default class Smoke {
 
         const num =
           player.socketId !== socket.id
-            ? (player.x - state.myplayerpos) * movespeed
+            ? (player.x - state.myPlayerPos) * movespeed
             : 0;
         context.drawImage(
           smoky,

@@ -11,7 +11,7 @@ import { radio } from "../models/gameObjects";
 import { startScreen } from "../config/elementConfig";
 
 /**
- * @typedef {import('@/node_modules/socket.io-client/lib/socket')} Socket
+ * @typedef {import('@/node_modules/socket.io/client-dist/socket.io')} Socket
  */
 
 // Socket.IOのインスタンスを作成

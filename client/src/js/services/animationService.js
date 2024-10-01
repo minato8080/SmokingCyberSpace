@@ -31,65 +31,89 @@ export function drawBackground(context) {
 
 /**
  * プレイヤーを描画する関数
+ * @param {CanvasRenderingContext2D} context - キャンバスのコンテキスト
+ * @param {Player} player - 描画するプレイヤーオブジェクト
+ * @param {number} myPlayerPos - 自プレイヤーの位置
+ */
+function drawPlayer(context, player, myPlayerPos) {
+  const avatarImage = Avatars[player.avatar];
+  const isMyPlayer = player.socketId === socket.id;
+  const xPos = isMyPlayer
+    ? DisplayCenter - 240
+    : (player.x - myPlayerPos) * movespeed + DisplayCenter - 240;
+  const yPos = isMyPlayer
+    ? 960 - player.height - 10 + DisplayTop
+    : 960 - player.height + DisplayTop;
+
+  ChatWriter(player);
+  NameWriter(player);
+  PlayerFrameChanger(player, state.frame8_4fps);
+
+  context.drawImage(
+    avatarImage,
+    player.frameX,
+    player.frameY,
+    player.width,
+    player.height,
+    xPos,
+    yPos,
+    480,
+    480
+  );
+  smoke.SmokeDrawer(context, smoky, player, socket);
+}
+
+/**
+ * プレイヤーを描画する関数
  * @param {HTMLCanvasElement} canvas - キャンバス要素
  * @param {CanvasRenderingContext2D} context - キャンバスのコンテキスト
  * @param {Record<string, Player>} players - プレイヤーのオブジェクト
  */
-function drawPlayers(canvas, context, players) {
-  // プレイヤーの状態更新処理
-  context.clearRect(0, 0, canvas.width, canvas.height);
-
+function drawScreen(canvas, context, players) {
   context.beginPath();
   context.fill();
   context.stroke();
+  context.save();
 
-  Object.values(players).forEach((player) => {
-    const isCurrentPlayer = player.socketId === socket.id;
-    if (isCurrentPlayer) {
+
+  // プレイヤーの描画を始める前に状態を更新
+  let myPlayer = null;
+  for (const player of Object.values(players)) {
+    if (player.socketId === socket.id) {
+      myPlayer = player;
       state.myPlayerPos = player.x;
-      context.drawImage(mapImage, -state.myPlayerPos * movespeed, +DisplayTop);
+      break;
     }
+  }
+  const backgroundX = -state.myPlayerPos * movespeed;
+  const backgroundY = DisplayTop;
 
-    context.save();
-    context.font = textfont;
-    context.fillStyle = textcolor;
+  // 背景を描画
+  context.drawImage(mapImage, backgroundX, backgroundY);
+  
+  // radioを描画
+  if (radio.isPlaying) ChatWriter(radio.whatPlaying());
+  if (radio.radioOK(state.myPlayerPos) || state.isYtPlayerLoadVideoById)
+    ChatWriter(radio);
 
-    if (isCurrentPlayer) {
-      if (radio.isPlaying) ChatWriter(radio.whatPlaying());
-      if (radio.radioOK(state.myPlayerPos) || state.isYtPlayerLoadVideoById)
-        ChatWriter(radio);
-      if (helios.heliosOK(state.myPlayerPos)) ChatWriter(helios);
+  // ヘリオス像を描画
+  if (helios.heliosOK(state.myPlayerPos)) ChatWriter(helios);
+
+  // 他のプレイヤーを描画
+  Object.values(players).forEach((player) => {
+    if (player.socketId !== socket.id) {
+      drawPlayer(context, player, state.myPlayerPos);
     }
-
-    ChatWriter(player);
-    NameWriter(player);
-    PlayerFrameChanger(player, state.frame8_4fps);
-
-    const xPos = isCurrentPlayer
-      ? DisplayCenter - 240
-      : (player.x - state.myPlayerPos) * movespeed + DisplayCenter - 240;
-    const yPos = isCurrentPlayer
-      ? 960 - player.height - 10 + DisplayTop
-      : 960 - player.height + DisplayTop;
-
-    const avatarImage = Avatars[player.avatar];
-    context.drawImage(
-      avatarImage,
-      player.frameX,
-      player.frameY,
-      player.width,
-      player.height,
-      xPos,
-      yPos,
-      480,
-      480
-    );
-
-    smoke.SmokeDrawer(context, smoky, player, socket);
-    context.restore();
   });
 
-  context.drawImage(mapImageZ1, -state.myPlayerPos * movespeed, +DisplayTop);
+  // 自分のプレイヤーを描画
+  if (myPlayer) {
+    drawPlayer(context, myPlayer, state.myPlayerPos);
+  }
+
+  // 前景を描画
+  context.drawImage(mapImageZ1, backgroundX, backgroundY);
+  context.restore();
 }
 
 /**
@@ -99,11 +123,11 @@ function drawPlayers(canvas, context, players) {
  * @param {CanvasRenderingContext2D} context - キャンバスのコンテキスト
  */
 export function initializeRendering(socket, canvas, context) {
+  context.font = textfont;
+  context.fillStyle = textcolor;
   socket.on("state", function (players) {
     clearCanvas(context, canvas);
-    drawBackground(context);
-
-    drawPlayers(canvas, context, players);
+    drawScreen(canvas, context, players);
   });
 }
 
