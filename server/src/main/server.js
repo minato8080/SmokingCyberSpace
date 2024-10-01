@@ -4,9 +4,9 @@
 require("dotenv").config();
 
 const express = require("express");
-const http = require("http");
+const { createServer } = require('node:http');
 const path = require("path");
-const socketIO = require("socket.io");
+const { Server } = require("socket.io");
 const pg = require("pg");
 const helmet = require("helmet");
 
@@ -19,9 +19,9 @@ const { getLogDate, weekhead } = require("../util/log");
 // Expressアプリケーションを作成
 const app = express();
 // HTTPサーバーを作成
-const server = http.Server(app);
+const server = createServer(app);
 // Socket.IOをサーバーにアタッチ
-global.io = socketIO(server);
+global.io = new Server(server);
 // PostgreSQLデータベース接続プールを作成
 global.pool = new pg.Pool({ connectionString: process.env.POSTGERSS_KEY });
 
@@ -68,7 +68,7 @@ if (nodeVersion > requiredVersion) {
       },
     })
   );
-}else{
+} else {
   console.error(
     `Node.js ${requiredVersion} 以上が必要です。現在のバージョン: ${nodeVersion}`
   );

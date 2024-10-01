@@ -7,7 +7,6 @@
  * ・プレイヤーの位置情報
  * ・喫煙アクション
  */
-import * as io from "socket.io-client";
 import { radio } from "../models/gameObjects";
 import { startScreen } from "../config/elementConfig";
 
