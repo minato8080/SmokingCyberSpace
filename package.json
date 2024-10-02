@@ -4,6 +4,7 @@
     "express": "^4.17.1",
     "helmet": "^8.0.0",
     "http": "^0.0.1-security",
+    "mongodb": "^6.9.0",
     "pg": "^8.2.1",
     "socket.io": "^4.8.0"
   },

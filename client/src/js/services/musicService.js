@@ -56,7 +56,7 @@ function onPlayerStateChange(event) {
 
 /**
  * YouTubeプレーヤーを作成する関数
- * @param {number} count - プレーヤー作成のためのカウント
+ * @param {number} count - 試行回数
  */
 export function createYouTubePlayer(count) {
   if (YT && count > 0) {
@@ -65,9 +65,7 @@ export function createYouTubePlayer(count) {
       setInterval(createYouTubePlayer(count - 1), 10000);
       return;
     }
-    console.log("YouTube Player API is loaded.  Creating player instance now.");
-
-    ytPlayer = new YT.Player("youtube", {
+    ytPlayer = new YT.Player("youtubePlayer", {
       height: "0",
       width: "0",
       playsinline: 1,
@@ -88,7 +86,7 @@ export function createYouTubePlayer(count) {
  * 音楽を初期化する関数
  */
 export function initializeMusic() {
-  createYouTubePlayer(3);
+  createYouTubePlayer(10);
   if (!ytPlayer) return;
 
   startButton.click(function () {

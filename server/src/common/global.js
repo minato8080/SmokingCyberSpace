@@ -5,7 +5,6 @@
  * @property {string[]} requestlist - リクエストされた動画IDのリスト
  * @property {string[]} whoserequest - リクエストしたプレイヤーの名前のリスト
  * @property {import('socket.io').Server|null} io - Socket.IOサーバーインスタンス
- * @property {import('pg').Pool|null} pool - PostgreSQLデータベース接続プール
  */
 
 /** @type {Global} */
@@ -14,5 +13,4 @@ exports.global = {
   requestlist: [],
   whoserequest: [],
   io: null,
-  pool: null,
 };

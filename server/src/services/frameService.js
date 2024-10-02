@@ -1,5 +1,6 @@
 const { global } = require("../common/global");
 const { APP } = require("../common/const");
+const { emitState } = require("./connectionService");
 
 /**
  * ゲームの更新フレームを設定する関数
@@ -8,7 +9,7 @@ exports.initializeFrameService = () => {
   // 一定間隔で実行されるタイマーを設定
   setInterval(() => {
     // すべてのプレイヤーに対して処理を行う
-    /** @type {Player[]} */
+    /** @type {import('@/server/src/models/types/Player').Player[]} */
     const players = Object.values(global.players);
     players.forEach((player) => {
       const movement = player.movement;
@@ -52,6 +53,6 @@ exports.initializeFrameService = () => {
     });
 
     // 更新された状態をすべてのクライアントに送信
-    global.io.sockets.emit("state", global.players);
+    emitState(players);
   }, 1000 / APP.FPS); // FPSに基づいて更新間隔を設定
 };

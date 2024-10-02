@@ -1,4 +1,7 @@
 const path = require("path");
+const dotenv = require("dotenv");
+dotenv.config();
+
 exports.APP = {
   // 画面のFPS
   FPS: 24,
@@ -19,6 +22,7 @@ exports.APP = {
   // ファイルログを出力するかどうか
   IS_FS: false,
   ROOT: path.join(__dirname, "../../../"),
+  mongoDBName: process.env.MONGODB_DB_NAME,
 };
 
 // ログメッセージ

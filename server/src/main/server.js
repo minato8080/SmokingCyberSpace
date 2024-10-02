@@ -6,52 +6,28 @@ dotenv.config();
 // dotenv.config({ path: '.env.develop' });
 
 const express = require("express");
-const { createServer } = require('node:http');
+const { createServer } = require("node:http");
 const path = require("path");
-const { Server } = require("socket.io");
-const pg = require("pg");
 const helmet = require("helmet");
 
 const { APP } = require("../common/const");
-const { global } = require("../common/global");
-const { onConnection } = require("../services/connectionService");
+const { initializeConnectionService } = require("../services/connectionService");
 const { initializeFrameService } = require("../services/frameService");
-const { getLogDate, weekhead } = require("../util/log");
+const { fetchRequests } = require("../dbaccess/mongodbBusiness");
 
 // Expressアプリケーションを作成
 const app = express();
 // HTTPサーバーを作成
 const server = createServer(app);
-// Socket.IOをサーバーにアタッチ
-global.io = new Server(server);
-// PostgreSQLデータベース接続プールを作成
-global.pool = new pg.Pool({ connectionString: process.env.POSTGERSS_KEY });
 
 // 新しい接続があった時のイベントハンドラを設定
-global.io.on("connection", onConnection);
+const dbAccessPool = initializeConnectionService(server);
 
 // ゲームの更新フレームを設定
 initializeFrameService();
 
 // データベースからリクエストリストを取得
-global.pool
-  .query(
-    "SELECT videoid,name FROM requestlist WHERE $1 <= date AND date <= $2",
-    [weekhead(), getLogDate()]
-  )
-  .then((res) => {
-    // 取得したデータをグローバル変数に格納
-    for (let i = 0; i < res.rows.length; i++) {
-      global.requestlist.push(res.rows[i].videoid);
-      global.whoserequest.push(res.rows[i].name);
-    }
-    console.log(global.requestlist);
-  })
-  .catch((e) => {
-    // エラーハンドリング
-    console.error("クエリエラー:", e.message);
-    console.error(e.stack);
-  });
+fetchRequests(dbAccessPool);
 
 // CSP設定
 // Node.jsのバージョンを確認
@@ -63,7 +39,7 @@ if (nodeVersion > requiredVersion) {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'", "https:"],
-          connectSrc: ["'self'", "data:", "https://www.youtube.com"],
+          connectSrc: ["'self'", "data:", "https://www.youtube.com","https://www.youtube.com/youtubei/"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           scriptSrc: ["'self'", "https:", "'unsafe-eval'"],
         },

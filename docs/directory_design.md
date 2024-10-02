@@ -1,9 +1,11 @@
-# Start of Selection
+# フォルダ構成
+
 <pre>
 root
 ├─ .env
 ├─ .gitignore
 ├─ basic_design.md
+├─ jsconfig.json
 ├─ package-lock.json
 ├─ package.json
 ├─ README.md
@@ -14,6 +16,9 @@ root
 │  │  ├─ favicon.ico
 │  │  ├─ css
 │  │  │  └─ style.css
+│  │  ├─ dist
+│  │  │  ├─ index.html
+│  │  │  └─ index.js
 │  │  ├─ fonts
 │  │  │  └─ misaki_gothic_2nd.ttf
 │  │  └─ img
@@ -59,10 +64,6 @@ root
 │             ├─ animationFrameChanger.js
 │             ├─ canvasHelper.js
 │             └─ textUtils.js
-│   
-├─ dist
-│  ├─ index.html
-│  └─ index.js
 │
 └─ server
     └─ src
@@ -76,7 +77,10 @@ root
         │
         ├─ models
         │  ├─ GameObject.js
-        │  └─ Player.js
+        │  ├─ Player.js
+        │  │
+        │  └─ types
+        │      └─  Player.d.ts
         │
         ├─ main
         │  └─ server.js
