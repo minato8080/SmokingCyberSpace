@@ -22,17 +22,23 @@
       name="viewport"
       content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
     />
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="/socket.io/socket.io.js"></script>
   </head>
-  <body class="container" >
+  <body class="container">
     <div style="flex: 1 1; position: relative; overflow: hidden">
       <div id="startScreen">
         <div style="text-align: center; width: 100%; font-size: xx-large">
           <form id="avatarArea" class="selectionGroup">
-            <input id="avatarMasi" type="radio" name="avatar" value="masi" checked />
+            <input
+              id="avatarMasi"
+              type="radio"
+              name="avatar"
+              value="masi"
+              checked
+            />
             <label for="avatarMasi">
               <img src="img/masi-icon.png" />
             </label>
@@ -68,12 +74,18 @@
         <div class="controllerRow">
           <button id="leftButton" class="directionKey materialButton">←</button>
           <button id="downButton" class="directionKey materialButton">↓</button>
-          <button id="rightButton" class="directionKey materialButton">→</button>
+          <button id="rightButton" class="directionKey materialButton">
+            →
+          </button>
           <button id="buttonB" class="actionButton materialButton">B</button>
         </div>
         <div class="controllerRow">
-          <button id="selectButton" class="menuButton materialButton">select</button>
-          <button id="startButton" class="menuButton materialButton">start</button>
+          <button id="selectButton" class="menuButton materialButton">
+            select
+          </button>
+          <button id="startButton" class="menuButton materialButton">
+            start
+          </button>
         </div>
       </div>
     </div>
@@ -83,8 +95,16 @@
     <img id="mapImage" src="img/map_ad.png" style="display: none" />
     <img id="mapImageZ1" src="img/map_front.png" style="display: none" />
     <img id="chatboxTop" src="img/chatbox-top-500.png" style="display: none" />
-    <img id="chatboxMiddle" src="img/chatbox-middle-500.png" style="display: none" />
-    <img id="chatboxUnder" src="img/chatbox-under-500.png" style="display: none" />
+    <img
+      id="chatboxMiddle"
+      src="img/chatbox-middle-500.png"
+      style="display: none"
+    />
+    <img
+      id="chatboxUnder"
+      src="img/chatbox-under-500.png"
+      style="display: none"
+    />
     <img id="smokyImage" src="img/smoke.png" style="display: none" />
     <script src="dist/index.js" type="text/javascript"></script>
   </body>

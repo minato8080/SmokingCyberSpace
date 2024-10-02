@@ -39,7 +39,7 @@ if (nodeVersion > requiredVersion) {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'", "https:"],
-          connectSrc: ["'self'", "data:", "https://www.youtube.com","https://www.youtube.com/youtubei/"],
+          connectSrc: ["'self'", "data:", "https://www.youtube.com/"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           scriptSrc: ["'self'", "https:", "'unsafe-eval'"],
         },

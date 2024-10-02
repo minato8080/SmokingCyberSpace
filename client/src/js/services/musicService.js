@@ -58,35 +58,37 @@ function onPlayerStateChange(event) {
  * YouTubeプレーヤーを作成する関数
  * @param {number} count - 試行回数
  */
-export function createYouTubePlayer(count) {
+export async function createYouTubePlayer(count) {
   if (YT && count > 0) {
     if (!YT.loaded) {
       console.log("YouTube Player API is still loading.  Retrying...");
-      setInterval(createYouTubePlayer(count - 1), 10000);
-      return;
+      setTimeout(() => createYouTubePlayer(count - 1), 1000);
+    } else {
+      ytPlayer = new YT.Player("youtubePlayer", {
+        height: "0",
+        width: "0",
+        playsinline: 1,
+        origin: window.location.origin,
+        enablejsapi: 1,
+        events: {
+          onReady: onYouTubePlayerReady,
+          onStateChange: onPlayerStateChange,
+        },
+      });
+      console.log("iframe api ready");
+      return true;
     }
-    ytPlayer = new YT.Player("youtubePlayer", {
-      height: "0",
-      width: "0",
-      playsinline: 1,
-      origin: window.location.origin,
-      enablejsapi: 1,
-      events: {
-        onReady: onYouTubePlayerReady,
-        onStateChange: onPlayerStateChange,
-      },
-    });
-    console.log("iframe api ready");
   } else {
     console.log("iframe was unsuccessful");
+    return false;
   }
 }
 
 /**
  * 音楽を初期化する関数
  */
-export function initializeMusic() {
-  createYouTubePlayer(10);
+export async function initializeMusic() {
+  await createYouTubePlayer(10);
   if (!ytPlayer) return;
 
   startButton.click(function () {
@@ -108,7 +110,7 @@ export function initializeMusic() {
     if (radio.playList.length === 0) return;
 
     radio.nextNumber += 1;
-    
+
     if (radio.playList.length < radio.nextNumber) radio.nextNumber = 0;
     ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
     radio.msg = "Next No." + (radio.nextNumber + 1);

@@ -60,7 +60,7 @@ const checkRequest = async (player, dbAccessPool) => {
       global.requestlist.push(videoId);
       global.whoserequest.push(player.nickname);
       // 全クライアントに更新されたリクエストリストを送信
-      socketIO?.sockets.emit(
+      socketIO.sockets.emit(
         "musicresponse",
         global.requestlist,
         global.whoserequest
@@ -95,7 +95,7 @@ const onConnection = (socket, dbAccessPool) => {
       // グローバルプレイヤーリストに追加
       global.players[player.id] = player;
       // 現在の音楽リクエストリストを送信
-      socketIO?.sockets.emit(
+      socketIO.sockets.emit(
         "musicresponse",
         global.requestlist,
         global.whoserequest
@@ -140,7 +140,6 @@ const onConnection = (socket, dbAccessPool) => {
     delete global.players[player.id];
     // メモリ解放
     player = null;
-    socketIO = null;
   });
 
   // プレイヤーの移動処理
@@ -231,7 +230,7 @@ const onConnection = (socket, dbAccessPool) => {
  */
 exports.emitState = (players) => {
   try {
-    socketIO?.sockets.emit("state", players);
+    socketIO.sockets.emit("state", players);
   } catch (error) {
     console.error("emitState error:", error.message);
   }
@@ -259,6 +258,6 @@ exports.initializeConnectionService = (server) => {
   });
 
   // 新しい接続があった時のイベントハンドラを設定
-  socketIO?.on("connection", (socket) => onConnection(socket, dbAccessPool));
+  socketIO.on("connection", (socket) => onConnection(socket, dbAccessPool));
   return dbAccessPool;
 };
