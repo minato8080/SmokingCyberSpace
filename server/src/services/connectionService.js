@@ -6,6 +6,7 @@ const Player = require("../models/Player");
 const { global } = require("../common/global");
 const { APP } = require("../common/const");
 const {
+  fetchRequests,
   saveRequest,
   logChat,
   logRoomEntry,
@@ -241,7 +242,7 @@ exports.emitState = (players) => {
  * @param {import('http').Server} server - Socket.IOをアタッチするサーバーインスタンス
  * @returns {MongoClient} - MongoDB接続クライアント
  */
-exports.initializeConnectionService = (server) => {
+exports.initializeConnectionService = async (server) => {
   // Socket.IOをサーバーにアタッチ
   socketIO = new Server(server);
 
@@ -256,6 +257,8 @@ exports.initializeConnectionService = (server) => {
       deprecationErrors: true,
     },
   });
+  // データベースからリクエストリストを取得
+  await fetchRequests(dbAccessPool);
 
   // 新しい接続があった時のイベントハンドラを設定
   socketIO.on("connection", (socket) => onConnection(socket, dbAccessPool));

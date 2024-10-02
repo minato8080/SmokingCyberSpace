@@ -85,35 +85,55 @@ export async function createYouTubePlayer(count) {
 }
 
 /**
- * 音楽を初期化する関数
+ * 音楽プレーヤーを初期化する関数
  */
 export async function initializeMusic() {
-  await createYouTubePlayer(10);
-  if (!ytPlayer) return;
+  // YouTubeプレーヤーを作成する
+  await createYouTubePlayer(3);
 
-  startButton.click(function () {
+  // スタートボタンがクリックされたときの処理
+  startButton.click(async function () {
+    // プレーヤーが未設定の場合、再度作成を試みる
+    if (!ytPlayer) {
+      const isSetUp = await createYouTubePlayer(3);
+      if (!isSetUp) return; // プレーヤーの作成に失敗した場合は終了
+    }
+    // プレイリストが空の場合は終了
     if (radio.playList.length === 0) return;
 
+    // 動画がまだ読み込まれていない場合
     if (!state.isYtPlayerLoadVideoById) {
+      // 次の動画を設定
       radio.nextNumber = (radio.nextNumber + 1) % radio.playList.length;
       ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-      state.isYtPlayerLoadVideoById = true;
+      state.isYtPlayerLoadVideoById = true; // 動画が読み込まれたことを記録
     } else if (!isSmartPhone() && radio.isPlaying) {
+      // スマートフォンでない場合、再生中なら一時停止
       ytPlayer.pauseVideo();
     } else {
+      // それ以外の場合は再生
       ytPlayer.playVideo();
     }
     return;
   });
 
-  selectButton.click(function () {
+  // セレクトボタンがクリックされたときの処理
+  selectButton.click(async function () {
+    // プレーヤーが未設定の場合、再度作成を試みる
+    if (!ytPlayer) {
+      const isSetUp = await createYouTubePlayer(3);
+      if (!isSetUp) return; // プレーヤーの作成に失敗した場合は終了
+    }
+    // プレイリストが空の場合は終了
     if (radio.playList.length === 0) return;
 
+    // 次の動画番号をインクリメント
     radio.nextNumber += 1;
 
+    // プレイリストの範囲を超えた場合は最初に戻る
     if (radio.playList.length < radio.nextNumber) radio.nextNumber = 0;
     ytPlayer.loadVideoById({ videoId: radio.playList[radio.nextNumber] });
-    radio.msg = "Next No." + (radio.nextNumber + 1);
+    radio.msg = "Next No." + (radio.nextNumber + 1); // 次の動画番号をメッセージに設定
     return;
   });
 }

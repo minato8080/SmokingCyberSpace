@@ -13,7 +13,6 @@ const helmet = require("helmet");
 const { APP } = require("../common/const");
 const { initializeConnectionService } = require("../services/connectionService");
 const { initializeFrameService } = require("../services/frameService");
-const { fetchRequests } = require("../dbaccess/mongodbBusiness");
 
 // Expressアプリケーションを作成
 const app = express();
@@ -21,13 +20,10 @@ const app = express();
 const server = createServer(app);
 
 // 新しい接続があった時のイベントハンドラを設定
-const dbAccessPool = initializeConnectionService(server);
+initializeConnectionService(server);
 
 // ゲームの更新フレームを設定
 initializeFrameService();
-
-// データベースからリクエストリストを取得
-fetchRequests(dbAccessPool);
 
 // CSP設定
 // Node.jsのバージョンを確認

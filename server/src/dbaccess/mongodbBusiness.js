@@ -29,6 +29,7 @@ const fetchRequests = async (client) => {
       global.requestlist.push(request.videoid);
       global.whoserequest.push(request.name);
     });
+    console.error("fetchRequests OK.");
     console.log(global.requestlist);
   } catch (e) {
     // エラーハンドリング
