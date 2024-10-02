@@ -25,7 +25,7 @@ const fetchRequests = async (client) => {
       ?.toArray();
 
     // 取得したデータをグローバル変数に格納
-    requests.forEach((request) => {
+    requests?.forEach((request) => {
       global.requestlist.push(request.videoid);
       global.whoserequest.push(request.name);
     });

@@ -28,7 +28,7 @@ let socketIO = null;
  * @param {Player} player - リクエストを送信したプレイヤーオブジェクト
  * @param {MongoClient|Pool} dbAccessPool - データベース接続プール
  */
-const checkRequest = function (player, dbAccessPool) {
+const checkRequest = async (player, dbAccessPool) => {
   let videoId;
   const msg = player.msg;
   const pcUrl = "https://www.youtube.com/watch?v=";
@@ -67,7 +67,7 @@ const checkRequest = function (player, dbAccessPool) {
       );
 
       // データベースにリクエストを保存
-      saveRequest(dbAccessPool, player, videoId);
+      await saveRequest(dbAccessPool, player, videoId);
     }
   } catch (error) {
     console.error("checkRequest error:", error.message);
@@ -191,7 +191,7 @@ const onConnection = (socket, dbAccessPool) => {
   socket.on("message", async (msg) => {
     if (!msg) return;
     player.msg = msg;
-    checkRequest(player, dbAccessPool);
+    await checkRequest(player, dbAccessPool);
     player.msgCountDown = 30 * APP.FPS;
     // ファイルシステムが有効な場合、ログを記録
     if (APP.IS_FS) {
