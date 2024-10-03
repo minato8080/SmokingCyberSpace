@@ -6,7 +6,8 @@
     "http": "^0.0.1-security",
     "mongodb": "^6.9.0",
     "pg": "^8.2.1",
-    "socket.io": "^4.8.0"
+    "socket.io": "^4.8.0",
+    "unicode-escape": "^0.1.0"
   },
   "scripts": {
     "start": "nodemon ./server/src/main/server.js",

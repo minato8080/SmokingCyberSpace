@@ -1,5 +1,6 @@
 const path = require("path");
 const dotenv = require("dotenv");
+const unicodeEscape = require('unicode-escape');
 dotenv.config();
 
 exports.APP = {
@@ -27,9 +28,7 @@ exports.APP = {
 
 // ログメッセージ
 exports.LOG_MSG = {
-  /** "さんが入室しました。" */
-  ENTRY_ESC: "\u3055\u3093\u304c\u5165\u5ba4\u3057\u307e\u3057\u305f\u3002",
-  /** "さんが退出しました。" */
-  EXIT_ESC: "\u3055\u3093\u304c\u9000\u51fa\u3057\u307e\u3057\u305f\u3002",
+  ENTRY_ESC: unicodeEscape("さんが入室しました。"),
+  EXIT_ESC: unicodeEscape("さんが退出しました。"),
   SUCCESS: "正常に出力されました",
 };

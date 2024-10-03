@@ -1,4 +1,4 @@
-const { ZERO_POSITION, MAX_POSITION } = require("../common/const");
+const { APP } = require("../common/const");
 
 /**
  * ゲームオブジェクトの基底クラス
@@ -23,7 +23,7 @@ class GameObject {
     this.x += distance;
 
     let collision = false;
-    if (this.x < -ZERO_POSITION || this.x >= MAX_POSITION) {
+    if (this.x < -APP.ZERO_POSITION || this.x >= APP.MAX_POSITION) {
       collision = true;
     }
 
