@@ -1,45 +1,57 @@
 # データベース設計
 
-## テーブル構造と最大サイズ
-サービス名 MongoDB@Atlas
-容量上限 512MB
-合計容量 20.983MB
+| サービス名         | MongoDB@Atlas         |
+|-------------------|-----------------------|
+| 容量上限           | 512MB                 |
+| 合計容量           | 20.983MB              |
 
-### リクエストリストテーブル (requestlist)
--- 1 record byte = 83 bytes
--- Maximum number of records = 1,000
--- Maximum bytes = 83,000 bytes = 0.083MB
+## リクエストリストテーブル 
+collection name : requestlist
 
-CREATE TABLE requestlist (
-date CHAR(8) NOT NULL, -- 8 バイト
-ip VARCHAR(45) NOT NULL, -- 最大 45 バイト + 1 バイト
-user_id CHAR(6) NOT NULL, -- 固定長 6 バイト
-name CHAR(12) NOT NULL, -- 固定長 12 バイト
-videoid CHAR(11) NOT NULL -- 固定長 11 バイト
-);
+one record byte : 83 bytes
 
-### 入退室ログテーブル
--- 1 record byte = 86 bytes
--- Maximum number of records = 100,000
--- Maximum bytes = 8,600,000 bytes = 8.6MB
+Maximum number of records : 1,000
 
-CREATE TABLE roomlogs (
-time CHAR(19) NOT NULL, -- 19 バイト
-ip VARCHAR(45) NOT NULL, -- 最大 45 バイト + 1 バイト
-user_id CHAR(6) NOT NULL, -- 固定長 6 バイト
-name CHAR(12) NOT NULL, -- 固定長 12 バイト
-state CHAR(3) NOT NULL CHECK (state IN ('IN', 'OUT')) -- 3 バイト
-);
+Maximum bytes : 83,000 = 0.083MB
 
-### チャットログテーブル
--- 1 record byte = 246 bytes
--- Maximum number of records = 50,000
--- Maximum bytes = 12,300,000 bytes = 12.3MB
+| 項目名   | データ型     | 制約                                   | バイト数                     |
+|----------|-------------|----------------------------------------|-----------------------------|
+| date     | CHAR(8)     | NOT NULL                               | 固定長 8 バイト              |
+| ip       | VARCHAR(45) | NOT NULL                               | 最大 45 バイト + 1 バイト    |
+| user_id  | CHAR(6)     | NOT NULL                               | 固定長 6 バイト             |
+| name     | CHAR(12)    | NOT NULL                               | 固定長 12 バイト            |
+| videoid  | CHAR(11)    | NOT NULL                               | 固定長 11 バイト            |
 
-CREATE TABLE chatlogs (
-time CHAR(19) NOT NULL, -- 19 バイト
-ip VARCHAR(45) NOT NULL, -- 最大 45 バイト + 1 バイト
-user_id CHAR(6) NOT NULL, -- 固定長 6 バイト
-name CHAR(12) NOT NULL, -- 固定長 12 バイト
-message VARCHAR(162) NOT NULL -- 最大 162 バイト + 1 バイト
-);
+## 入退室ログテーブル
+collection name : roomlogs
+
+one record byte : 86 bytes
+
+Maximum number of records : 100,000
+
+Maximum bytes : 8,600,000 = 8.6MB
+
+| 項目名   | データ型     | 制約                                   | バイト数                    |
+|----------|-------------|----------------------------------------|----------------------------|
+| time     | CHAR(19)    | NOT NULL                               | 固定長 19 バイト            |
+| ip       | VARCHAR(45) | NOT NULL                               | 最大 45 バイト + 1 バイト   |
+| user_id  | CHAR(6)     | NOT NULL                               | 固定長 6 バイト             |
+| name     | CHAR(12)    | NOT NULL                               | 固定長 12 バイト            |
+| state    | CHAR(3)     | NOT NULL CHECK (state IN ('IN', 'OUT'))| 固定長 3 バイト             |
+
+## チャットログテーブル
+collection name : chatlogs
+
+one record byte : 246 bytes
+
+Maximum number of records : 50,000
+
+Maximum bytes : 12,300,000 = 12.3MB
+
+| 項目名   | データ型     | 制約                                   | バイト数                     |
+|----------|-------------|----------------------------------------|-----------------------------|
+| time     | CHAR(19)    | NOT NULL                               | 固定長 19 バイト            |
+| ip       | VARCHAR(45) | NOT NULL                               | 最大 45 バイト + 1 バイト   |
+| user_id  | CHAR(6)     | NOT NULL                               | 固定長 6 バイト             |
+| name     | CHAR(12)    | NOT NULL                               | 固定長 12 バイト            |
+| message  | VARCHAR(162)| NOT NULL                               | 最大 162 バイト + 1 バイト  |
